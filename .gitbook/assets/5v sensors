@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <style>
+            body.dragging * {
+                cursor: grabbing !important;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            *:focus,
+            *:hover {
+                outline: none;
+            }
+            .gitbook-splashscreen {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
+            .slate-spacer {
+                height: 0;
+                color: transparent;
+                outline: none;
+                position: absolute;
+            }
+            @keyframes LoadingIndicator {
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            [data-loading-indicator='true'] {
+                animation: LoadingIndicator 0.6s linear infinite;
+            }
+        </style>
+        <title>Using 3rd Party Sensors - DUO Control System</title>
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-Bold.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-BoldItalic.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-Black.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-BlackItalic.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-Medium.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-MediumItalic.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-Regular.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/Roboto/Roboto-Italic.woff2?v=3.19" crossorigin="anonymous">
+        <style id="__font-Roboto-gitbook-content-font">
+            @font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local("Roboto Bold"), local("Roboto-Bold"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Bold.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Bold.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  italic;
+            font-weight: 700;
+            font-display: swap;
+            src: local("Roboto BoldItalic"), local("Roboto-BoldItalic"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-BoldItalic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-BoldItalic.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  normal;
+            font-weight: 800;
+            font-display: swap;
+            src: local("Roboto Black"), local("Roboto-Black"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Black.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Black.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  italic;
+            font-weight: 800;
+            font-display: swap;
+            src: local("Roboto BlackItalic"), local("Roboto-BlackItalic"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-BlackItalic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-BlackItalic.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  normal;
+            font-weight: 500;
+            font-display: swap;
+            src: local("Roboto Medium"), local("Roboto-Medium"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Medium.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Medium.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  italic;
+            font-weight: 500;
+            font-display: swap;
+            src: local("Roboto MediumItalic"), local("Roboto-MediumItalic"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-MediumItalic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-MediumItalic.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local("Roboto Regular"), local("Roboto-Regular"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Regular.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Regular.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-content-font';
+            font-style:  italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local("Roboto Italic"), local("Roboto-Italic"), url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Italic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/Roboto/Roboto-Italic.woff?v=3.19") format("woff");
+        }
+        </style>
+<meta name="description" content="" id="__meta-description" />
+<meta name="og:description" content="" id="__meta-og:description" />
+<meta name="og:image" content="https://app.gitbook.com/share/space/thumbnail/UOOiQ4S2QcMWmVoSmeQ8/page/-M7xccq_CaFTWUgeGXK-.png?color=%233DAE2b&logo=https%3A%2F%2F2589213514-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-M4_pJHI8HTuZFQTNfcy%252Flogo%252FGVy82O8q2ntLl4w66G9K%252FGitBook-Title-Banners-REV-DUO-CONTROL-SYSTEM.png%3Falt%3Dmedia%26token%3De7fdbb16-326c-4c2f-b6c7-a7c0a5d0fd0e&theme=bold" id="__meta-og:image" />
+<meta name="twitter:card" content="summary_large_image" id="__meta-twitter:card" />
+<meta name="og:title" content="Using 3rd Party Sensors" id="__meta-og:title" />
+<meta name="twitter:site" content="DUO Control System" id="__meta-twitter:site" />
+<meta name="robots" content="index" id="__meta-robots" />
+<link rel="icon" href="https://2589213514-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FUOOiQ4S2QcMWmVoSmeQ8%2Ficon%2F48P2wrtAqMBdnWsXqzNY%2FREV_Logo_for_GitBook-1250x1200px.png?alt=media&token=8bf601a0-a63e-4829-a7c8-85d179ff46d0"  id="__link-icon" />
+<link rel="preload" as="image" href="https://www.gitbook.com/cdn-cgi/image/width=256,height=40,fit=contain,dpr=1,format=auto/https%3A%2F%2F2589213514-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-M4_pJHI8HTuZFQTNfcy%252Flogo%252FGVy82O8q2ntLl4w66G9K%252FGitBook-Title-Banners-REV-DUO-CONTROL-SYSTEM.png%3Falt%3Dmedia%26token%3De7fdbb16-326c-4c2f-b6c7-a7c0a5d0fd0e" />
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Bold.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-BoldItalic.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Black.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-BlackItalic.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Medium.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-MediumItalic.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Regular.woff2?v=3.19" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Italic.woff2?v=3.19" crossorigin="anonymous">
+        <style id="__font-SourceCodePro-gitbook-code-font">
+            @font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local("Source Code Pro Bold"), local("SourceCodePro-Bold"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Bold.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Bold.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  italic;
+            font-weight: 700;
+            font-display: swap;
+            src: local("Source Code Pro BoldItalic"), local("SourceCodePro-BoldItalic"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-BoldItalic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-BoldItalic.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  normal;
+            font-weight: 800;
+            font-display: swap;
+            src: local("Source Code Pro Black"), local("SourceCodePro-Black"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Black.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Black.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  italic;
+            font-weight: 800;
+            font-display: swap;
+            src: local("Source Code Pro BlackItalic"), local("SourceCodePro-BlackItalic"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-BlackItalic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-BlackItalic.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  normal;
+            font-weight: 500;
+            font-display: swap;
+            src: local("Source Code Pro Medium"), local("SourceCodePro-Medium"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Medium.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Medium.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  italic;
+            font-weight: 500;
+            font-display: swap;
+            src: local("Source Code Pro MediumItalic"), local("SourceCodePro-MediumItalic"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-MediumItalic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-MediumItalic.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local("Source Code Pro Regular"), local("SourceCodePro-Regular"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Regular.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Regular.woff?v=3.19") format("woff");
+        }
+@font-face {
+            font-family: 'gitbook-code-font';
+            font-style:  italic;
+            font-weight: 400;
+            font-display: swap;
+            src: local("Source Code Pro Italic"), local("SourceCodePro-Italic"), url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Italic.woff2?v=3.19") format("woff2"),
+                    url("https://app.gitbook.com/public/fonts/SourceCodePro/SourceCodePro-Italic.woff?v=3.19") format("woff");
+        }
+        </style>
+
+                
+                <script type="module" defer src="https://app.gitbook.com/public/app/public-SOVNHC2A.min.js?v=10.9.232-e5c6a1dca08cf9bab5b1935431b7034a76f2667a-3941929473"></script>
+                <style id="react-native-stylesheet">[stylesheet-group="0"]{}
+body{margin:0;}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0;}
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+input::-webkit-search-cancel-button,input::-webkit-search-decoration,input::-webkit-search-results-button,input::-webkit-search-results-decoration{display:none;}
+[stylesheet-group="1"]{}
+.css-11aywtz{-moz-appearance:textfield;-webkit-appearance:none;background-color:rgba(0,0,0,0.00);border-bottom-left-radius:0px;border-bottom-right-radius:0px;border-top-left-radius:0px;border-top-right-radius:0px;border:0 solid black;box-sizing:border-box;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0px;padding:0px;resize:none;}
+.css-175oi2r{align-items:stretch;background-color:rgba(0,0,0,0.00);border:0 solid black;box-sizing:border-box;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;list-style:none;margin:0px;min-height:0px;min-width:0px;padding:0px;position:relative;text-decoration:none;z-index:0;}
+.css-1qaijid{background-color:rgba(0,0,0,0.00);border:0 solid black;box-sizing:border-box;color:inherit;display:inline;font:inherit;list-style:none;margin:0px;padding:0px;text-align:inherit;text-decoration:none;white-space:inherit;word-wrap:break-word;}
+.css-1rynq56{background-color:rgba(0,0,0,0.00);border:0 solid black;box-sizing:border-box;color:rgba(0,0,0,1.00);display:inline;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;list-style:none;margin:0px;padding:0px;text-align:inherit;text-decoration:none;white-space:pre-wrap;word-wrap:break-word;}
+.css-9pa8cd{bottom:0px;height:100%;left:0px;opacity:0;position:absolute;right:0px;top:0px;width:100%;z-index:-1;}
+[stylesheet-group="2"]{}
+.r-1064s9p{margin:4px;}
+.r-11mg6pl{border-bottom-color:rgba(255,255,255,1.00);border-left-color:rgba(255,255,255,1.00);border-right-color:rgba(255,255,255,1.00);border-top-color:rgba(255,255,255,1.00);}
+.r-13awgt0{flex:1;}
+.r-13fxbef{border-bottom-color:rgba(211,61,61,1.00);border-left-color:rgba(211,61,61,1.00);border-right-color:rgba(211,61,61,1.00);border-top-color:rgba(211,61,61,1.00);}
+.r-1471scf{display:inline;}
+.r-156hn8l{border-bottom-color:rgba(211,220,228,1.00);border-left-color:rgba(211,220,228,1.00);border-right-color:rgba(211,220,228,1.00);border-top-color:rgba(211,220,228,1.00);}
+.r-17gur6a{border-bottom-left-radius:0px;border-bottom-right-radius:0px;border-top-left-radius:0px;border-top-right-radius:0px;}
+.r-18c69zk{border-bottom-left-radius:100px;border-bottom-right-radius:100px;border-top-left-radius:100px;border-top-right-radius:100px;}
+.r-190qawg{border-bottom-color:rgba(227,232,237,1.00);border-left-color:rgba(227,232,237,1.00);border-right-color:rgba(227,232,237,1.00);border-top-color:rgba(227,232,237,1.00);}
+.r-19dn8jc{border-bottom-color:rgba(104,60,17,1.00);border-left-color:rgba(104,60,17,1.00);border-right-color:rgba(104,60,17,1.00);border-top-color:rgba(104,60,17,1.00);}
+.r-19nkufj{border-bottom-color:rgba(40,49,67,1.00);border-left-color:rgba(40,49,67,1.00);border-right-color:rgba(40,49,67,1.00);border-top-color:rgba(40,49,67,1.00);}
+.r-1awa8pu{border-bottom-color:rgba(101,119,134,1.00);border-left-color:rgba(101,119,134,1.00);border-right-color:rgba(101,119,134,1.00);border-top-color:rgba(101,119,134,1.00);}
+.r-1c57tb8{border-bottom-left-radius:34px;border-bottom-right-radius:34px;border-top-left-radius:34px;border-top-right-radius:34px;}
+.r-1d4xg89{border-bottom-color:rgba(170,184,194,1.00);border-left-color:rgba(170,184,194,1.00);border-right-color:rgba(170,184,194,1.00);border-top-color:rgba(170,184,194,1.00);}
+.r-1dqxon3{overflow-x:auto;overflow-y:auto;}
+.r-1edjr5w{padding:80px;}
+.r-1f0042m{border-bottom-left-radius:5px;border-bottom-right-radius:5px;border-top-left-radius:5px;border-top-right-radius:5px;}
+.r-1fdo3w0{margin:16px;}
+.r-1fuqb1j{border-bottom-left-radius:24px;border-bottom-right-radius:24px;border-top-left-radius:24px;border-top-right-radius:24px;}
+.r-1j16mh1{border-bottom-left-radius:100%;border-bottom-right-radius:100%;border-top-left-radius:100%;border-top-right-radius:100%;}
+.r-1jkafct{border-bottom-left-radius:2px;border-bottom-right-radius:2px;border-top-left-radius:2px;border-top-right-radius:2px;}
+.r-1jyn79y{border-bottom-color:rgba(0,150,136,1.00);border-left-color:rgba(0,150,136,1.00);border-right-color:rgba(0,150,136,1.00);border-top-color:rgba(0,150,136,1.00);}
+.r-1p0fg95{border-bottom-color:rgba(245,247,249,1.00);border-left-color:rgba(245,247,249,1.00);border-right-color:rgba(245,247,249,1.00);border-top-color:rgba(245,247,249,1.00);}
+.r-1phboty{border-bottom-style:solid;border-left-style:solid;border-right-style:solid;border-top-style:solid;}
+.r-1rwzld0{border-bottom-color:rgba(11,79,47,1.00);border-left-color:rgba(11,79,47,1.00);border-right-color:rgba(11,79,47,1.00);border-top-color:rgba(11,79,47,1.00);}
+.r-1tw7wh{border-bottom-left-radius:50px;border-bottom-right-radius:50px;border-top-left-radius:50px;border-top-right-radius:50px;}
+.r-1udh08x{overflow-x:hidden;overflow-y:hidden;}
+.r-1w1o3af{border-bottom-color:rgba(251,232,240,1.00);border-left-color:rgba(251,232,240,1.00);border-right-color:rgba(251,232,240,1.00);border-top-color:rgba(251,232,240,1.00);}
+.r-1wgstfn{border-bottom-style:none;border-left-style:none;border-right-style:none;border-top-style:none;}
+.r-1xc7w19{border-bottom-color:rgba(0,0,0,1.00);border-left-color:rgba(0,0,0,1.00);border-right-color:rgba(0,0,0,1.00);border-top-color:rgba(0,0,0,1.00);}
+.r-1xfd6ze{border-bottom-left-radius:8px;border-bottom-right-radius:8px;border-top-left-radius:8px;border-top-right-radius:8px;}
+.r-1xutcf9{padding:40px;}
+.r-1yadl64{border-bottom-width:0px;border-left-width:0px;border-right-width:0px;border-top-width:0px;}
+.r-42olwf{border-bottom-color:rgba(0,0,0,0.00);border-left-color:rgba(0,0,0,0.00);border-right-color:rgba(0,0,0,0.00);border-top-color:rgba(0,0,0,0.00);}
+.r-4a18lf{border-bottom-color:rgba(255,0,0,1.00);border-left-color:rgba(255,0,0,1.00);border-right-color:rgba(255,0,0,1.00);border-top-color:rgba(255,0,0,1.00);}
+.r-4qtqp9{display:inline-block;}
+.r-60ke3l{border-bottom-color:rgba(0,128,0,1.00);border-left-color:rgba(0,128,0,1.00);border-right-color:rgba(0,128,0,1.00);border-top-color:rgba(0,128,0,1.00);}
+.r-6578ry{margin:40px;}
+.r-6koalj{display:flex;}
+.r-6ncur5{border-bottom-left-radius:18px;border-bottom-right-radius:18px;border-top-left-radius:18px;border-top-right-radius:18px;}
+.r-6t2glc{border-bottom-left-radius:40px;border-bottom-right-radius:40px;border-top-left-radius:40px;border-top-right-radius:40px;}
+.r-9x6qib{border-bottom-color:rgba(204,214,221,1.00);border-left-color:rgba(204,214,221,1.00);border-right-color:rgba(204,214,221,1.00);border-top-color:rgba(204,214,221,1.00);}
+.r-ancj0c{border-bottom-color:rgba(218,212,255,1.00);border-left-color:rgba(218,212,255,1.00);border-right-color:rgba(218,212,255,1.00);border-top-color:rgba(218,212,255,1.00);}
+.r-by8dw1{margin:24px;}
+.r-cdmcib{border-bottom-left-radius:3px;border-bottom-right-radius:3px;border-top-left-radius:3px;border-top-right-radius:3px;}
+.r-cpet4d{border-bottom-left-radius:999px;border-bottom-right-radius:999px;border-top-left-radius:999px;border-top-right-radius:999px;}
+.r-crgep1{margin:0px;}
+.r-d045u9{border-bottom-width:2px;border-left-width:2px;border-right-width:2px;border-top-width:2px;}
+.r-d23pfw{padding:24px;}
+.r-dta0w2{flex:2;}
+.r-edyy15{padding:8px;}
+.r-eg6o18{border-bottom-style:dashed;border-left-style:dashed;border-right-style:dashed;border-top-style:dashed;}
+.r-egco7n{border-bottom-color:rgba(253,195,137,1.00);border-left-color:rgba(253,195,137,1.00);border-right-color:rgba(253,195,137,1.00);border-top-color:rgba(253,195,137,1.00);}
+.r-fx7oqy{border-bottom-color:rgba(0,0,255,1.00);border-left-color:rgba(0,0,255,1.00);border-right-color:rgba(0,0,255,1.00);border-top-color:rgba(0,0,255,1.00);}
+.r-gat16f{border-bottom-color:rgba(194,217,255,1.00);border-left-color:rgba(194,217,255,1.00);border-right-color:rgba(194,217,255,1.00);border-top-color:rgba(194,217,255,1.00);}
+.r-gav1f{border-bottom-color:rgba(24,28,31,1.00);border-left-color:rgba(24,28,31,1.00);border-right-color:rgba(24,28,31,1.00);border-top-color:rgba(24,28,31,1.00);}
+.r-hvic4v{display:none;}
+.r-hwh8t1{margin:8px;}
+.r-jqra5g{border-bottom-color:rgba(55,65,81,1.00);border-left-color:rgba(55,65,81,1.00);border-right-color:rgba(55,65,81,1.00);border-top-color:rgba(55,65,81,1.00);}
+.r-jxo161{border-bottom-color:rgba(255,204,203,1.00);border-left-color:rgba(255,204,203,1.00);border-right-color:rgba(255,204,203,1.00);border-top-color:rgba(255,204,203,1.00);}
+.r-kdyh1x{border-bottom-left-radius:6px;border-bottom-right-radius:6px;border-top-left-radius:6px;border-top-right-radius:6px;}
+.r-krxsd3{display:-webkit-box;}
+.r-m2nopt{border-bottom-color:rgba(43,46,57,1.00);border-left-color:rgba(43,46,57,1.00);border-right-color:rgba(43,46,57,1.00);border-top-color:rgba(43,46,57,1.00);}
+.r-m7id7e{flex:unset;}
+.r-m9k8lk{border-bottom-color:rgba(223,255,240,1.00);border-left-color:rgba(223,255,240,1.00);border-right-color:rgba(223,255,240,1.00);border-top-color:rgba(223,255,240,1.00);}
+.r-nsbfu8{padding:16px;}
+.r-p4pd8u{border-bottom-color:rgba(36,42,49,1.00);border-left-color:rgba(36,42,49,1.00);border-right-color:rgba(36,42,49,1.00);border-top-color:rgba(36,42,49,1.00);}
+.r-qwd59z{border-bottom-left-radius:1px;border-bottom-right-radius:1px;border-top-left-radius:1px;border-top-right-radius:1px;}
+.r-rs99b7{border-bottom-width:1px;border-left-width:1px;border-right-width:1px;border-top-width:1px;}
+.r-t60dpp{padding:0px;}
+.r-texgdz{margin:80px;}
+.r-tp2cfv{border-bottom-color:rgba(61,174,43,1.00);border-left-color:rgba(61,174,43,1.00);border-right-color:rgba(61,174,43,1.00);border-top-color:rgba(61,174,43,1.00);}
+.r-tuq35u{padding:4px;}
+.r-tyhe3k{border-bottom-left-radius:64px;border-bottom-right-radius:64px;border-top-left-radius:64px;border-top-right-radius:64px;}
+.r-xoduu5{display:inline-flex;}
+.r-xyw6el{padding:12px;}
+.r-ywje51{margin:auto;}
+.r-z2wwpe{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-top-left-radius:4px;border-top-right-radius:4px;}
+.r-zhp00w{padding:2px;}
+[stylesheet-group="2.1"]{}
+.r-10x3wzx{padding-bottom:40px;padding-top:40px;}
+.r-11yq8vr{margin-left:40px;margin-right:40px;}
+.r-1e081e0{padding-left:12px;padding-right:12px;}
+.r-1faleph{padding-left:64px;padding-right:64px;}
+.r-1guathk{padding-left:24px;padding-right:24px;}
+.r-1h4fu65{padding-bottom:24px;padding-top:24px;}
+.r-1hy1u7s{margin-left:24px;margin-right:24px;}
+.r-1isdzm1{padding-left:80px;padding-right:80px;}
+.r-1jgb5lz{margin-left:auto;margin-right:auto;}
+.r-1p02zvt{padding-left:48px;padding-right:48px;}
+.r-1p4rafz{padding-left:2px;padding-right:2px;}
+.r-1p6iasa{margin-bottom:4px;margin-top:4px;}
+.r-1pn2ns4{padding-left:8px;padding-right:8px;}
+.r-1r5su4o{margin-bottom:16px;margin-top:16px;}
+.r-1unineu{margin-bottom:40px;margin-top:40px;}
+.r-1vvnge1{padding-bottom:2px;padding-top:2px;}
+.r-1w3m5we{padding-bottom:80px;padding-top:80px;}
+.r-1ybube5{margin-left:8px;margin-right:8px;}
+.r-1ydw1k6{margin-left:16px;margin-right:16px;}
+.r-1yzf0co{padding-bottom:16px;padding-top:16px;}
+.r-4amgru{margin-left:4px;margin-right:4px;}
+.r-5njf8e{padding-bottom:8px;padding-top:8px;}
+.r-5wp0in{padding-left:40px;padding-right:40px;}
+.r-c8eef1{margin-bottom:8px;margin-top:8px;}
+.r-g8va3u{margin-left:80px;margin-right:80px;}
+.r-lz04qo{margin-left:-4px;margin-right:-4px;}
+.r-mgi0kt{margin-left:-24px;margin-right:-24px;}
+.r-mk0yit{padding-left:0px;padding-right:0px;}
+.r-mvpalk{margin-left:0px;margin-right:0px;}
+.r-oyd9sg{padding-bottom:4px;padding-top:4px;}
+.r-pw2am6{margin-bottom:24px;margin-top:24px;}
+.r-r0h9e2{margin-bottom:0px;margin-top:0px;}
+.r-r26ds4{margin-bottom:80px;margin-top:80px;}
+.r-rjfia{padding-bottom:0px;padding-top:0px;}
+.r-s1qlax{padding-left:4px;padding-right:4px;}
+.r-ymttw5{padding-left:16px;padding-right:16px;}
+[stylesheet-group="2.2"]{}
+.r-100vyta{margin-top:7px;}
+.r-1029d6i{top:-24px;}
+.r-105ug2t{pointer-events:auto!important;}
+.r-109y4c4{height:1px;}
+.r-10drpc{color:rgba(0,73,215,1.00);}
+.r-10kz8ia{color:rgba(228,79,137,1.00);}
+.r-10ptun7{height:16px;}
+.r-10pyoum{color:rgba(5,5,5,1.00);}
+.r-10sqg0u{margin-bottom:1px;}
+.r-10x49cs{font-size:10px;}
+.r-10xqauy{padding-top:env(safe-area-inset-top);}
+.r-111w7nw{box-shadow:0px 1px 2px rgba(0,0,0,0.69);}
+.r-113qch9{cursor:auto;}
+.r-116b19x{padding-left:40px;}
+.r-119vxgs{border-top-style:dashed;}
+.r-119zq30{border-left-width:4px;}
+.r-11c0sde{margin-top:24px;}
+.r-11f42r{height:314px;}
+.r-11g3r6m{padding-right:24px;}
+.r-11j48u5{width:calc(100% - 80px);}
+.r-11j9u27{visibility:hidden;}
+.r-11mo1y0{margin-bottom:7px;}
+.r-11mpjr4{background-color:rgba(223,223,223,1.00);}
+.r-11udlyb{background-color:rgba(0,150,136,1.00);}
+.r-11vxtcu{background-color:rgba(211,220,228,1.00);}
+.r-11wrixw{margin-left:0px;}
+.r-11xgnqw{color:rgba(85,208,66,1.00);}
+.r-11yh6sk{overflow-x:hidden;}
+.r-11ys0m{-webkit-break-before:auto;break-before:auto;}
+.r-123mryc{color:rgba(185,94,4,1.00);}
+.r-127358a{animation-name:r-9p3sdl;}
+.r-127gp16{max-width:150px;}
+.r-12dqhl9{height:calc(100vh - 80px);}
+.r-12mrs02{object-fit:contain;}
+.r-12v2sbk{background-color:rgba(36,42,49,0.50);}
+.r-12vffkv>*{pointer-events:auto;}
+.r-12vffkv{pointer-events:none!important;}
+.r-12ym1je{width:18px;}
+.r-12zb1j4{margin-right:7px;}
+.r-135wba7{line-height:24px;}
+.r-13hce6t{margin-left:4px;}
+.r-13i40vn{box-shadow:0px 12px 13px rgba(0,0,0,0.02);}
+.r-13l2t4g{border-right-width:1px;}
+.r-13ll0g2{color:rgba(10,48,105,1.00);}
+.r-13qz1uu{width:100%;}
+.r-13tjlyg{transition-duration:0.1s;}
+.r-13yce4e{border-top-width:0px;}
+.r-142tt33{-webkit-text-decoration-line:line-through;text-decoration-line:line-through;}
+.r-144uupt{left:2px;}
+.r-146iojx{max-width:300px;}
+.r-1472mwg{height:24px;}
+.r-14bkmb3{bottom:-3px;}
+.r-14eup4l{top:3px;}
+.r-14gqq1x{margin-top:4px;}
+.r-14lw9ot{background-color:rgba(255,255,255,1.00);}
+.r-14sbq61{background-color:rgba(33,150,243,1.00);}
+.r-14taxks{width:196px;}
+.r-14utu6a{line-height:8px;}
+.r-14vq63g{background-color:rgba(3,58,22,1.00);}
+.r-14yzgew{line-height:18px;}
+.r-150rngu{-webkit-overflow-scrolling:touch;}
+.r-157h22z{background-color:rgba(45,50,58,1.00);}
+.r-15czi30{background-image:linear-gradient(90deg, #e44f89, #c62c68);}
+.r-15d4u6f{background-color:rgba(145,176,240,1.00);}
+.r-15g7tld{margin-bottom:80px;}
+.r-15m1z73{margin-left:40px;}
+.r-15n4387{outline-color:#2662d7;}
+.r-15o5oer{bottom:auto;}
+.r-15qchaa{color:rgba(56,102,49,1.00);}
+.r-15ysp7h{min-height:32px;}
+.r-15zivkp{margin-bottom:4px;}
+.r-16dba41{font-weight:400;}
+.r-16l9doz{height:auto;}
+.r-16r7sh{right:-16px;}
+.r-16vg0q1{max-width:225px;}
+.r-16y2uox{flex-grow:1;}
+.r-173mn98{align-self:flex-end;}
+.r-1777fci{justify-content:center;}
+.r-17bb2tj{animation-duration:0.75s;}
+.r-17giqoz{box-shadow:0px 0px 7px rgba(0,0,0,0.52);}
+.r-17grq5a{margin-right:-8px;}
+.r-17leim2{background-repeat:repeat;}
+.r-17rnw9f{line-height:30px;}
+.r-17s6mgv{justify-content:flex-end;}
+.r-17tb59b{opacity:0.7;}
+.r-17tloay{opacity:0.6;}
+.r-17wrw06{color:rgba(180,26,26,1.00);}
+.r-184en5c{z-index:1;}
+.r-18ayb63{border-right-color:rgba(227,232,237,1.00);}
+.r-18kxxzh{flex-grow:0;}
+.r-18nhz7w{top:-3px;}
+.r-18p6if4{border-right-width:2px;}
+.r-18u37iz{flex-direction:row;}
+.r-18y5qoh{color:rgba(165,214,255,1.00);}
+.r-190thrv{color:rgba(145,75,5,1.00);}
+.r-19554kt{width:90px;}
+.r-19907ok{-moz-transition:opacity ease 200ms;-webkit-transition:opacity ease 200ms;transition:opacity ease 200ms;}
+.r-19akecc{color:rgba(175,245,180,1.00);}
+.r-19bdk51{border-right-color:rgba(211,61,61,1.00);}
+.r-19byhck{flex-basis:32%;}
+.r-19eyfmh{width:640px;}
+.r-19lq7b1{top:16px;}
+.r-19r33im{letter-spacing:1.2px;}
+.r-19tq15n{margin-top:80px;}
+.r-19wmn03{width:20px;}
+.r-19z077z{touch-action:none;}
+.r-19z6dmj{background-color:rgba(61,174,43,1.00);}
+.r-1a15hzg{padding-right:380px;}
+.r-1a3cspq{background-color:rgba(40,49,67,1.00);}
+.r-1abnn5w{animation-play-state:paused;}
+.r-1acpoxo{width:36px;}
+.r-1aerykh{border-top-color:rgba(211,220,228,1.00);}
+.r-1aockid{width:40px;}
+.r-1armvtb{font-size:8px;}
+.r-1awozwy{align-items:center;}
+.r-1axcl7z{border:1px solid #d3dce4;}
+.r-1ay1djp{animation-duration:1s;}
+.r-1azx6h{max-height:480px;}
+.r-1b00too{background-color:rgba(236,239,241,1.00);}
+.r-1b096ap{border-bottom-color:rgba(36,42,49,1.00);}
+.r-1b1g84l{bottom:-8px;}
+.r-1b3fm86{background-color:undefined;}
+.r-1b43r93{font-size:14px;}
+.r-1bcbbo8{color:rgba(17,99,41,1.00);}
+.r-1bnj018{color:rgba(92,105,117,1.00);}
+.r-1bwgafa{-webkit-text-decoration-color:rgba(136,153,168,1.00);text-decoration-color:rgba(136,153,168,1.00);}
+.r-1c681wc{color:rgba(77,222,152,1.00);}
+.r-1c6unfx{forced-color-adjust:none;}
+.r-1ceczpf{min-height:24px;}
+.r-1clhhh9{-moz-transition-property:all;-webkit-transition-property:all;transition-property:all;}
+.r-1cmwbt1{gap:8px;}
+.r-1d09ksm{align-items:baseline;}
+.r-1d2f490{left:0px;}
+.r-1d4mawv{margin-right:4px;}
+.r-1d5kdc7{flex-direction:column-reverse;}
+.r-1d7fvdj{justify-content:space-evenly;}
+.r-1d9grui{border-bottom-color:rgba(211,220,228,1.00);}
+.r-1ddef8g{-webkit-text-decoration-line:underline;text-decoration-line:underline;}
+.r-1dernwh{height:70%;}
+.r-1dlgt49{max-height:30px;}
+.r-1dmvmgl{background-color:rgba(36,42,49,1.00);}
+.r-1dn12g7{line-height:48px;}
+.r-1dpl46z{border-bottom-right-radius:4px;}
+.r-1dqbpge{cursor:text;}
+.r-1dumtqg{background-color:rgba(253,195,137,1.00);}
+.r-1e7him5{min-width:220px;}
+.r-1ea14ly{border-right-color:rgba(95,69,255,1.00);}
+.r-1efo1hp{border-bottom-color:rgba(43,46,57,1.00);}
+.r-1ei5mc7{cursor:inherit;}
+.r-1eic64l{color:rgba(198,44,104,1.00);}
+.r-1enofrn{font-size:12px;}
+.r-1etz4cy{color:rgba(194,217,255,1.00);}
+.r-1euycsn{flex-direction:row-reverse;}
+.r-1ewcgjf{box-shadow:0px 1px 3px rgba(0,0,0,0.5);}
+.r-1f23bpq{text-color:#ffffff;}
+.r-1f2v84d{color:rgba(204,207,212,1.00);}
+.r-1f529hi{line-height:14px;}
+.r-1fd96xs{padding-left:50px;}
+.r-1fe0xdi{left:0%;}
+.r-1ff274t{text-align:right;}
+.r-1fi01yr{background-color:rgba(55,65,81,1.00);}
+.r-1fiaf3z{opacity:0.05;}
+.r-1fo40xd{top:80px;}
+.r-1fq43b1{flex-basis:100%;}
+.r-1g7fiml{height:30px;}
+.r-1g80fh1{margin-right:80px;}
+.r-1ghhsy9{color:rgba(52,109,219,1.00);}
+.r-1gigy5k{border-bottom-color:rgba(45,50,58,1.00);}
+.r-1glc72y{border-bottom-color:rgba(245,247,249,1.00);}
+.r-1glkqn6{width:80px;}
+.r-1h0z5md{justify-content:flex-start;}
+.r-1h815vi{right:92%;}
+.r-1h8ys4a{padding-top:4px;}
+.r-1h9q8wt{color:rgba(69,69,69,1.00);}
+.r-1habvwh{align-items:flex-start;}
+.r-1hjwoze{height:18px;}
+.r-1hlnpa{height:3px;}
+.r-1hpgsb4{;}
+.r-1hqdnve{box-shadow:0px 0px 4px inset rgba(0,0,0, 0.08);}
+.r-1hrvmjx{border-top-color:rgba(55,65,81,1.00);}
+.r-1hsi953{min-height:180px;}
+.r-1hvjb8t{padding-right:4px;}
+.r-1hy97zq{padding-top:80px;}
+.r-1i6wzkk{-moz-transition-property:opacity;-webkit-transition-property:opacity;transition-property:opacity;}
+.r-1i7sdiz{box-shadow:0px 4px 10px rgba(0,0,0,0.05);}
+.r-1i93rbr{right:0%;}
+.r-1ielgck{animation-duration:300ms;}
+.r-1ifxtd0{margin-bottom:16px;}
+.r-1ik5qf4{max-width:500px;}
+.r-1iln25a{word-wrap:normal;}
+.r-1ioqa4e{border-top-right-radius:7px;}
+.r-1ipicw7{width:300px;}
+.r-1j7aebl{width:880px;}
+.r-1janqcz{width:16px;}
+.r-1jg9483{width:8px;}
+.r-1jj8364{margin-left:auto;}
+.r-1jkjb{margin-left:8px;}
+.r-1jnzvcq{padding-bottom:80px;}
+.r-1jocfgc{width:290px;}
+.r-1jpmnxg{word-wrap:anywhere;}
+.r-1jrm8ja{background-color:rgba(185,94,4,1.00);}
+.r-1jsra8{box-shadow:inset 0px 0px 0px 1px #e3e8ed;}
+.r-1jxfwug{border-top-width:2px;}
+.r-1k1q3bj{max-height:300px;}
+.r-1k25im9{height:26px;}
+.r-1kb76zh{margin-right:8px;}
+.r-1kf75xu{color:rgba(12,105,61,1.00);}
+.r-1kfrs79{font-weight:600;}
+.r-1kihuf0{align-self:center;}
+.r-1kjq87h{width:376px;}
+.r-1knl56f{animation-name:r-1hunrpy;}
+.r-1kvn7zp{max-height:150px;}
+.r-1kx0pzc{background-image:radial-gradient(rgba(0, 0, 0, 0.1), #181c1f);}
+.r-1kzwzxd{margin-right:300px;}
+.r-1l0m7dr{background-image:radial-gradient(rgba(0, 0, 0, 0.1), #ffffff);}
+.r-1l5ssaz{max-width:910px;}
+.r-1l7z4oj{padding-bottom:16px;}
+.r-1l94q7l{box-shadow:inset 0px 0px 1px rgb(0 0 0 / 30%);}
+.r-1ld3bg{top:-4px;}
+.r-1ldzwu0{animation-timing-function:linear;}
+.r-1ljd8xs{border-left-width:1px;}
+.r-1lky6n1{background-color:rgba(227,232,237,1.00);}
+.r-1lnfjr6{-webkit-background-clip:text;}
+.r-1lnt56z{color:rgba(211,220,228,1.00);}
+.r-1loqt21{cursor:pointer;}
+.r-1m04atk{padding-left:8px;}
+.r-1m4drjs{top:-6px;}
+.r-1maqer6{max-width:860px;}
+.r-1mdbw0j{padding-bottom:0px;}
+.r-1mdsxwj{color:rgba(237,159,81,1.00);}
+.r-1mgmw1x{background-image:linear-gradient(90deg, #5f45ff, #442fc8);}
+.r-1mhtwjo{left:-3px;}
+.r-1mkpi1y{max-width:max(50%, 300px);}
+.r-1mlwlqe{flex-basis:auto;}
+.r-1mmau9f{margin-top:-32px;}
+.r-1mnahxq{margin-top:0px;}
+.r-1moh23t{bottom:16px;}
+.r-1mrlafo{background-position:0;}
+.r-1ms9ukt{bottom:-5px;}
+.r-1mtwht8{color:rgba(210,168,255,1.00);}
+.r-1muvv40{animation-iteration-count:infinite;}
+.r-1n20pny{width:140px;}
+.r-1n6k3lk{color:rgba(36,42,49,1.00);}
+.r-1na1l7e{animation-play-state:running;}
+.r-1nf4jbm{color:rgba(59,69,78,1.00);}
+.r-1niwhzg{background-color:rgba(0,0,0,0.00);}
+.r-1nj16ve{left:-10px;}
+.r-1nlw0im{bottom:8px;}
+.r-1nq9s1i{color:rgba(145,176,240,1.00);}
+.r-1ny4l3l{outline-style:none;}
+.r-1o9jcv2{max-width:660px;}
+.r-1ocf4r9{scroll-snap-type:y mandatory;}
+.r-1odw9d6{background-color:rgba(20,23,28,1.00);}
+.r-1oec5bt{opacity:0.2;}
+.r-1oep0n4{left:-12px;}
+.r-1ois7e2{color:rgba(55,65,81,1.00);}
+.r-1or9b2r{height:10px;}
+.r-1osy6ei{color:rgba(255,220,215,1.00);}
+.r-1oszu61{align-items:stretch;}
+.r-1otgn73{touch-action:manipulation;}
+.r-1ow6zhx{margin-left:16px;}
+.r-1oy60ga{transform:translateX(-12px);}
+.r-1p0dtai{bottom:0px;}
+.r-1p3vkdf{border-right-color:rgba(45,50,58,1.00);}
+.r-1p5i0ed{bottom:-24px;}
+.r-1p69tiw{border-top-color:rgba(43,46,57,1.00);}
+.r-1peese0{margin-bottom:24px;}
+.r-1pfkmbz{outline-color:#386631;}
+.r-1pgixoa{border-right-left-radius:4px;}
+.r-1ph75f1{height:80px;}
+.r-1pi2tsx{height:100%;}
+.r-1pl7oy7{min-height:48px;}
+.r-1pos5eu{vertical-align:middle;}
+.r-1ptriwd{right:2px;}
+.r-1pyaxff{padding-right:8px;}
+.r-1q142lx{flex-shrink:0;}
+.r-1q3nxaj{z-index:300;}
+.r-1q77oe7{background-color:rgba(171,183,202,1.00);}
+.r-1q9jyb7{-webkit-filter:blur(16px) contrast(110%) hue-rotate(10deg) brightness(1.2) saturate(1.2);filter:blur(16px) contrast(110%) hue-rotate(10deg) brightness(1.2) saturate(1.2);}
+.r-1qc3rpd{transform:scaleY(-1);}
+.r-1qd0xha{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+.r-1qdbj55{animation-name:r-ndfo3d;}
+.r-1qefu2b{right:-3px;}
+.r-1qhn6m8{padding-left:16px;}
+.r-1quu1zo{;}
+.r-1r0uwd5{color:rgba(255,166,87,1.00);}
+.r-1r74h94{left:8px;}
+.r-1r8g8re{height:36px;}
+.r-1rasi3h{color:rgba(136,153,168,1.00);}
+.r-1rbj2e8{outline-color:#f5f7f9;}
+.r-1rdth4h{border-left-color:rgba(55,65,81,1.00);}
+.r-1rho1gz{box-shadow:0px 12px 13px rgba(0,0,0,0.12);}
+.r-1rkdych{max-width:1040px;}
+.r-1rla0r3{background-image:linear-gradient(90deg, #d33d3d, #b41a1a);}
+.r-1rnoaur{overflow-y:auto;}
+.r-1ro0kt6{flex-basis:0%;}
+.r-1ro7rbe{right:100%;}
+.r-1rttkqs{width:400px;}
+.r-1s3egr7{z-index:100;}
+.r-1s8p94s{max-width:832px;}
+.r-1sc18lr{padding-bottom:88px;}
+.r-1sncvnh{transform:translateZ(0px);}
+.r-1sxrcry{background-size:auto;}
+.r-1t2qqvi{flex-basis:50%;}
+.r-1t7uo4s{object-fit:cover;}
+.r-1t8m4kl{text-shadow:0px 0px 3px rgba(36,42,49,1.00);}
+.r-1tazni7{cursor:not-allowed;}
+.r-1tpn5c{background-color:rgba(194,217,255,1.00);}
+.r-1ts5s6y{aspect-ratio:1.7777777777777777;}
+.r-1ttybm1{border-top-color:rgba(45,50,58,1.00);}
+.r-1ty4vvm{left:40px;}
+.r-1tymxbh{box-shadow:5px 0px 7px rgba(36,42,49,0.60);}
+.r-1u62nw6{border-right-color:rgba(61,174,43,1.00);}
+.r-1u8kdu{bottom:24px;}
+.r-1ua3vzd{background-color:rgba(223,255,240,1.00);}
+.r-1ub1aon{transform:translateY(100%);}
+.r-1udbk01{text-overflow:ellipsis;}
+.r-1ufdtu9{background-image:linear-gradient(270deg, #e3e8ed 10%, #f5f7f9, #e3e8ed 90%);}
+.r-1ufr4wv{z-index:9;}
+.r-1ug9s38{box-shadow:inset 0px 0px 0px 1px #374151;}
+.r-1ui5ee8{font-size:32px;}
+.r-1ul06mb{margin-left:32px;}
+.r-1ulgld5{color:rgba(255,123,114,1.00);}
+.r-1uql0sn{top:-1.2em;}
+.r-1ur4h4l{bottom:-16px;}
+.r-1ur9v65{padding-top:40px;}
+.r-1ut4w64{margin-bottom:-1px;}
+.r-1uwte3a{padding-bottom:40px;}
+.r-1uypc71{animation-timing-function:ease-in;}
+.r-1v4p587{border-bottom-color:rgba(24,28,31,1.00);}
+.r-1v6e3re{min-width:48px;}
+.r-1v7sw2p{background-size:50% 80px;}
+.r-1vamr63{max-width:720px;}
+.r-1vckr1u{background-color:rgba(245,247,249,1.00);}
+.r-1vco6b3{max-width:830px;}
+.r-1vex5ub{color:rgba(68,47,200,1.00);}
+.r-1vo7ria{color:rgba(38,98,215,1.00);}
+.r-1vutw0s{background-color:rgba(103,6,12,1.00);}
+.r-1vz48go{background-image:radial-gradient(rgba(255, 255, 255, 0.1), #181c1f);}
+.r-1vzi8xi{vertical-align:middle;}
+.r-1w2pmg{height:0px;}
+.r-1w6e6rj{flex-wrap:wrap;}
+.r-1wb8bfx{text-decoration-thickness:2px;}
+.r-1wbh5a2{flex-shrink:1;}
+.r-1wezhl{margin-left:80px;}
+.r-1wfhzrg{height:120px;}
+.r-1wrb965{color:rgba(143,224,130,1.00);}
+.r-1wtj0ep{justify-content:space-between;}
+.r-1wv73ep{align-self:baseline;}
+.r-1ww30s9{max-width:30px;}
+.r-1wyvozj{left:50%;}
+.r-1wyyakw{z-index:-1;}
+.r-1wzrnnt{margin-top:16px;}
+.r-1x35g6{font-size:24px;}
+.r-1xbve24{height:6px;}
+.r-1xcajam{position:fixed;}
+.r-1xnzce8{-moz-user-select:text;-webkit-user-select:text;user-select:text;}
+.r-1xoqk23{background-color:rgba(68,47,200,1.00);}
+.r-1y14msn{border-bottom-color:rgba(55,65,81,1.00);}
+.r-1y9xkqr{left:8%;}
+.r-1yb8zos{background-color:rgba(162,169,185,1.00);}
+.r-1ybp48z{background-image:linear-gradient(90deg, #cc3131, #b41a1a);}
+.r-1ygmrgt{padding-top:24px;}
+.r-1ylffjs{-webkit-text-decoration-style:dotted;text-decoration-style:dotted;}
+.r-1yv4afn{border-top-color:rgba(227,232,237,1.00);}
+.r-1yvhtrz{width:32px;}
+.r-1yxedwg{top:8px;}
+.r-1yyzdbt{border-left-color:rgba(227,232,237,1.00);}
+.r-23aq58{border-right-color:rgba(204,49,49,1.00);}
+.r-257lmc{width:1180px;}
+.r-285fr0{min-width:16px;}
+.r-29dh1f{background-image:linear-gradient(90deg, #eceff1, #e3e8ed);}
+.r-2awvau{min-width:-webkit-max-content;min-width:-moz-max-content;min-width:max-content;}
+.r-2eszeu::-webkit-scrollbar{display:none}
+.r-2eszeu{scrollbar-width:none;}
+.r-2fm7cc{color:rgba(139,148,158,1.00);}
+.r-2fw26j{outline-offset:0px;}
+.r-2jelyo{background-color:rgba(24,28,31,1.00);}
+.r-2jxp4q{background-color:rgba(34,39,46,1.00);}
+.r-2kxcpj{inset:0px;}
+.r-2l1l37{color:rgba(61,174,43,1.00);}
+.r-2llsf{min-height:100%;}
+.r-2o02ov{margin-top:40px;}
+.r-2tavb8{background-color:rgba(0,0,0,0.60);}
+.r-2zpn8w{-webkit-break-inside:avoid;break-inside:avoid;}
+.r-30o5oe{-moz-appearance:none;-ms-appearance:none;-webkit-appearance:none;appearance:none;}
+.r-30qeir{bottom:-4px;}
+.r-36ujnk{font-style:italic;}
+.r-37tt59{line-height:32px;}
+.r-3da1kt{height:8px;}
+.r-3dgjpp{border-top-color:rgba(36,42,49,1.00);}
+.r-3hw5f6{color:rgba(149,56,0,1.00);}
+.r-3mc0re{right:8px;}
+.r-3o833n{background-color:rgba(251,232,240,1.00);}
+.r-3pxcvb{border-bottom-color:rgba(255,255,255,1.00);}
+.r-3s2u2q{white-space:nowrap;}
+.r-417010{z-index:0;}
+.r-432wen{width:3px;}
+.r-44c749{border-bottom-left-radius:7px;}
+.r-493a2x{width:680px;}
+.r-4d76ec{height:200px;}
+.r-4dj0k7{box-shadow:0px 1px 2px rgba(0,0,0,0.12);}
+.r-4gszlv{background-size:cover;}
+.r-4jz4xt{background-image:linear-gradient(90deg, #374151, #374151);}
+.r-4v7adb{height:5px;}
+.r-5cpxsl{stroke-width:3;}
+.r-5fb4cz{background-color:rgba(172,233,164,1.00);}
+.r-5is6sd{max-width:460px;}
+.r-5kkj8d{border-top-width:1px;}
+.r-5ks0hp{right:3.5px;}
+.r-5kx3fr{page-break-inside:avoid;}
+.r-5oul0u{margin-bottom:8px;}
+.r-5soawk{width:10px;}
+.r-5xr8s6{outline-width:2px;}
+.r-60emj1{background-color:rgba(255,204,203,1.00);}
+.r-61z16t{margin-right:0px;}
+.r-633pao{pointer-events:none!important;}
+.r-6dt33c{opacity:1;}
+.r-6k4xqk{margin-top:-40px;}
+.r-6t5ypu{border-bottom-left-radius:4px;}
+.r-6taxm2:-ms-input-placeholder{color:var(--placeholderTextColor);opacity:1;}
+.r-6taxm2::-moz-placeholder{color:var(--placeholderTextColor);opacity:1;}
+.r-6taxm2::-webkit-input-placeholder{color:var(--placeholderTextColor);opacity:1;}
+.r-6taxm2::placeholder{color:var(--placeholderTextColor);opacity:1;}
+.r-6uxfom{margin-left:24px;}
+.r-6wscbn{max-width:252px;}
+.r-73dpzl{border-top-color:rgba(245,247,249,1.00);}
+.r-7b7h2f{left:100%;}
+.r-7cikom{font-size:inherit;}
+.r-7l9xyp{background-color:rgba(255,255,255,0.20);}
+.r-7q8q6z{cursor:default;}
+.r-7xmw5f{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;}
+.r-81rbui{animation-name:r-1ak6360;}
+.r-855088{border-left-color:rgba(0,0,0,0.00);}
+.r-86h6oi{color:rgba(32,58,27,1.00);}
+.r-88pszg{margin-right:16px;}
+.r-8akbws{-webkit-box-orient:vertical;}
+.r-8d26hk{margin-bottom:40px;}
+.r-8hc5te{width:6px;}
+.r-8v5hsd{color:rgba(126,231,135,1.00);}
+.r-9030i9{box-shadow:0px 4px 10px rgba(0,0,0,0.99);}
+.r-92ng3h{width:1px;}
+.r-934yyj{padding-left:34px;}
+.r-9358xi{background-color:rgba(35,131,226,0.14);}
+.r-95jzfe{padding-top:16px;}
+.r-97e31f{padding-bottom:env(safe-area-inset-bottom);}
+.r-97prym{flex-basis:16px;}
+.r-99m41f{color:rgba(110,119,129,1.00);}
+.r-9aemit{padding-right:0px;}
+.r-9ji8r7{transform:translateY(0%);}
+.r-9jpwak{min-width:auto;}
+.r-9z1w0z{left:28px;}
+.r-a21fva{box-shadow:0px -1px 2px rgba(0,0,0,0.69);}
+.r-a2tzq0{justify-content:space-around;}
+.r-a5pmau{margin-right:2px;}
+.r-adacv{min-height:64px;}
+.r-adyw6z{font-size:20px;}
+.r-ah5dr5>*{pointer-events:none;}
+.r-ah5dr5{pointer-events:auto!important;}
+.r-ak0haq{color:rgba(121,192,255,1.00);}
+.r-aqxs90{-moz-transition:opacity 500ms ease-in, z-index 1000ms ease-in;-webkit-transition:opacity 500ms ease-in, z-index 1000ms ease-in;transition:opacity 500ms ease-in, z-index 1000ms ease-in;}
+.r-ar5de{height:112px;}
+.r-b3pvzv{left:-63px;}
+.r-b4cb4{max-height:440px;}
+.r-b88u0q{font-weight:700;}
+.r-bcqeeo{min-width:0px;}
+.r-bcycc3{box-shadow:0px -1px 2px rgba(0,0,0,0.12);}
+.r-bgnin{min-width:150px;}
+.r-bnwqim{position:relative;}
+.r-bsjocg{@media print:[object Object];}
+.r-bta5j5{right:40px;}
+.r-buy8e9{overflow-y:hidden;}
+.r-bv2aro{padding-left:env(safe-area-inset-left);}
+.r-bxaprw{border-top-left-radius:7px;}
+.r-c68hjy{color:rgba(161,161,161,1.00);}
+.r-c8fpu0{background-color:rgba(0,136,71,1.00);}
+.r-cdhzog{padding-right:80px;}
+.r-ceakki{border-right-color:rgba(245,247,249,1.00);}
+.r-cpa5s6{scroll-snap-align:start;}
+.r-cqilzk{height:400px;}
+.r-d822y2{color:rgba(5,80,174,1.00);}
+.r-deolkf{box-sizing:border-box;}
+.r-dflpy8{height:1.2em;}
+.r-dkge59{background-color:rgba(170,184,194,1.00);}
+.r-dnmrzs{max-width:100%;}
+.r-dse9kg{outline-style:auto;}
+.r-dvzd6p{right:-1px;}
+.r-dvzwsg{border-left-color:rgba(211,220,228,1.00);}
+.r-dwliz8{border-left-width:2px;}
+.r-e1k2in{right:16px;}
+.r-e9uq0i{animation-duration:1200ms;}
+.r-ea455c{border:none;}
+.r-eafdt9{transition-duration:0.15s;}
+.r-ehq7j7{background-size:contain;}
+.r-epq5cr{height:2px;}
+.r-eqo98v{top:24px;}
+.r-eqz5dr{flex-direction:column;}
+.r-ero68b{min-height:40px;}
+.r-eu3ka{height:40px;}
+.r-f5cfds{min-height:160px;}
+.r-fdjqy7{text-align:left;}
+.r-flmpir{border-bottom-color:rgba(40,49,67,1.00);}
+.r-fnigne{border-right-width:0px;}
+.r-fpub7{color:rgba(0,0,0,0.00);}
+.r-g3mlsw{animation-name:r-t2lo5v;}
+.r-gay1rn{border-right-color:rgba(34,39,46,1.00);}
+.r-gg6oyi{font-family:gitbook-content-font,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+.r-ggadg3{left:-2px;}
+.r-givd4m{left:-5px;}
+.r-gl891g{min-width:420px;}
+.r-gtdqiz{position:-webkit-sticky;position:sticky;}
+.r-gu0qjt{padding-left:32px;}
+.r-gxnn5r{border-left-width:0px;}
+.r-gxopl6{left:316px;}
+.r-gy4na3{padding-left:0px;}
+.r-gys0vz{color:rgba(0,136,71,1.00);}
+.r-h1b427{width:225px;}
+.r-h2mvr{min-width:8px;}
+.r-h2q2x{transform:scaleX(-1);}
+.r-h3s6tt{height:48px;}
+.r-h7ga17{background-color:rgba(43,46,57,1.00);}
+.r-h7gdob{color:currentColor;}
+.r-ha54is{icon-color:#a2a9b9;}
+.r-hbpseb{line-height:22px;}
+.r-hd655f{color:rgba(162,169,185,1.00);}
+.r-homxoj{color:inherit;}
+.r-hq6u89{left:92%;}
+.r-htfu76{margin-left:-8px;}
+.r-hu79xy{min-width:196px;}
+.r-hvns9x{max-width:400px;}
+.r-hxflta{padding-right:env(safe-area-inset-right);}
+.r-i023vh{padding-right:16px;}
+.r-i7h7g2{-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);}
+.r-i8xx8x{color:rgba(207,34,46,1.00);}
+.r-ia06lx{background-color:rgba(115,92,255,1.00);}
+.r-ibjss6{background-color:rgba(136,153,168,1.00);}
+.r-icoktb{opacity:0.5;}
+.r-ifefl9{min-height:0px;}
+.r-ihd41t{border:1px solid #374151;}
+.r-iphfwy{padding-bottom:4px;}
+.r-ipm5af{top:0px;}
+.r-iqs06e{background-image:radial-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 1));}
+.r-ir6n1k{border-top-right-radius:6px;}
+.r-ixzivm{@media print:[object Object];}
+.r-iyfy8q{width:auto;}
+.r-j300sb{animation-name:r-1rx4pb;}
+.r-jfrpv2{color:rgba(130,80,223,1.00);}
+.r-jkjf35{border-left-color:rgba(61,174,43,1.00);}
+.r-jn0m22{top:54px;}
+.r-jn5ml{right:-5px;}
+.r-jvuzdy{top:-5px;}
+.r-jwli3a{color:rgba(255,255,255,1.00);}
+.r-jxjwwx{left:24px;}
+.r-k200y{align-self:flex-start;}
+.r-k923pl{background-color:rgba(218,212,255,1.00);}
+.r-kcufgn{cursor:ew-resize;}
+.r-key0ze{height:240px;}
+.r-kicko2{border-top-left-radius:4px;}
+.r-kls4rr{padding-right:40px;}
+.r-knv0ih{margin-top:8px;}
+.r-kquydp{right:-4px;}
+.r-ky29hr{bottom:2px;}
+.r-l0gwng{width:200px;}
+.r-l13dpy{z-index:200;}
+.r-l27s25{background-color:rgba(204,207,212,1.00);}
+.r-l9hqf4{box-shadow:0px 1px 1px rgba(0,0,0,0.69);}
+.r-l9st2p{-webkit-text-decoration-color:rgba(162,169,185,1.00);text-decoration-color:rgba(162,169,185,1.00);}
+.r-labphf{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;}
+.r-lchren{margin-right:auto;}
+.r-lk1fr1{icon-color:#8899a8;}
+.r-lltvgl{overflow-x:auto;}
+.r-lqms97{margin-left:-1px;}
+.r-lrsllp{width:24px;}
+.r-lrvibr{-moz-user-select:none;-webkit-user-select:none;user-select:none;}
+.r-lx1l9k{background-image:radial-gradient(rgba(255, 255, 255, 0.1), #ffffff);}
+.r-m0vln2{border-left-color:rgba(43,46,57,1.00);}
+.r-m2pi6t{padding-left:4px;}
+.r-m5arl1{width:2px;}
+.r-mabqd8{height:32px;}
+.r-majxgm{font-weight:500;}
+.r-mbgqwd{margin-right:24px;}
+.r-me5xia{height:104px;}
+.r-mfh4gg{scroll-snap-type:x mandatory;}
+.r-mfzc6t{background-color:rgba(0,0,0,0.10);}
+.r-mhe3cw{z-index:10;}
+.r-ms8t9i{border-left-width:3px;}
+.r-mwitap{pointer-event:none;}
+.r-n9piew{min-height:260px;}
+.r-na6qhi{;}
+.r-ng8e2f{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;}
+.r-njp1lv{padding-top:1px;}
+.r-nkouq2{box-shadow:-5px 0px 7px rgba(36,42,49,0.60);}
+.r-notknq{border-top-right-radius:4px;}
+.r-nvplwv{animation-timing-function:ease-out;}
+.r-nvvorq{top:3.5px;}
+.r-nwxazl{line-height:40px;}
+.r-nzcix3{border-bottom-color:rgba(227,232,237,1.00);}
+.r-o8yidv{border-top-left-radius:6px;}
+.r-o9xkwf{top:2px;}
+.r-oanuwj{width:268px;}
+.r-obd0qt{align-items:flex-end;}
+.r-onxxid{background-color:rgba(27,30,33,0.77);}
+.r-op3p1c{width:520px;}
+.r-orgf3d{opacity:0;}
+.r-ou6ah9{border-top-left-radius:0px;}
+.r-oucylx{border-bottom-color:rgba(0,0,0,0.00);}
+.r-oz83uh{box-shadow:0px 1px 1px rgba(0,0,0,0.12);}
+.r-p1pxzi{margin-bottom:0px;}
+.r-pex7a0{color:rgba(130,7,30,1.00);}
+.r-pi8zqv{box-shadow:0px 0px 7px rgba(0,0,0,0.04);}
+.r-pm2fo{border-bottom-left-radius:0px;}
+.r-pm9dpa{max-height:100%;}
+.r-puj83k{padding-left:24px;}
+.r-py1axk{border-bottom-right-radius:7px;}
+.r-q4m81j{text-align:center;}
+.r-qd89wu{max-width:900px;}
+.r-qklmqi{border-bottom-width:1px;}
+.r-ql8eny{min-height:200px;}
+.r-qn3fzs{padding-bottom:24px;}
+.r-qyrhsv{border-right-color:rgba(40,49,67,1.00);}
+.r-r1s0sa{background-color:rgba(255,235,233,1.00);}
+.r-r7ey0d{background-color:rgba(218,212,255,0.50);}
+.r-r9hte5{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.r-rs94m5{background-image:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmVyc2lvbj0iMS4xIgogICB2aWV3Qm94PSIwIDAgMSAxIgogICBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWluWU1pbiBtZWV0Ij4KICA8cGF0aAogICAgIGQ9Ik0gMC4wNDAzODA1OSwwLjYyNjc3NjcgMC4xNDY0NDY2MSwwLjUyMDcxMDY4IDAuNDI5Mjg5MzIsMC44MDM1NTMzOSAwLjMyMzIyMzMsMC45MDk2MTk0MSB6IE0gMC4yMTcxNTcyOSwwLjgwMzU1MzM5IDAuODUzNTUzMzksMC4xNjcxNTcyOSAwLjk1OTYxOTQxLDAuMjczMjIzMyAwLjMyMzIyMzMsMC45MDk2MTk0MSB6IgogICAgIGlkPSJyZWN0Mzc4MCIKICAgICBzdHlsZT0iZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTpub25lIiAvPgo8L3N2Zz4K");}
+.r-rwqe4o{width:48px;}
+.r-s09aw7{background-image:linear-gradient(to left, #735cff, rgb(109 28 169), rgb(96 104 191), #008847, #FFD139, #b95e04, #d33d3d);}
+.r-s0e3za{padding-left:80px;}
+.r-sa2ff0{min-height:100vh;}
+.r-sfbmgh{z-index:9999;}
+.r-sga3zk{height:64px;}
+.r-sgscqh{width:250px;}
+.r-t12b5v{border-top-right-radius:0px;}
+.r-t3lkjx{background-color:rgba(228,79,137,1.00);}
+.r-t9hbny{background-color:rgba(211,61,61,1.00);}
+.r-tceitz{left:16px;}
+.r-tni569{background-color:rgba(11,79,47,1.00);}
+.r-tskmnb{padding-top:8px;}
+.r-tsynxw{text-transform:uppercase;}
+.r-tw6int{border-top-color:rgba(61,174,43,1.00);}
+.r-ty80ws{max-width:1510px;}
+.r-u529wo{transform:translateY(-2px);}
+.r-u6sd8q{background-repeat:no-repeat;}
+.r-u8s1d{position:absolute;}
+.r-u92y06{background-color:rgba(255,165,0,1.00);}
+.r-u9bbvc{;}
+.r-u9z937{bottom:80px;}
+.r-ubezar{font-size:16px;}
+.r-ud0q2t{letter-spacing:1px;}
+.r-ufs8t{background-clip:text;}
+.r-uibjmv{font-family:gitbook-code-font, Menlo, monospace;}
+.r-upfvwg{box-shadow:0px 0px 1px rgb(255 255 255 / 30%);}
+.r-ur2o52{border-bottom-color:rgba(61,174,43,1.00);}
+.r-uweo6c{bottom:136px;}
+.r-ux9zog{background-color:rgba(51,61,85,1.00);}
+.r-v2u3o6{right:4px;}
+.r-v5byei{top:-12px;}
+.r-vjwmdu{max-width:75px;}
+.r-vlcob{color:rgba(24,28,31,1.00);}
+.r-vq47rg{color:rgba(211,61,61,1.00);}
+.r-vvn4in{background-position:center;}
+.r-w0va4e{margin-right:40px;}
+.r-w9n8ly{transition-delay:200ms;}
+.r-wc24c3{z-index:20;}
+.r-wech8c{max-width:1280px;}
+.r-wgabs5{border-bottom-width:2px;}
+.r-wk8lta{padding-top:0px;}
+.r-ws9h79{left:4px;}
+.r-wwqw7s{left:-1px;}
+.r-wy61xf{height:72px;}
+.r-x1dlf0{max-width:200px;}
+.r-x3cy2q{background-size:100% 100%;}
+.r-x3dn3n{height:196px;}
+.r-xb2eav{font-size:40px;}
+.r-xd6kpl{padding-bottom:8px;}
+.r-xifl00{left:-4px;}
+.r-xky0vn{background-color:rgba(104,60,17,1.00);}
+.r-xnn892{background-color:rgba(218,251,225,1.00);}
+.r-xx3c9p{animation-name:r-imtty0;}
+.r-xzortm{margin-right:-16px;}
+.r-y3rmyz{width:120px;}
+.r-ye2ihm{background-image:none;}
+.r-yh6aho{background-image:linear-gradient(270deg, #2b2e39 10%, #22272e, #2b2e39 90%);}
+.r-yj30ev{right:24px;}
+.r-yrgyi6{white-space:pre;}
+.r-ywxogp{color:rgba(115,92,255,1.00);}
+.r-z3s97b{border-right-color:rgba(43,46,57,1.00);}
+.r-z80fyv{height:20px;}
+.r-z9jf92{color:rgba(234,242,247,1.00);}
+.r-zchlnj{right:0px;}
+.r-zh076v{height:100vh;}
+.r-zits6j{right:8%;}
+.r-zmljjp{border-bottom-right-radius:0px;}
+.r-ztyd71{background-color:rgba(0,0,0,0.20);}
+@-webkit-keyframes r-1ak6360{0%{background-position-x:0%;}100%{background-position-x:100%;}}
+@-webkit-keyframes r-1hunrpy{0%{transform:translateY(100%);}100%{transform:translateY(0%);}}
+@-webkit-keyframes r-1rx4pb{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
+@-webkit-keyframes r-9p3sdl{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+@-webkit-keyframes r-imtty0{0%{opacity:0;}100%{opacity:1;}}
+@-webkit-keyframes r-ndfo3d{0%{transform:translateY(0%);}100%{transform:translateY(100%);}}
+@-webkit-keyframes r-t2lo5v{0%{opacity:1;}100%{opacity:0;}}
+@keyframes r-1ak6360{0%{background-position-x:0%;}100%{background-position-x:100%;}}
+@keyframes r-1hunrpy{0%{transform:translateY(100%);}100%{transform:translateY(0%);}}
+@keyframes r-1rx4pb{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
+@keyframes r-9p3sdl{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+@keyframes r-imtty0{0%{opacity:0;}100%{opacity:1;}}
+@keyframes r-ndfo3d{0%{transform:translateY(0%);}100%{transform:translateY(100%);}}
+@keyframes r-t2lo5v{0%{opacity:1;}100%{opacity:0;}}
+[stylesheet-group="10"]{}
+[data-rnwrdesktop-18u37iz]{flex-direction:row;}
+[data-rnwrdesktop-1glkqn6-h3s6tt]{height:48px;width:80px;}
+[data-rnwrdesktop-1hy97zq-cdhzog-s0e3za-1a15hzg]{padding-left:80px;padding-right:380px;padding-top:80px;}
+[data-rnwrdesktop-1jkjb]{margin-left:8px;}
+[data-rnwrdesktop-1kb76zh]{margin-right:8px;}
+[data-rnwrdesktop-1ph75f1]{height:80px;}
+[data-rnwrdesktop-1uwte3a]{padding-bottom:40px;}
+[data-rnwrdesktop-1wezhl]{margin-left:80px;}
+[data-rnwrdesktop-cdhzog-]{padding-right:80px;}
+[data-rnwrdesktop-cdhzog]{padding-right:80px;}
+[data-rnwrdesktop-eu3ka]{height:40px;}
+[data-rnwrdesktop-fnigne]{border-right-width:0px;}
+[data-rnwrdesktop-gg6oyi-adyw6z-135wba7-b88u0q]{font-family:gitbook-content-font,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;line-height:24px;}
+[data-rnwrdesktop-gg6oyi-xb2eav-1dn12g7-b88u0q]{font-family:gitbook-content-font,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:40px;font-weight:700;line-height:48px;}
+[data-rnwrdesktop-hidden]{display: none;}
+[data-rnwrdesktop-iyfy8q-1qhn6m8-11g3r6m-1h0z5md]{justify-content:flex-start;padding-left:16px;padding-right:24px;width:auto;}
+[data-rnwrdesktop-sqhxed]{width:max(220px, calc(100vw - max(300px, calc((100vw - 910px) / 2 - 0px)) - 750px - 80px - 300px - 0px));}
+[data-rnwrdesktop-visible]{display: flex;}
+[stylesheet-group="11"]{}
+@media (max-width: 1024px) and (max-width: 9999999.494850524510111312253100114px) { [data-rnwr1024-eqz5dr] {flex-direction:column;} }
+@media (max-width: 1024px) and (max-width: 9999999.49485052454910510212011610048px) { [data-rnwr1024-1ifxtd0] {margin-bottom:16px;} }
+@media (max-width: 1430px) and (max-width: 9999999.4952514845104105100100101110px) { [data-rnwr1430-hidden] {display: none;} }
+@media (max-width: 1430px) and (max-width: 9999999.495251484511810511510598108101px) { [data-rnwr1430-visible] {display: flex;} }
+@media (max-width: 1430px) and (max-width: 9999999.49525148454955555510299105px) { [data-rnwr1430-1777fci] {justify-content:center;} }
+[stylesheet-group="12"]{}
+@media (max-width: 700px) and (max-width: 9999999.5548484510111312253100114px) { [data-rnwr700-eqz5dr] {flex-direction:column;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845103103541111211054511798101122971144549515311998975545491071021141155557px) { [data-rnwr700-gg6oyi-ubezar-135wba7-1kfrs79] {font-family:gitbook-content-font,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:24px;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845103103541111211054549117105531011015645110119120971221084598565611748113px) { [data-rnwr700-gg6oyi-1ui5ee8-nwxazl-b88u0q] {font-family:gitbook-content-font,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:32px;font-weight:700;line-height:40px;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845104105100100101110px) { [data-rnwr700-hidden] {display: none;} }
+@media (max-width: 700px) and (max-width: 9999999.554848451051211021215611345103121521109751451054850511181044549119981045397504549104481225310910045px) { [data-rnwr700-iyfy8q-gy4na3-i023vh-1wbh5a2-1h0z5md-] {flex-shrink:1;justify-content:flex-start;padding-left:0px;padding-right:16px;width:auto;} }
+@media (max-width: 700px) and (max-width: 9999999.554848451151039751122107px) { [data-rnwr700-sga3zk] {height:64px;} }
+@media (max-width: 700px) and (max-width: 9999999.5548484511810511510598108101px) { [data-rnwr700-visible] {display: flex;} }
+@media (max-width: 700px) and (max-width: 9999999.554848454910355102105109108px) { [data-rnwr700-1g7fiml] {height:30px;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845491111195412210412045px) { [data-rnwr700-1ow6zhx-] {margin-left:16px;} }
+@media (max-width: 700px) and (max-width: 9999999.554848454911111954122104120px) { [data-rnwr700-1ow6zhx] {margin-left:16px;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845491195410154114106454955555510299105px) { [data-rnwr700-1w6e6rj-1777fci] {flex-wrap:wrap;justify-content:center;} }
+@media (max-width: 700px) and (max-width: 9999999.5548484549511085011652103px) { [data-rnwr700-13l2t4g] {border-right-width:1px;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845505653102114484510512110212156113451011175110797px) { [data-rnwr700-285fr0-iyfy8q-eu3ka] {height:40px;min-width:16px;width:auto;} }
+@media (max-width: 700px) and (max-width: 9999999.554848455449122495411645px) { [data-rnwr700-61z16t-] {margin-right:0px;} }
+@media (max-width: 700px) and (max-width: 9999999.5548484557531061221021014549113104110541095645105485051118104px) { [data-rnwr700-95jzfe-1qhn6m8-i023vh] {padding-left:16px;padding-right:16px;padding-top:16px;} }
+@media (max-width: 910px) and (max-width: 9999999.5749484510111312253100114px) { [data-rnwr910-eqz5dr] {flex-direction:column;} }
+@media (max-width: 910px) and (max-width: 9999999.5749484549491191141051201194510711011848105104px) { [data-rnwr910-11wrixw-knv0ih] {margin-left:0px;margin-top:8px;} }
+@media (max-width: 910px) and (max-width: 9999999.5749484554491224954116455311111710848117px) { [data-rnwr910-61z16t-5oul0u] {margin-bottom:8px;margin-right:0px;} }
+[stylesheet-group="13"]{}
+@media (max-width: 700px) and (max-width: 9999999.55484845105485051118104454955555510299105px) { [data-rnwr700-i023vh-1777fci] {justify-content:center;padding-right:16px;} }
+@media (max-width: 700px) and (max-width: 9999999.55484845105485051118104px) { [data-rnwr700-i023vh] {padding-right:16px;} }
+[stylesheet-group="20"]{}
+[data-rnwi-1rasi3h-]{color:rgba(136,153,168,1.00);}
+[data-rnwi-handle="link"] [data-rnwilink--2l1l37-]{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi--1ghhsy9-hover-focus]:hover, body:not(.dragging) [data-rnwi--1ghhsy9-hover-focus]:focus{color:rgba(52,109,219,1.00);}
+body:not(.dragging) [data-rnwi--2l1l37-hover-focus]:hover, body:not(.dragging) [data-rnwi--2l1l37-hover-focus]:focus{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi--tp2cfv--focus]:focus{border-bottom-color:rgba(61,174,43,1.00);border-left-color:rgba(61,174,43,1.00);border-right-color:rgba(61,174,43,1.00);border-top-color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi-1b00too-hover]:hover{background-color:rgba(236,239,241,1.00);}
+body:not(.dragging) [data-rnwi-1vckr1u-hover-focus]:hover, body:not(.dragging) [data-rnwi-1vckr1u-hover-focus]:focus{background-color:rgba(245,247,249,1.00);}
+body:not(.dragging) [data-rnwi-5xr8s6-dse9kg-1rbj2e8-2fw26j-focus-visible]:focus-visible{outline-color:#f5f7f9;outline-offset:0px;outline-style:auto;outline-width:2px;}
+body:not(.dragging) [data-rnwi-5xr8s6-dse9kg-2fw26j-15n4387-focus-visible]:focus-visible{outline-color:#2662d7;outline-offset:0px;outline-style:auto;outline-width:2px;}
+body:not(.dragging) [data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible]:focus-visible{outline-color:#386631;outline-offset:0px;outline-style:auto;outline-width:2px;}
+body:not(.dragging) [data-rnwi-h7ga17-hover-focus]:hover, body:not(.dragging) [data-rnwi-h7ga17-hover-focus]:focus{background-color:rgba(43,46,57,1.00);}
+body:not(.dragging) [data-rnwi-handle="BaseCard"]:hover [data-rnwibasecard--2l1l37-hover-focus], body:not(.dragging) [data-rnwi-handle="BaseCard"]:focus [data-rnwibasecard--2l1l37-hover-focus]{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi-handle="BaseCard"]:hover [data-rnwibasecard--2l1l37-hover]{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi-handle="button"]:hover [data-rnwibutton--2l1l37-hover-focus], body:not(.dragging) [data-rnwi-handle="button"]:focus [data-rnwibutton--2l1l37-hover-focus]{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi-handle="button"]:hover [data-rnwibutton-1bnj018-hover-focus], body:not(.dragging) [data-rnwi-handle="button"]:focus [data-rnwibutton-1bnj018-hover-focus]{color:rgba(92,105,117,1.00);}
+body:not(.dragging) [data-rnwi-handle="button"]:hover [data-rnwibutton-1f2v84d-hover-focus], body:not(.dragging) [data-rnwi-handle="button"]:focus [data-rnwibutton-1f2v84d-hover-focus]{color:rgba(204,207,212,1.00);}
+body:not(.dragging) [data-rnwi-handle="button"]:hover [data-rnwibutton-jwli3a-hover-focus], body:not(.dragging) [data-rnwi-handle="button"]:focus [data-rnwibutton-jwli3a-hover-focus]{color:rgba(255,255,255,1.00);}
+body:not(.dragging) [data-rnwi-handle="link"]:hover [data-rnwilink--86h6oi-1ddef8g-hover]{-webkit-text-decoration-line:underline;color:rgba(32,58,27,1.00);text-decoration-line:underline;}
+body:not(.dragging) [data-rnwi-handle="nearest"]:hover [data-rnwinearest--1ghhsy9-hover-focus], body:not(.dragging) [data-rnwi-handle="nearest"]:focus [data-rnwinearest--1ghhsy9-hover-focus]{color:rgba(52,109,219,1.00);}
+body:not(.dragging) [data-rnwi-handle="nearest"]:hover [data-rnwinearest--2l1l37-hover-focus], body:not(.dragging) [data-rnwi-handle="nearest"]:focus [data-rnwinearest--2l1l37-hover-focus]{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi-handle="nearest"]:hover [data-rnwinearest--2l1l37-hover]{color:rgba(61,174,43,1.00);}
+body:not(.dragging) [data-rnwi-handle="nearest"]:hover [data-rnwinearest-z9jf92-hover-focus], body:not(.dragging) [data-rnwi-handle="nearest"]:focus [data-rnwinearest-z9jf92-hover-focus]{color:rgba(234,242,247,1.00);}
+body:not(.dragging) [data-rnwi-m2nopt-hover-focus]:hover, body:not(.dragging) [data-rnwi-m2nopt-hover-focus]:focus{border-bottom-color:rgba(43,46,57,1.00);border-left-color:rgba(43,46,57,1.00);border-right-color:rgba(43,46,57,1.00);border-top-color:rgba(43,46,57,1.00);}
+body:not(.dragging) [data-rnwi-u529wo-aq1qub-c1zw6o-1khlhp8-1cut0bx-na6qhi--hover]:hover{box-shadow:0px 12px 13px rgba(0,0,0,0.02);transform:translateY(-2px);}</style>
+                <style>
+                    html,
+                    body {
+                        -webkit-font-smoothing: antialiased;
+                        text-rendering: optimizelegibility;
+                        width: 100%;
+                        min-height: 100vh;
+                        user-select: none;
+                        outline: none;
+                        position: relative;
+                    }
+                    /* Avoid Chrome to see Safari hack */
+                    @supports (-webkit-touch-callout: none) {
+                        html,
+                        body,
+                        .gitbook-root {
+                            /* The hack for Safari */
+                            min-height: -webkit-fill-available;
+                        }
+                    }
+                    .gitbook-root {
+                        display: flex;
+                        min-height: 100vh;
+                    }
+                </style>
+            
+        <script type="text/javascript" defer src="https://cdn.iframe.ly/embed.js" async></script>
+        <script
+            type="text/javascript"
+            defer
+            src="https://cdn.polyfill.io/v2/polyfill.js?features=Intl.~locale.en"
+            crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <div class="gitbook-root"><div class="css-175oi2r r-13awgt0 r-12vffkv"><div class="css-175oi2r r-13awgt0 r-12vffkv"><!--$--><header data-rnwrdesktop-1ph75f1="true" data-rnwr700-sga3zk="true" class="r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-qklmqi r-gtdqiz r-ipm5af r-184en5c r-19z6dmj r-ur2o52 r-18u37iz r-1awozwy"><div class="css-175oi2r r-6koalj r-18u37iz r-1jgb5lz r-ty80ws r-1pn2ns4 r-13qz1uu r-1awozwy"><div aria-label="Show Table of Content" role="button" data-rnwrdesktop-hidden="true" data-rnwr700-visible="true" data-rnwi-h7ga17-hover-focus="true" data-rnwi-5xr8s6-dse9kg-1rbj2e8-2fw26j-focus-visible="true" data-rnwi-handle="button" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-rs99b7 r-18u37iz r-18kxxzh r-1777fci r-1ny4l3l r-eu3ka r-1f2v84d r-1kb76zh r-18c69zk r-mk0yit r-1aockid" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" data-rnwibutton-1f2v84d-hover-focus="true" data-rnwi-handle="nearest" class="r-h7gdob" style="vertical-align:middle;width:18px;height:18px"><path d="M3 12h18M3 6h18M3 18h18"></path></svg></div><a href="/duo-control/" aria-label="DUO Control System" data-rnwi-5xr8s6-dse9kg-1rbj2e8-2fw26j-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-iyfy8q-1qhn6m8-11g3r6m-1h0z5md="true" data-rnwr700-iyfy8q-gy4na3-i023vh-1wbh5a2-1h0z5md-="true" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s" data-testid="public.headerHomeLink"><div data-rnwrdesktop-eu3ka="true" data-rnwr700-1g7fiml="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1awozwy r-6wscbn"><div data-rnwrdesktop-visible="true" data-rnwr700-hidden="true" class="css-175oi2r"><img alt="" src="https://www.gitbook.com/cdn-cgi/image/width=256,height=40,fit=contain,dpr=1,format=auto/https%3A%2F%2F2589213514-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-M4_pJHI8HTuZFQTNfcy%252Flogo%252FGVy82O8q2ntLl4w66G9K%252FGitBook-Title-Banners-REV-DUO-CONTROL-SYSTEM.png%3Falt%3Dmedia%26token%3De7fdbb16-326c-4c2f-b6c7-a7c0a5d0fd0e" decoding="async" style="max-height:40px;max-width:252px;width:auto;height:auto"/></div><div data-rnwrdesktop-hidden="true" data-rnwr700-visible="true" class="css-175oi2r"><img alt="" src="https://www.gitbook.com/cdn-cgi/image/width=256,height=30,fit=contain,dpr=1,format=auto/https%3A%2F%2F2589213514-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-M4_pJHI8HTuZFQTNfcy%252Flogo%252FGVy82O8q2ntLl4w66G9K%252FGitBook-Title-Banners-REV-DUO-CONTROL-SYSTEM.png%3Falt%3Dmedia%26token%3De7fdbb16-326c-4c2f-b6c7-a7c0a5d0fd0e" decoding="async" style="max-height:30px;max-width:252px;width:auto;height:auto"/></div></div></a><div data-rnwr700-hidden="true" class="css-175oi2r r-18u37iz r-17s6mgv r-1awozwy r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1qhn6m8"></div><div data-rnwrdesktop-visible="true" data-rnwr700-hidden="true" class="css-175oi2r r-1jj8364 r-puj83k r-1pyaxff r-16vg0q1 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div aria-label="Search…" data-rnwi-m2nopt-hover-focus="true" data-rnwi-5xr8s6-dse9kg-1rbj2e8-2fw26j-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-42olwf r-kdyh1x r-rs99b7 r-eu3ka r-13qz1uu r-18u37iz r-1wtj0ep r-1awozwy r-1qhn6m8 r-1pyaxff" style="background-color:rgba(0,0,0,0.15);transition-duration:0.15s"><div class="css-175oi2r r-18u37iz r-1awozwy"><svg viewBox="0 0 24 24" fill="none" preserveAspectRatio="xMidYMid meet" class="r-z9jf92 r-1kb76zh" style="vertical-align:middle;width:14px;height:14px"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 4a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM2 10.5a8.5 8.5 0 1117 0 8.5 8.5 0 01-17 0z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.093 15.093a1 1 0 011.414 0l5.2 5.2a1 1 0 01-1.414 1.414l-5.2-5.2a1 1 0 010-1.414z" fill="currentColor"></path></svg><div dir="auto" data-rnwinearest-z9jf92-hover-focus="true" data-rnwi-handle="nearest" class="css-1rynq56 r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-z9jf92">Search…</div></div><div class="css-175oi2r"><div class="css-175oi2r r-14lw9ot r-z2wwpe r-1472mwg r-s1qlax r-7xmw5f r-18u37iz r-1awozwy"><div dir="auto" class="css-1rynq56 r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-2l1l37">⌃K</div></div></div></div></div><div data-rnwrdesktop-hidden="true" data-rnwr700-visible="true" class="css-175oi2r r-1jj8364 r-puj83k r-1pyaxff"><div aria-label="Search…" role="button" data-rnwi-5xr8s6-dse9kg-1rbj2e8-2fw26j-focus-visible="true" data-rnwi-handle="button" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-rs99b7 r-18u37iz r-18kxxzh r-1777fci r-1ny4l3l r-z2wwpe r-mabqd8 r-z9jf92 r-mk0yit r-1yvhtrz" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" preserveAspectRatio="xMidYMid meet" data-rnwibutton-jwli3a-hover-focus="true" data-rnwi-handle="nearest" class="r-h7gdob" style="vertical-align:middle;width:14px;height:14px"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 4a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM2 10.5a8.5 8.5 0 1117 0 8.5 8.5 0 01-17 0z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.093 15.093a1 1 0 011.414 0l5.2 5.2a1 1 0 01-1.414 1.414l-5.2-5.2a1 1 0 010-1.414z" fill="currentColor"></path></svg></div></div></div></header><div data-rnwrdesktop-hidden="true" data-rnwr700-visible="true" class="css-175oi2r"></div><div data-rnwrdesktop-18u37iz="true" data-rnwr700-eqz5dr="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div data-rnwrdesktop-visible="true" data-rnwr1430-visible="true" data-rnwr700-hidden="true" class="css-175oi2r r-k200y r-14lw9ot r-18ayb63 r-13l2t4g r-12dqhl9 r-1rnoaur r-gtdqiz r-1fo40xd r-18u37iz r-17s6mgv" style="width:max(300px, calc((100vw - 910px) / 2 - 0px))" data-testid="page.desktopTableOfContents"><nav aria-label="Table of contents" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ipicw7 r-eqz5dr"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-puj83k"><div data-rnwrdesktop-hidden="true" data-rnwr700-visible="true" class="css-175oi2r r-14lw9ot r-nzcix3 r-qklmqi r-sga3zk r-1pn2ns4 r-1wtj0ep r-1awozwy r-18u37iz"><div aria-label="Close" role="button" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="button" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-rs99b7 r-18u37iz r-18kxxzh r-1777fci r-1ny4l3l r-z2wwpe r-eu3ka r-1bnj018 r-1kihuf0 r-mk0yit r-1aockid" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" data-rnwibutton--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="r-h7gdob" style="vertical-align:middle;width:18px;height:18px"><path d="M18 6L6 18M6 6l12 12"></path></svg></div></div><div class="css-175oi2r r-150rngu r-eqz5dr r-11yh6sk r-1rnoaur r-1sncvnh r-1ro0kt6 r-16y2uox r-1wbh5a2"><div class="css-175oi2r r-1yzf0co r-1sc18lr"><!--$--><div class="css-175oi2r"><a href="/duo-control/" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Introduction</div></a></div><!--/$--><!--$--><div class="css-175oi2r"><a href="/duo-control/control-hub-gs" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Getting Started with Control Hub</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--><!--$--><div class="css-175oi2r"><a href="/duo-control/driver-hub-gs" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Getting Started with Driver Hub</div></a></div><!--/$--><!--$--><div class="css-175oi2r"><a href="/duo-control/adding-more-motors" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Adding More Motors</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">Troubleshooting the Control System</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/troubleshooting-the-control-system/troubleshooting-the-control-system" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">General Troubleshooting</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/troubleshooting-the-control-system/control-hub-troubleshooting" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Control Hub Troubleshooting</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/troubleshooting-the-control-system/driver-hub-troubleshooting" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Driver Hub Troubleshooting</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/troubleshooting-the-control-system/expansion-hub-troubleshooting" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Expansion Hub Troubleshooting</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/troubleshooting-the-control-system/led-blink-codes" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Status LED Blink Codes</div></a></div><!--/$--></div></div></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">System Overview</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/control-hub-basics" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Control Hub Specifications</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/expansion-hub-basics" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Expansion Hub Specifications</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/driver-hub-specifications" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Driver Hub Specifications</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/port-pinouts" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Port Pinouts</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/protection-features" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Protection Features</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/cables-and-connectors" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Cables and Connectors</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/integrated-sensors" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Integrated Sensors</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/control-system-overview/dimensions" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Dimensions and Important Component Locations</div></a></div><!--/$--></div></div></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">Updating and Managing</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/ch-wifi" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Managing Wi-Fi on the Control Hub</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/rev-hardware-client" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">REV Hardware Client</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/updating-firmware" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Updating Firmware</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/updating-operating-system" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Updating Operating System</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/updating-robot-controller-application" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Updating Robot Controller Application</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/updating-the-driver-hub" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Updating the Driver Hub</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/managing-the-control-system/downloading-log-file" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Accessing Log Files</div></a></div><!--/$--></div></div></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">Programming</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/programming/hello-robot-introduction-to-programming" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Hello Robot - Introduction to Programming</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/programming/hello-robot-configuration" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Hello Robot - Configuration</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/programming/hello-robot-test-bed" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Hello Robot - Test Bed</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/programming/hello-robot-autonomous-robot" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Hello Robot - Robot Control</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/programming/using-encoder-feedback" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Using Encoders</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/programming/android-studio-using-wireless-adb" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Android Studio - Deploying Code Wirelessly</div></a></div><!--/$--></div></div></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">Sensors</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/intro-to-sensors" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Introduction to Sensors</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/digital" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Digital</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/analog" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Analog</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/i2c" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">I2C</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/encoders" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Encoders</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/5v-sensors" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="background-color:rgba(145,224,133,0.10);transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-hbpseb r-2l1l37 r-b88u0q">Using 3rd Party Sensors</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-2l1l37" style="vertical-align:middle;width:16px;height:16px"><path d="M6 9l6 6 6-6"></path></svg></div></a><div class="css-175oi2r r-bnwqim r-1jkjb r-14gqq1x r-5oul0u"><div class="css-175oi2r r-1jkjb"><!--$--><div class="css-175oi2r"><a href="/duo-control/sensors/5v-sensors/sensor-compatibility-chart" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1rasi3h">Sensor Compatibility Chart</div></a></div><!--/$--></div><div class="css-175oi2r r-11vxtcu r-1p0dtai r-1d2f490 r-u8s1d r-ipm5af r-92ng3h"></div></div></div><!--/$--></div></div></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">Useful Links</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="https://docs.revrobotics.com/duo-build/" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">REV DUO Build System</div><div class="css-175oi2r r-1jkjb r-12zb1j4"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" class="r-1rasi3h" style="vertical-align:middle;width:18px;height:18px"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 1.5a.5.5 0 01.5-.5H6v1H2v12h12v-4h1v4.5a.5.5 0 01-.5.5h-13a.5.5 0 01-.5-.5v-13zM9 1h5.5a.5.5 0 01.5.5V7h-1V2H9V1z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M5.556 9.736l8.59-8.59.708.708-8.59 8.59-.708-.708z" fill="currentColor"></path></svg></div></a></div><!--/$--></div></div></div><!--/$--><!--$--><div class="css-175oi2r r-1r5su4o"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" class="css-175oi2r r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1enofrn r-1kfrs79 r-19r33im r-14yzgew r-tsynxw r-1rasi3h">Legacy Documentation</div></div><div class="css-175oi2r r-bnwqim r-11wrixw"><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/legacy/configuring-a-driver-station-android-device" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Configuring Your Android Devices</div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/legacy/expansion-hub-gs" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh r-15zivkp" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">Expansion Hub with Android Device Robot Controller</div><div tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy" style="transition-duration:0.15s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" class="r-1bnj018" style="vertical-align:middle;width:16px;height:16px"><path d="M9 18l6-6-6-6"></path></svg></div></a></div><!--/$--></div><div class="css-175oi2r"><!--$--><div class="css-175oi2r"><a href="/duo-control/legacy/rev-hub-interface-software" data-rnwrdesktop-fnigne="true" data-rnwr700-13l2t4g="true" data-rnwi-1b00too-hover="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-z2wwpe r-rs99b7 r-18u37iz r-1ceczpf r-1pn2ns4 r-1kb76zh" style="transition-duration:0.15s"><div dir="auto" class="css-1rynq56 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-oyd9sg r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018">REV Hub Interface Software</div></a></div><!--/$--></div></div></div><!--/$--></div></div></div><div class="css-175oi2r r-1p0dtai r-u8s1d r-13qz1uu r-184en5c"><div class="css-175oi2r r-10ptun7" style="background-image:linear-gradient(3.141592653589793rad,#ffffff00,#ffffff)"></div><div class="css-175oi2r r-ymttw5 r-1l7z4oj r-14lw9ot"><a href="https://www.gitbook.com/?utm_source=content&amp;utm_medium=trademark&amp;utm_campaign=UOOiQ4S2QcMWmVoSmeQ8" data-rnwi--1ghhsy9-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-15n4387-focus-visible="true" data-rnwi-handle="nearest" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy r-1b00too r-1xfd6ze r-5njf8e r-ymttw5" style="transition-duration:0.15s"><svg viewBox="0 0 1000 1000" fill="none" preserveAspectRatio="xMidYMid meet" data-rnwi--1ghhsy9-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-15n4387-focus-visible="true" data-rnwi-handle="nearest" class="r-1rasi3h" style="vertical-align:middle;width:40px;height:40px"><path fill-rule="evenodd" clip-rule="evenodd" d="M562.168 159.724l325.95 162.727c15.062 7.519 15.298 28.898.404 36.746L465.19 582.283a82.875 82.875 0 01-75.639.83L123.74 450.409c-32.376-12.972-68.568 10.748-68.568 46.474 0 28.728 16.256 54.991 41.99 67.839l266.48 133.036c16.267-16.537 38.918-26.795 63.967-26.795 24.334 0 46.404 9.68 62.558 25.394L822.075 521.45a89.893 89.893 0 01-1.385-15.755c0-49.44 40.14-89.519 89.655-89.519S1000 456.255 1000 505.695c0 49.439-40.14 89.518-89.655 89.518-24.21 0-46.178-9.581-62.31-25.153L515.94 745.065a90.036 90.036 0 011.324 15.417c0 49.439-40.14 89.518-89.655 89.518s-89.655-40.079-89.655-89.518c0-4.572.343-9.063 1.006-13.451L68.622 612.068C26.566 591.072 0 548.153 0 501.205v-26.15c0-35.755 19.82-68.574 51.49-85.261l435.039-229.24a82.87 82.87 0 0175.639-.83zM427.609 794.912c19.044 0 34.483-15.415 34.483-34.43 0-19.016-15.439-34.431-34.483-34.431-19.044 0-34.482 15.415-34.482 34.431 0 19.015 15.438 34.43 34.482 34.43zm517.219-289.217c0 19.015-15.438 34.43-34.483 34.43-19.044 0-34.482-15.415-34.482-34.43s15.438-34.43 34.482-34.43c19.045 0 34.483 15.415 34.483 34.43z" fill="currentColor"></path></svg><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1qhn6m8"><div dir="auto" data-rnwinearest--1ghhsy9-hover-focus="true" data-rnwi-handle="nearest" class="css-1rynq56 r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1rasi3h">Powered By <span class="css-1qaijid r-b88u0q">GitBook</span></div></div></a></div></div></nav></div><div class="css-175oi2r r-13awgt0" style="background-color:rgba(255,255,255,1.00)"><!--$--><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><main class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-eqz5dr"><div data-rnwrdesktop-cdhzog="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh="true" class="css-175oi2r r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div class="css-175oi2r r-eqz5dr r-1ygmrgt r-1peese0"><div class="css-175oi2r r-18u37iz"><div data-rnwrdesktop-1glkqn6-h3s6tt="true" data-rnwr700-285fr0-iyfy8q-eu3ka="true" class="css-175oi2r r-18u37iz r-17s6mgv r-1awozwy"></div><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><h1 data-rnwrdesktop-gg6oyi-xb2eav-1dn12g7-b88u0q="true" data-rnwr700-gg6oyi-1ui5ee8-nwxazl-b88u0q="true" class="r-1xnzce8 r-crgep1 r-1nf4jbm" data-testid="page.title">Using 3rd Party Sensors</h1></div><div data-rnwrdesktop-hidden="true" data-rnwr1430-visible="true" data-rnwr700-visible="true" class="css-175oi2r r-18u37iz r-1awozwy"><div aria-label="Page actions" role="button" data-rnwi-1vckr1u-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="button" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1awozwy r-42olwf r-rs99b7 r-18u37iz r-18kxxzh r-1777fci r-1ny4l3l r-eu3ka r-1bnj018 r-18c69zk r-mk0yit r-1aockid" style="transition-duration:0.15s" data-testid="pageCompactToolbar.paletteButton"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" data-rnwibutton-1bnj018-hover-focus="true" data-rnwi-handle="nearest" class="r-h7gdob" style="vertical-align:middle;width:18px;height:18px"><path d="M8 4a1 1 0 100-2 1 1 0 000 2zM8 8.75a1 1 0 100-2 1 1 0 000 2zM8 13.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"></path></svg></div></div></div><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx="true" class="css-175oi2r r-1wzrnnt"></div><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx="true" class="css-175oi2r"></div></div></div></div><div data-rnwrdesktop-1uwte3a="true" class="css-175oi2r"><div class="css-175oi2r r-bnwqim"><div data-testid="page.contentEditor" data-slate-editor="true" data-document-key="d8451e7635444a46834cd23fc5770949" data-key="d8451e7635444a46834cd23fc5770949" autoCorrect="on" spellcheck="true" style="outline:none;white-space:pre-wrap;word-wrap:break-word"><div style="content-visibility:auto;contain-intrinsic-size:0 160px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="7a26226896dc49418550ca437c544edb" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-tskmnb r-xd6kpl"><div data-block-content="7a26226896dc49418550ca437c544edb" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="69473b63f6504402a13035777c5044a2"><span data-offset-key="69473b63f6504402a13035777c5044a2:0">The Control Hub (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1595/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="228a6f54accc4dc5b6357f04ee686db8" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="4decf124f4524a3897c2345d3aaeb99f"><span data-offset-key="4decf124f4524a3897c2345d3aaeb99f:0">REV-31-1595</span></span></span></a><!--/$--><span data-key="d621fb92a83244c9832636ea0a9ca2ea"><span data-offset-key="d621fb92a83244c9832636ea0a9ca2ea:0">)</span><strong data-slate-leaf="true" data-offset-key="d621fb92a83244c9832636ea0a9ca2ea:1" class="r-crgep1 r-b88u0q"> </strong><span data-offset-key="d621fb92a83244c9832636ea0a9ca2ea:2">and Expansion Hub (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1153/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="ffe139f94e194495b4faedfbb05711d6" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="a35902cd13044a35898e1a7c72cbfde0"><span data-offset-key="a35902cd13044a35898e1a7c72cbfde0:0">REV-31-1153</span></span></span></a><!--/$--><span data-key="776cb0d44089429b8d5b41aa95f8c8eb"><span data-offset-key="776cb0d44089429b8d5b41aa95f8c8eb:0">) are 3.3V logic level devices. Many 3rd party sensors, including ones that teams have previously purchased through vendors such as Modern Robotics, are 5V logic level devices.  Many of these legacy sensors are used with the REV system by using a logic level converter. REV Robotics offers a Logic Level Converter (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1389/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="c64ecf8a58bb4ee98731ea82122a8234" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="a4b5f8ba91774aed8db6c2abbdd9d845"><span data-offset-key="a4b5f8ba91774aed8db6c2abbdd9d845:0">REV-31-1389</span></span></span></a><!--/$--><span data-key="c8881fbf6c304ebfa71b6cca7bc4bad4"><span data-offset-key="c8881fbf6c304ebfa71b6cca7bc4bad4:0">) and an optional Sensor Adapter Cable (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1384/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="77ce991ce7044518b144de8f4e9fb117" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="f1218d73f87c401a9388e0b7973cd8f9"><span data-offset-key="f1218d73f87c401a9388e0b7973cd8f9:0">REV-31-1384</span></span></span></a><!--/$--><span data-key="6457e9b2319f4c98b2abb3e99e2daa25"><span data-offset-key="6457e9b2319f4c98b2abb3e99e2daa25:0">) so teams can more easily use their legacy sensors with the REV Control System. </span></span></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 56px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="007e87f9d6724ac9a27439ccdab1ccd2" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-1ygmrgt r-xd6kpl"><div data-block-content="007e87f9d6724ac9a27439ccdab1ccd2" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><h3 class="r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-18u37iz r-obd0qt" id="wiring-a-limit-switch-or-micro-switch"><div dir="auto" data-rnwrdesktop-gg6oyi-adyw6z-135wba7-b88u0q="true" data-rnwr700-gg6oyi-ubezar-135wba7-1kfrs79="true" class="css-1rynq56 r-1nf4jbm r-fdjqy7 r-1xnzce8" id="text-wiring-a-limit-switch-or-micro-switch"><span data-key="1f69c946b4d74094b3a245559f474c3d"><span data-offset-key="1f69c946b4d74094b3a245559f474c3d:0">Wiring a Limit Switch or Micro Switch</span></span><a href="#wiring-a-limit-switch-or-micro-switch" aria-label="Direct link to heading" data-rnwi-1rasi3h-="true" data-rnwi--2l1l37-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-1qaijid r-1awozwy r-xoduu5 r-1jkjb r-orgf3d r-1loqt21"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" role="presentation" style="vertical-align:middle;width:16px;height:16px"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path></svg></a></div></h3></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 136px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="73d2cb26ffd1498a91662b4a280427f5" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-tskmnb r-xd6kpl"><div data-block-content="73d2cb26ffd1498a91662b4a280427f5" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="c97fac68f68745688249c7135214714c"><span data-offset-key="c97fac68f68745688249c7135214714c:0">Limit switches are common 3rd Party sensor type used with the REV Control System and require a custom wiring harness. </span><strong data-slate-leaf="true" data-offset-key="c97fac68f68745688249c7135214714c:1" class="r-crgep1 r-b88u0q"> </strong><span data-offset-key="c97fac68f68745688249c7135214714c:2">Each of the digital inputs on the Control and Expansion Hub have a pull-up resistor making the digital inputs pulled &quot;high&quot; by default. Incorrect wiring of a limit switch to a digital input can create a conflict making the Control or Expansion Hub unresponsive.</span></span></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 136px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="e3dbace2c79140ebaf211007ed751388" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-tskmnb r-xd6kpl"><div data-block-content="e3dbace2c79140ebaf211007ed751388" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="9aee7fccd23c48f3b92fef5d5d8604c8"><span data-offset-key="9aee7fccd23c48f3b92fef5d5d8604c8:0">The recommended wiring is to connect the signal wire (n, n+1) to the common pin (COM), the ground wire to the normally closed (NC) pin, and not connect to the normally open pin (NO) of the limit switch. With this wiring when the switch is in its normal state (not pressed), the switch is closed connecting the signal to ground (reporting </span><code data-slate-leaf="true" data-offset-key="9aee7fccd23c48f3b92fef5d5d8604c8:1" class="r-crgep1 r-1vckr1u r-z2wwpe r-uibjmv r-m2pi6t r-1hvjb8t">FALSE</code><span data-offset-key="9aee7fccd23c48f3b92fef5d5d8604c8:2">in code). When pressed, the switch is open and disconnects the signal from ground (reporting </span><code data-slate-leaf="true" data-offset-key="9aee7fccd23c48f3b92fef5d5d8604c8:3" class="r-crgep1 r-1vckr1u r-z2wwpe r-uibjmv r-m2pi6t r-1hvjb8t">TRUE</code><span data-offset-key="9aee7fccd23c48f3b92fef5d5d8604c8:4">in code). </span></span></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 88px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="533f1362175f4b9cafe8a7cb1f2db8d2" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="533f1362175f4b9cafe8a7cb1f2db8d2" class="r-1oszu61 r-1phboty r-1yadl64 r-deolkf r-6koalj r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1vckr1u r-119zq30 r-z2wwpe r-11g3r6m r-bnwqim r-13qz1uu r-18u37iz" style="border-top-color:rgba(211,61,61,1.00);border-right-color:rgba(211,61,61,1.00);border-bottom-color:rgba(211,61,61,1.00);border-left-color:rgba(211,61,61,1.00)"><div class="css-175oi2r r-rwqe4o r-18u37iz r-1777fci" style="padding-top:18px"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" style="vertical-align:middle;width:20px;height:20px;color:rgba(211,61,61,1.00)"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1a.5.5 0 01.424.235l7.5 12A.5.5 0 0115.5 14H.5a.5.5 0 01-.424-.765l7.5-12A.5.5 0 018 1zM1.402 13h13.196L8 2.443 1.402 13z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 9.41V6.12h1v3.29h-1z" fill="currentColor"></path><path d="M8 11.67a.76.76 0 110-1.52.76.76 0 010 1.52z" fill="currentColor"></path></svg></div><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div class="css-175oi2r r-bnwqim"><div class="css-175oi2r"><div data-key="f7e402ff6e044e3a83dbe63c36307571" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="f7e402ff6e044e3a83dbe63c36307571" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="e397126d59e24e68a189b2d6280ef554"><span data-offset-key="e397126d59e24e68a189b2d6280ef554:0">The power wire and the unused signal wire will not be used in this set up process. </span></span></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 232px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="3f94c1cbe7bf4c07ae7534d8134d1f24" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="3f94c1cbe7bf4c07ae7534d8134d1f24" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div data-rnwr700-1w6e6rj-1777fci="true" class="css-175oi2r r-18u37iz r-1777fci"><div data-slate-void="true" data-key="81ac22734d69464ca3378fd253a9980e"><div><div data-rnwr700-61z16t-="true" class="css-175oi2r"><div class="css-175oi2r r-z2wwpe r-bnwqim"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73" style="transition-duration:0.15s"><img alt="" src="https://2589213514-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4_pJHI8HTuZFQTNfcy%2F-Md4BTcMKO1IRCHZTw-7%2F-Md4CM_hm02aFjD6rs7p%2FControl_Hub_Port_Limit_Switch_Wiring_Diagram_fixed.svg?alt=media&amp;token=f631806b-44aa-4cb8-9d14-357cbf626019" decoding="async" loading="lazy" style="width:100%;height:auto;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;max-width:100%"/></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 136px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="8af843dd408e4d7d91b63df2e2bd14ba" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="8af843dd408e4d7d91b63df2e2bd14ba" class="r-1oszu61 r-1phboty r-1yadl64 r-deolkf r-6koalj r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1vckr1u r-119zq30 r-z2wwpe r-11g3r6m r-bnwqim r-13qz1uu r-18u37iz" style="border-top-color:rgba(52,109,219,1.00);border-right-color:rgba(52,109,219,1.00);border-bottom-color:rgba(52,109,219,1.00);border-left-color:rgba(52,109,219,1.00)"><div class="css-175oi2r r-rwqe4o r-18u37iz r-1777fci" style="padding-top:18px"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" style="vertical-align:middle;width:20px;height:20px;color:rgba(52,109,219,1.00)"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1a7 7 0 100 14A7 7 0 008 1zM0 8a8 8 0 1116 0A8 8 0 010 8z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 6.37H8a.5.5 0 01.5.5v5.5h-1v-5h-1v-1z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 12.37h-3v-1h3v1z" fill="currentColor"></path><path d="M7.74 5.16a.77.77 0 01-.76-.77.76.76 0 011.52 0 .77.77 0 01-.76.77z" fill="currentColor"></path></svg></div><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div class="css-175oi2r r-bnwqim"><div class="css-175oi2r"><div data-key="bf9b56efdb1f4879a2bada082056c350" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="bf9b56efdb1f4879a2bada082056c350" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="07bb285e0f754bcbae12a466181d83bf"><span data-offset-key="07bb285e0f754bcbae12a466181d83bf:0">If you need the opposite behavior (</span><code data-slate-leaf="true" data-offset-key="07bb285e0f754bcbae12a466181d83bf:1" class="r-crgep1 r-1vckr1u r-z2wwpe r-uibjmv r-m2pi6t r-1hvjb8t">FALSE</code><span data-offset-key="07bb285e0f754bcbae12a466181d83bf:2">for pressed, and </span><code data-slate-leaf="true" data-offset-key="07bb285e0f754bcbae12a466181d83bf:3" class="r-crgep1 r-1vckr1u r-z2wwpe r-uibjmv r-m2pi6t r-1hvjb8t">TRUE</code><span data-offset-key="07bb285e0f754bcbae12a466181d83bf:4">for not pressed) switch the ground (black) wire to the NO position instead of NC. Alternatively changing the logic in code will have a similar effect. </span></span></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 56px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="7ec4f8ef72924b3185c4633c350cf8f1" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-1ygmrgt r-xd6kpl"><div data-block-content="7ec4f8ef72924b3185c4633c350cf8f1" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><h3 class="r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-18u37iz r-obd0qt" id="logic-level-converter"><div dir="auto" data-rnwrdesktop-gg6oyi-adyw6z-135wba7-b88u0q="true" data-rnwr700-gg6oyi-ubezar-135wba7-1kfrs79="true" class="css-1rynq56 r-1nf4jbm r-fdjqy7 r-1xnzce8" id="text-logic-level-converter"><span data-key="79cef17700654912a50f208f7e475fe7"><span data-offset-key="79cef17700654912a50f208f7e475fe7:0">Logic Level Converter</span></span><a href="#logic-level-converter" aria-label="Direct link to heading" data-rnwi-1rasi3h-="true" data-rnwi--2l1l37-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-1qaijid r-1awozwy r-xoduu5 r-1jkjb r-orgf3d r-1loqt21"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" role="presentation" style="vertical-align:middle;width:16px;height:16px"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path></svg></a></div></h3></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 136px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="e06a78779351462f9e79bbe1349e7fe8" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-tskmnb r-xd6kpl"><div data-block-content="e06a78779351462f9e79bbe1349e7fe8" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="c3e3953d92c94e88a96785ddb340a9d1"><span data-offset-key="c3e3953d92c94e88a96785ddb340a9d1:0">The REV Robotics Logic Level Converter is a circuit board which generates a 5V output from the 3.3V input and uses a MOSFET on each signal line to create a bidirectional communication appropriate for a variety of digital signals include I2C communication.  For more information on how bidirectional level shifting communication is accomplished, please reference the </span></span><!--$--><a href="http://www.nxp.com/documents/application_note/AN10441.pdf" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="8307ec7173c247f28f0b12f9e358a969" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="45ce20cf2001457bbe76e7010525e863"><span data-offset-key="45ce20cf2001457bbe76e7010525e863:0">NXP Application Note AN10441</span></span></span></a><!--/$--><span data-key="28caf04974b6407882ff887f35e3ac17"><span data-offset-key="28caf04974b6407882ff887f35e3ac17:0">.</span></span></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 232px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="41a11b2b42cf404da2aa35c2b87346da" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="41a11b2b42cf404da2aa35c2b87346da" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div data-rnwr700-1w6e6rj-1777fci="true" class="css-175oi2r r-18u37iz r-1777fci"><div data-slate-void="true" data-key="7addaffdcee8424898cb354d6ed81d53"><div><div data-rnwr700-61z16t-="true" class="css-175oi2r"><div class="css-175oi2r r-z2wwpe r-bnwqim"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73" style="transition-duration:0.15s"><img alt="" src="https://2589213514-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4_pJHI8HTuZFQTNfcy%2F-M8MXu-p93A1N1GDhgg0%2F-M8MYdRGwpxcTFDtq3Zt%2Fimage.png?alt=media&amp;token=dada7875-f203-4e0c-8f3c-5e3901632fb0" decoding="async" loading="lazy" style="width:100%;height:auto;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;max-width:100%"/></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 112px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="41c1c15517174b1a971e9043f4ff62b0" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="41c1c15517174b1a971e9043f4ff62b0" class="r-1oszu61 r-1phboty r-1yadl64 r-deolkf r-6koalj r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1vckr1u r-119zq30 r-z2wwpe r-11g3r6m r-bnwqim r-13qz1uu r-18u37iz" style="border-top-color:rgba(185,94,4,1.00);border-right-color:rgba(185,94,4,1.00);border-bottom-color:rgba(185,94,4,1.00);border-left-color:rgba(185,94,4,1.00)"><div class="css-175oi2r r-rwqe4o r-18u37iz r-1777fci" style="padding-top:18px"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" style="vertical-align:middle;width:20px;height:20px;color:rgba(185,94,4,1.00)"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 8.96V3.29h1v5.67h-1z" fill="currentColor"></path><path d="M8 12.5a1 1 0 110-2 1 1 0 010 2z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1a7 7 0 100 14A7 7 0 008 1zM0 8a8 8 0 1116 0A8 8 0 010 8z" fill="currentColor"></path></svg></div><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div class="css-175oi2r r-bnwqim"><div class="css-175oi2r"><div data-key="8d3978881e6942fa9b301abeafb3dc2d" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="8d3978881e6942fa9b301abeafb3dc2d" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="ff8fbfe06df24b0fa6a7a4b9040e4bde"><span data-offset-key="ff8fbfe06df24b0fa6a7a4b9040e4bde:0">The Logic Level Converter is only needed for the Digital and I2C senor ports on the Control or Expansion Hub when using a 5V device.</span></span></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 56px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="fbc3f5a992d849d1ba3c29cc3ecc63fc" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-1ygmrgt r-xd6kpl"><div data-block-content="fbc3f5a992d849d1ba3c29cc3ecc63fc" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><h3 class="r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-18u37iz r-obd0qt" id="connecting-5v-encoder"><div dir="auto" data-rnwrdesktop-gg6oyi-adyw6z-135wba7-b88u0q="true" data-rnwr700-gg6oyi-ubezar-135wba7-1kfrs79="true" class="css-1rynq56 r-1nf4jbm r-fdjqy7 r-1xnzce8" id="text-connecting-5v-encoder"><span data-key="a9d9062954c84b8693a9e493e5a891e5"><span data-offset-key="a9d9062954c84b8693a9e493e5a891e5:0">Connecting 5V Encoder</span></span><a href="#connecting-5v-encoder" aria-label="Direct link to heading" data-rnwi-1rasi3h-="true" data-rnwi--2l1l37-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-1qaijid r-1awozwy r-xoduu5 r-1jkjb r-orgf3d r-1loqt21"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" role="presentation" style="vertical-align:middle;width:16px;height:16px"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path></svg></a></div></h3></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 160px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="d6b1f834d5454e2f9aaf97947f5da6ff" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-tskmnb r-xd6kpl"><div data-block-content="d6b1f834d5454e2f9aaf97947f5da6ff" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="973096b4b05f41a7ab5194661fb83594"><span data-offset-key="973096b4b05f41a7ab5194661fb83594:0">The Logic Level Converter (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1389/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="37307923519042149e21823da436856b" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="c59bdb4c27f24b9fa04aecfaf7af286f"><span data-offset-key="c59bdb4c27f24b9fa04aecfaf7af286f:0">REV-31-1389</span></span></span></a><!--/$--><span data-key="edeca9c6a6ff4a4a827a75ae1c0bed51"><span data-offset-key="edeca9c6a6ff4a4a827a75ae1c0bed51:0">) pinout directly matches the encoder cable pin out for FTC legal 3rd party motors. Encoder cables plug directly into the Logic Level Converter board and then the 4-pin JST PH Cable (</span></span><!--$--><a href="https://www.revrobotics.com/jst-ph-4-pin-sensor-cable-4-pack/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="867c1a33c1d9466d8cb344bb2f4c6134" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="4ae8dcc71ae34516950bf09640c71b76"><span data-offset-key="4ae8dcc71ae34516950bf09640c71b76:0">REV-31-1407</span></span></span></a><!--/$--><span data-key="73ec056a567e454ba12f9c61daa9ac80"><span data-offset-key="73ec056a567e454ba12f9c61daa9ac80:0">), which is included with the Logic Level Converter, is plugged into the appropriate Control Hub  (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1595/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="69fafb37de834c99bf1f16a0ca3c936e" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="9bde9843fe4b44789ce73eca86aa3062"><span data-offset-key="9bde9843fe4b44789ce73eca86aa3062:0">REV-31-1595</span></span></span></a><!--/$--><span data-key="91d2ec5fa408418f8e87c76d9c6922ec"><span data-offset-key="91d2ec5fa408418f8e87c76d9c6922ec:0">)</span><strong data-slate-leaf="true" data-offset-key="91d2ec5fa408418f8e87c76d9c6922ec:1" class="r-crgep1 r-b88u0q">  </strong><span data-offset-key="91d2ec5fa408418f8e87c76d9c6922ec:2">Encoder Port. Motors which are terminated with Anderson Power Pole style connectors use the JST VH to Anderson Power Pole Style (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1381/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="91f63db3db1245699fd54113c3d20fea" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="c72baf5b70f3475898fc5add8ab778b8"><span data-offset-key="c72baf5b70f3475898fc5add8ab778b8:0">REV-31-1381</span></span></span></a><!--/$--><span data-key="4dc582eade5e4a018bcd2321bdcd9386"><span data-offset-key="4dc582eade5e4a018bcd2321bdcd9386:0">) cable to connect to the motor output port on the Control Hub.</span></span></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 232px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="96da4742e3be4f2285a65a4188986b60" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="96da4742e3be4f2285a65a4188986b60" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div data-rnwr700-1w6e6rj-1777fci="true" class="css-175oi2r r-18u37iz r-1777fci"><div data-slate-void="true" data-key="f19817a7d4124012a8fdb1cf664dc2d2"><div><div data-rnwr700-61z16t-="true" class="css-175oi2r"><div class="css-175oi2r r-z2wwpe r-bnwqim"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73" style="transition-duration:0.15s"><img alt="" src="https://2589213514-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4_pJHI8HTuZFQTNfcy%2F-M8MXu-p93A1N1GDhgg0%2F-M8MZ9iOENEtlJZ-mDQt%2Fimage.png?alt=media&amp;token=43ac8eec-2872-4883-85da-f676c5af5e1c" decoding="async" loading="lazy" style="width:100%;height:auto;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;max-width:100%"/></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 112px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="69a8de740e7b421d972282d1db9d8f9f" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="69a8de740e7b421d972282d1db9d8f9f" class="r-1oszu61 r-1phboty r-1yadl64 r-deolkf r-6koalj r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1vckr1u r-119zq30 r-z2wwpe r-11g3r6m r-bnwqim r-13qz1uu r-18u37iz" style="border-top-color:rgba(52,109,219,1.00);border-right-color:rgba(52,109,219,1.00);border-bottom-color:rgba(52,109,219,1.00);border-left-color:rgba(52,109,219,1.00)"><div class="css-175oi2r r-rwqe4o r-18u37iz r-1777fci" style="padding-top:18px"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" style="vertical-align:middle;width:20px;height:20px;color:rgba(52,109,219,1.00)"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1a7 7 0 100 14A7 7 0 008 1zM0 8a8 8 0 1116 0A8 8 0 010 8z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 6.37H8a.5.5 0 01.5.5v5.5h-1v-5h-1v-1z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 12.37h-3v-1h3v1z" fill="currentColor"></path><path d="M7.74 5.16a.77.77 0 01-.76-.77.76.76 0 011.52 0 .77.77 0 01-.76.77z" fill="currentColor"></path></svg></div><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div class="css-175oi2r r-bnwqim"><div class="css-175oi2r"><div data-key="e9fd7d70bf9e48eea213da1b604ee511" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="e9fd7d70bf9e48eea213da1b604ee511" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="0c4335f81f7b4b6ba6cd84129d730b67"><span data-offset-key="0c4335f81f7b4b6ba6cd84129d730b67:0">All REV Robotics Motors work directly with the REV Control and Expansion Hubs. No Logic Level Converter is needed for REV Motors.</span></span></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 56px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="c272e399a0064a3aa8b23bd5b3d886bb" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-1ygmrgt r-xd6kpl"><div data-block-content="c272e399a0064a3aa8b23bd5b3d886bb" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><h3 class="r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-18u37iz r-obd0qt" id="connecting-a-5v-sensor"><div dir="auto" data-rnwrdesktop-gg6oyi-adyw6z-135wba7-b88u0q="true" data-rnwr700-gg6oyi-ubezar-135wba7-1kfrs79="true" class="css-1rynq56 r-1nf4jbm r-fdjqy7 r-1xnzce8" id="text-connecting-a-5v-sensor"><span data-key="1aa55239e0b649ebbfff5177f4e8d5e8"><span data-offset-key="1aa55239e0b649ebbfff5177f4e8d5e8:0">Connecting a 5V Sensor</span></span><a href="#connecting-a-5v-sensor" aria-label="Direct link to heading" data-rnwi-1rasi3h-="true" data-rnwi--2l1l37-hover-focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" class="css-1qaijid r-1awozwy r-xoduu5 r-1jkjb r-orgf3d r-1loqt21"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" role="presentation" style="vertical-align:middle;width:16px;height:16px"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path></svg></a></div></h3></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 232px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="09688d9c62d447e69081ce48a8a3d0a4" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-tskmnb r-xd6kpl"><div data-block-content="09688d9c62d447e69081ce48a8a3d0a4" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-gg6oyi r-ubezar r-16dba41 r-135wba7 r-1nf4jbm r-fdjqy7 r-1xnzce8"><span data-key="527a50c3f3a14e888faee55d2cef6b28"><span data-offset-key="527a50c3f3a14e888faee55d2cef6b28:0">A variety of 5V sensors are usable with the Control Hub (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1595/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="81e6e77e7cb54e14a24c3c2baef2b1fa" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="c3d962f02a744aa3abb61f9ff7f7959a"><span data-offset-key="c3d962f02a744aa3abb61f9ff7f7959a:0">REV-31-1595</span></span></span></a><!--/$--><span data-key="ec43e9d0e8284a3a8108fc53e75230c0"><span data-offset-key="ec43e9d0e8284a3a8108fc53e75230c0:0">)</span><strong data-slate-leaf="true" data-offset-key="ec43e9d0e8284a3a8108fc53e75230c0:1" class="r-crgep1 r-b88u0q"> </strong><span data-offset-key="ec43e9d0e8284a3a8108fc53e75230c0:2">when used with a Logic Level Converter (</span></span><!--$--><a href="https://www.revrobotics.com/rev-31-1389/" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="92842631a70d4e68817463431562edfd" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="cc1c1a37490541659f8736fb0dfea114"><span data-offset-key="cc1c1a37490541659f8736fb0dfea114:0">REV-31-1389</span></span></span></a><!--/$--><span data-key="0018135a9fb4405fb336d1218a3c4fbe"><span data-offset-key="0018135a9fb4405fb336d1218a3c4fbe:0">). For some Modern Robotics I2C sensors a Logic Level Converter, and a change in wiring to match the pinout of the Control Hub are needed. Teams can either purchase a Sensor Cable as an add on to the Logic Level Converter Kit which will cross over the correct wires, or they can carefully rearrange the pin order on the sensor cable. If using the Sensor Cable, connect the sensor to the Control Hub as shown below.  It is recommended to zip tie the connection between the sensor and the sensor cable to prevent accidental disconnects.  See the </span></span><!--$--><a href="/duo-control/sensors/5v-sensors/sensor-compatibility-chart" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="link" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-1471scf" style="transition-duration:0.15s"><span data-key="070f54e4e06d4721b79cc792dae39629" data-rnwilink--2l1l37-="true" data-rnwilink--86h6oi-1ddef8g-hover="true" data-rnwi-handle="nearest" class="r-crgep1"><span data-key="3184f8a5e8ad4f9d86078a21b43f8072"><span data-offset-key="3184f8a5e8ad4f9d86078a21b43f8072:0">Sensor Compatibility Chart</span></span></span></a><!--/$--><span data-key="6848a7d0c86643079744e3c1f45f58d1"><span data-offset-key="6848a7d0c86643079744e3c1f45f58d1:0"> for more information on hardware required for other sensors.</span></span></div></div></div></div></div></div></div></div></div><div style="content-visibility:auto;contain-intrinsic-size:0 232px"><div class="css-175oi2r r-bnwqim"><div data-rnwrdesktop-cdhzog-="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh-1777fci="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx-="true" class="css-175oi2r"><div class="css-175oi2r"><div data-key="214bb9d867e5437e9dcc079435f993bd" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1yzf0co r-95jzfe r-1l7z4oj"><div data-block-content="214bb9d867e5437e9dcc079435f993bd" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010 r-1ro0kt6 r-16y2uox r-1wbh5a2"><div data-rnwr700-1w6e6rj-1777fci="true" class="css-175oi2r r-18u37iz r-1777fci"><div data-slate-void="true" data-key="ba87409c6e4349a1bc0adeb4ae450467"><div><div data-rnwr700-61z16t-="true" class="css-175oi2r"><div class="css-175oi2r r-z2wwpe r-bnwqim"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73" style="transition-duration:0.15s"><img alt="" src="https://2589213514-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4_pJHI8HTuZFQTNfcy%2F-MYHPYGB21Z9wzoWlzlz%2F-MYHQWuaQXDYKS3YZYfG%2Fimage.png?alt=media&amp;token=0708bb8d-3de0-447d-97e5-b79bf502e866" decoding="async" loading="lazy" style="width:100%;height:auto;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px;max-width:100%"/></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div><div data-rnwrdesktop-cdhzog="true" data-rnwr1430-1777fci="true" data-rnwr700-i023vh="true" class="css-175oi2r r-11c0sde r-18u37iz r-1777fci"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-1l5ssaz"><div data-rnwrdesktop-1wezhl="true" data-rnwr700-1ow6zhx="true" class="css-175oi2r"><div data-rnwrdesktop-18u37iz="true" data-rnwr910-eqz5dr="true" class="css-175oi2r r-1peese0"><a href="/duo-control/sensors/encoders/through-bore-encoder" data-rnwrdesktop-1kb76zh="true" data-rnwr910-61z16t-5oul0u="true" data-rnwi-u529wo-aq1qub-c1zw6o-1khlhp8-1cut0bx-na6qhi--hover="true" data-rnwi--tp2cfv--focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="BaseCard" class="css-175oi2r r-lrvibr r-1loqt21 r-1otgn73 r-190qawg r-z2wwpe r-rs99b7 r-1udh08x r-1clhhh9 r-18u37iz r-1awozwy r-nsbfu8 r-1ro0kt6 r-16y2uox r-1wbh5a2" style="background-color:rgba(255,255,255,1.00);transition-duration:0.15s"><div class="css-175oi2r r-88pszg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" data-rnwibasecard--2l1l37-hover="true" data-rnwi-handle="nearest" class="r-1rasi3h" style="vertical-align:middle;width:24px;height:24px"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg></div><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2 r-obd0qt"><div class="css-175oi2r"><div dir="auto" class="css-1rynq56 r-gg6oyi r-1enofrn r-16dba41 r-14yzgew r-1rasi3h">Previous</div></div><div dir="auto" data-rnwibasecard--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-ubezar r-135wba7 r-majxgm r-1nf4jbm">Through Bore Encoder</div></div></a><a href="/duo-control/sensors/5v-sensors/sensor-compatibility-chart" data-rnwrdesktop-1jkjb="true" data-rnwr910-11wrixw-knv0ih="true" data-rnwi-u529wo-aq1qub-c1zw6o-1khlhp8-1cut0bx-na6qhi--hover="true" data-rnwi--tp2cfv--focus="true" data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="BaseCard" class="css-175oi2r r-lrvibr r-1loqt21 r-1otgn73 r-190qawg r-z2wwpe r-rs99b7 r-1udh08x r-1clhhh9 r-18u37iz r-1awozwy r-nsbfu8 r-1ro0kt6 r-16y2uox r-1wbh5a2" style="background-color:rgba(255,255,255,1.00);transition-duration:0.15s"><div class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div class="css-175oi2r"><div dir="auto" class="css-1rynq56 r-gg6oyi r-1enofrn r-16dba41 r-14yzgew r-1rasi3h">Next</div></div><div dir="auto" data-rnwibasecard--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-ubezar r-135wba7 r-majxgm r-1nf4jbm">Sensor Compatibility Chart</div></div><div class="css-175oi2r r-1ow6zhx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet" data-rnwibasecard--2l1l37-hover="true" data-rnwi-handle="nearest" class="r-1rasi3h" style="vertical-align:middle;width:24px;height:24px"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></div></a></div><div class="css-175oi2r r-1ygmrgt r-1yv4afn r-5kkj8d"><div data-rnwrdesktop-18u37iz="true" data-rnwr1024-eqz5dr="true" class="css-175oi2r r-1awozwy r-1wtj0ep"><div data-rnwr1024-1ifxtd0="true" class="css-175oi2r r-1ro0kt6 r-16y2uox r-1wbh5a2"><div dir="auto" class="css-1rynq56 r-1rasi3h r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb">Last modified <span aria-label="2022-06-06 20:52 UTC" class="css-1qaijid">7mo ago</span></div></div></div></div></div></div></div></div></main></div><aside aria-label="Page outline" data-rnwrdesktop-sqhxed="true" data-rnwr1430-hidden="true" data-rnwr700-hidden="true" class="r-1oszu61 r-1xc7w19 r-1phboty r-1yadl64 r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1q142lx r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-417010 r-k200y r-1rnoaur r-gtdqiz r-pw2am6 r-1mkpi1y" style="top:104px;max-height:calc(100vh - 104px)" data-testid="page.outline"><div class="css-175oi2r r-hu79xy r-1peese0"><div class="css-175oi2r r-5njf8e r-wk8lta r-1mdbw0j"><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy r-1guathk r-oyd9sg r-dnmrzs r-7xmw5f" style="transition-duration:0.15s" data-testid="page.exportButton"><div class="css-175oi2r r-1kb76zh"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" data-rnwinearest--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="r-1rasi3h" style="vertical-align:middle;width:16px;height:16px"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 2.5A.5.5 0 01.5 2h13a.5.5 0 01.5.5V8h-1V3H1v12h12.5v1H.5a.5.5 0 01-.5-.5v-13z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3.1 1a.1.1 0 00-.1.1v.4H2v-.4A1.1 1.1 0 013.1 0h1.8A1.1 1.1 0 016 1.1V5a2 2 0 11-4 0V4h1v1a1 1 0 102 0V1.1a.1.1 0 00-.1-.1H3.1zM2 9.5a.5.5 0 01.5-.5H4a2 2 0 110 4H3v1H2V9.5zm1 .5v2h1a1 1 0 000-2H3zM7 9.5a.5.5 0 01.5-.5h1a2.5 2.5 0 010 5h-1a.5.5 0 01-.5-.5v-4zm1 .5v3h.5a1.5 1.5 0 100-3H8zM12 9.5a.5.5 0 01.5-.5H15v1h-2v4h-1V9.5z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15 12h-2.5v-1H15v1z" fill="currentColor"></path></svg></div><div dir="auto" data-rnwinearest--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018 r-1ro0kt6 r-16y2uox r-1wbh5a2">Export as PDF</div></div><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1awozwy r-1guathk r-oyd9sg r-dnmrzs r-7xmw5f" style="transition-duration:0.15s"><div class="css-175oi2r r-1kb76zh"><svg viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet" data-rnwinearest--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="r-1rasi3h" style="vertical-align:middle;width:16px;height:16px"><path d="M14.11 6.6l-.16-.09c-.042.343-.13.68-.26 1A3 3 0 0115 10a3 3 0 01-3 3H8a3 3 0 010-6h.82A3 3 0 009 6H8a4 4 0 000 8h4a4 4 0 002.11-7.4z" fill="currentColor"></path><path d="M1.89 9.4l.16.09c.042-.343.13-.68.26-1A3 3 0 011 6a3 3 0 013-3h4a3 3 0 110 6h-.82A3 3 0 007 10h1a4 4 0 000-8H4a4 4 0 00-2.11 7.4z" fill="currentColor"></path></svg></div><div dir="auto" data-rnwinearest--2l1l37-hover-focus="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018 r-1ro0kt6 r-16y2uox r-1wbh5a2">Copy link</div></div></div></div><div class="css-175oi2r r-146iojx"><div class="css-175oi2r r-18u37iz r-1awozwy r-1guathk r-5oul0u"><div dir="auto" class="css-1rynq56 r-gg6oyi r-1enofrn r-19r33im r-14yzgew r-tsynxw r-1rasi3h r-b88u0q">On this page</div></div><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1guathk r-855088 r-ms8t9i r-15zivkp r-lqms97 r-14gqq1x r-dnmrzs r-7xmw5f" style="transition-duration:0.15s"><div dir="auto" data-rnwinearest--2l1l37-hover="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018 r-1jkjb">Wiring a Limit Switch or Micro Switch</div></div><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1guathk r-855088 r-ms8t9i r-15zivkp r-lqms97 r-14gqq1x r-dnmrzs r-7xmw5f" style="transition-duration:0.15s"><div dir="auto" data-rnwinearest--2l1l37-hover="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018 r-1jkjb">Logic Level Converter</div></div><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1guathk r-855088 r-ms8t9i r-15zivkp r-lqms97 r-14gqq1x r-dnmrzs r-7xmw5f" style="transition-duration:0.15s"><div dir="auto" data-rnwinearest--2l1l37-hover="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018 r-1jkjb">Connecting 5V Encoder</div></div><div data-rnwi-5xr8s6-dse9kg-2fw26j-1pfkmbz-focus-visible="true" data-rnwi-handle="nearest" tabindex="0" class="css-175oi2r r-1i6wzkk r-lrvibr r-1loqt21 r-1otgn73 r-18u37iz r-1guathk r-855088 r-ms8t9i r-15zivkp r-lqms97 r-14gqq1x r-dnmrzs r-7xmw5f" style="transition-duration:0.15s"><div dir="auto" data-rnwinearest--2l1l37-hover="true" data-rnwi-handle="nearest" class="css-1rynq56 r-dnmrzs r-1udh08x r-1udbk01 r-3s2u2q r-1iln25a r-gg6oyi r-1b43r93 r-16dba41 r-hbpseb r-1bnj018 r-1jkjb">Connecting a 5V Sensor</div></div></div></aside></div><!--/$--></div></div><!--/$--></div></div></div>
+        <script>
+            // Rendered with GitBook 10.9.232-e5c6a1dca08cf9bab5b1935431b7034a76f2667a-3941929473
+            // Space UOOiQ4S2QcMWmVoSmeQ8
+            
+            window.__GITBOOK_WAS_SSR = true;
+            window.__GITBOOK_INITIAL_PROPS__ = "㞂‖འ츂аⶁ䱀⸐ӂز聴ĸꀛ鄐ѡం寠渑∀㐢傔⠀ꂌ怳怊ⴓ㠰⠁덢ஷ᠀▣왆錘ᠰ9䝀Ẑ쉝먈ܵꌚ萀획鯊计⹍ꅩ싂耇訬%㉚⡚࠸⅜尀⽊崀䔙UiVF㠔1Ⰰ䅝开㥟祜ቾ頌偮䤬⠌䲀㙴耖⺀฀瘀☀晶䐸栔⚖ꆶ耆䖥聟発ࣤ삀ᤡ洽ͣ3娒乮堈∄ଔ䬈ࠋᤔ卐윤䍒秃䩃⬛箻ᢗ옥큐뀄匾靃䍺ᠠ蘗ᮅԀʐ൲준㲦㚀铨Ɣ؉尀ᙀ຤老ꡁҏ䴛静섙鴞輀怇爠쀊Gቀࡋ܃╀\u001a粘襀ন찈Ņ⤀紭菂ಬ㩝销煫₠ᘤ젍틳弱녬倢ᘀ㼂ك\u0002내Ѐಆཡ䇁鴽䨡셩遃쳄࠶郅أ搌ᆾ긇꘡낙㺼烨瓩뒰ಝ妱\ud968瓺⌡飪狣≽圛鷁稐飯侷ퟭ斲΁ꂈ㠲ዡ虶휻锞謐錺쫝\n奀ґ*숀ᚮ䄥뤪ᵰO䙉拁ѤꞞ胓Ꮣꑛᤧ厖퍨ꤛﺨ楮혓옢ਈᰃ鄐倘袪剢\u0002▉蠀ウ≑溁☥놈꾉渊褭櫚ຓꫨО랫⠟䡱悔┎톈䌀웒글㈜戥ǅ긏〠ᦼ샇챨㬊ૐ䠂т鸨䐂夐䈀ౄ〡Ԃꀲ僲ᘅ爜《ᘀ䄷ぇ쬈ප즓낔䰍㊀ᘮ伱듊│剴粛䘀괏謨桮ʄᑃీ㊐ࠐ쐳퐠るꅠ픡䝓ꀍⓁጴ괇䷑늃ࣂƌጔ솂첝ዂ뎰䰰蔢듋⫂ʸȐ薂蠒э〈ᔳઁ䢎䍝쏉렘ઐꂧ邉裪뮘̪ᆝ☤禀⒕ 嫍殼쌩‥ላ㐤̉䊴⒧껠蛤㈉₆੶णᇘꊶЫ䥅瓈덲䧈ⵘᶂ冒⒀쩴ᒙ⻥묤䌉䌓⹠⠸ᄠ뮭껫ꉐ쨠䌢धﬨ꣮怳刋जํ恤닥 撆ᮀ૘䲒᝼쮒剛볏᫨줦ᖻ댬훩䥠〥⒃왛ꔆ䩒塊ᙪꓸ뉊碒મ䦊Ш檲䬨芩಺㯔㈄쮮쐉ᤥ舥㪲᮰ਂ虤鲮ԭ\ud8f2⦕ð杂ꯣ䈼蘍⅙啲铲ф⏎洊஢૥䁄ㄐ䢀↙ᖟ≜㸑ڻ硾ႏ　㹠౅局숺՟ퟵﺒ舜࠰蓨ᄄ芄愬禁硠❽揈琌ӱࡈ映\u0011⥒ⲅ㿢Ꞌ닁\ud9ee谂䬎騈ɚL奰〲䢗┆킌鷦茶恜ᚅ崖여ᚫ噠脕̀䃲⤊ዐ䨋䁤㖇᪘ᝃࡊȃ瀅䊨　↟䰁糜螒俈Ԡꦈ䊘傊兆⡔匫桐֒늰ᩡ챶޼쁈˄㢏ሒ扎䢩ണꐽὈ╨῀밳邠Ⱍǀ㛣⃖ᒁ䀖ૠ윸ࣤ䀪ˮࠖ腠㪮섮ր芴أ炾쏤ࡅ栊籇줅㨱ⓢ蝨ꅥ䦉߾뷒≠梇ᄒੀ죙༢ᑢ虐綳쀮宐窠ℍ䁤⊎冺࿐餳≂倥隲᠞掰䆤䆆꣕㲔鎻\ud8a5ἕ츒鞰됙ၠᛣ↸㋂\u0000";
+            window.__GITBOOK_INITIAL_STATE__ = "㞂⁦ॠ上惎Ű㶬䀮净ค〱밃퀊ꀼꤐࢠ଀쨁㉗育Ψୠ᪒랳─㧒肀ເঌ\u001e㇄ɑ耍순ࡉ䞡ޏ/F夨ƶ‚䀫F儰Ƌ蠈▊䀹⤠Ñ涃脬蜈술ú섈堰騈ၼ蠸鸠瀰磪lԂì챞ꈸꉈ椙ዙ棦方\f¾帐爀㊚\u0016ࠈ塰梄蒐끺㡩蠨㠀t⭈䠫䘰㡘⫫᧬蒊궄窄⬐ࡺ\udb00혀둒佘偈ܓ塈ࣇ␩줈䛃R稭貁䆠゘氮༏蠢蛙竪瑵@Wꀁ\udca0ࠇ\u0011\ud980ȗ኉塰\u0006ꤧ䋠ɫꋤQ丰䁣뉃Ӏ⡠耜囡䱹㴬⭊䤯欹환儊쀏쎂〠¼籱Ї\u0003♀㱠ꉍ䂏䘃橘炭➎ᜦ冁㱱✝뢧耑㰄▘ꫫƁꢹ焫䔤旧栐⣜椶髌想䖲ਊ냙汶笃釄륜湷煫\udde9慾｀瀴ᮀ⇁텏昵ᠥ老䠀␀鈂ỀՀૠ˕뉐蜮〞ᰮ認淑䋎㡀佅 䧴儂d暠፲뤡殴첽ដ螷㶓슝冱䃠伎有ጡ㰀스ᜐ ➖虥校\udd96愕敍僕땙པ㒐捔톁訰᱃탴㲉輆瓰稌ɸ㢠嚇ϵ娌㖦袼瞎⇀ꁰ鯲䂣⠓䀁裊矁읥ԧᄳ、۽虪赠光ᇞAᩋீ䎔ꂅ斱婜螳큜樔闉蘁ʐ腨ỗ뼇ಡ퇨䔇̨쨠葲쇄弟쐈【谤覢㣖➈၄餢䲅俉ਜ咠ꡀ⪆ꂊᩴᦦꀺ⺋새䝝윤ဗA虍᱁Ა➞ꁀ㸣ԡ㣸巑ꔁ䈈訤킐㴀ʷ䤂ʭ⍢铁臂䴔舔읡馐莨刚瘙頮Ꭾ髻嚙靠屶ᩬꇨᜓ겡숱\uddf5낌昝Ṧ݀秌晓ꮑ㪗ᳪㆦ鎛쐇藅憘稈ⰱ졶⃊ᜇ䋭蘠湇惇ᗂ̝報쬃큻㤈쏁䑦ೱ뇎霐꛶ੂㄨ億鼑堮츁션翏ȕ汎꼞慎횖쓠蝖闒솈(照ᦡ펇တ丝蕴蜽ᖄ唱桢ᰦ懙嬔莑뼥禁炏䞠뀗겣邻㇓姑⡖᱇犅⻑䟗ဘ᯴뀉㰜塸则⸅얎䏹襴᪬劲긯揁扵ፃ浲᠋¥틙ಢ腚把Ᵹⱅ┡䄤⠏낑ꑍᖠ}蘝Ჺ䁇㐜릮殱☃pᇃ嗄怨ᶁ兔⣮㌑蘶䥢Џ擑㽒\u0000ⓣ眚뱽ꇂ䝽腉퓦Ꮰੀ⣏ص쑈셠䆈眳켑痍୉틴茨줲첋⫉달蜩쥲밁圫賤຿剥ᕃ퀠⌖㣅聇ẀŸຨѼ聈Ծ멟䨙挪旌ꖕ⃖囋\ud947ⳤ陔〞䨩䐈큚ឆ㒰㘑债ࣀ堇۠밟脈⼆唍꽅ୈ籅媿铐ꈙ뫕ʦ⃼ૄ첑푁㔐߁\udb8e\udbcdɘʢ聖㕀耺ᶇ眐ۘ쨩❼鵜鋐剁䡑댃꒛寳ђʑ怏ᨎ㍨紈恌ֆ끶ᇃ㠷৭爜総艨箄憷鞂䁑ᑃ䥙⁂怂鉒贕ꎅ綅Ć냗࢜ඹ眇ᒣ슓戠鐾აꑏ䍑₶╃\ud8b8ࡀ鱁蘰昊샘笄㮁ൡ䣞ᛔ囪ᇄ\u0015䆣鐞ᒋ큽藂遅૨ꀘ䎝㩎雷ㅀᠮᒐ㣐ऀ䯲㴤Ʊ䳊㐊蝏胨\u0003歨傤⤆悦Ѳ偠詡沽阝燶䔂郛Ⴄʒȹ㪱ˬခ癎ↈཤ㦂瀗ʠ妢茀綈슘瑟줿॒雤࠮쥀Ḙ됎鉰嬋惼Ԣ鄕聶什⤢芀記€䐊텰ஂ쁸ዂ⊺䰱堄Ȝ訇䁒瘊䥬㟤芒鈽෹ᅭ츈뢏낎戅\u0006ⲫᲮ钑腱⚪ꐀ蜐⊀싸剎ᇟ㴂ᒤ聂Ђ卲ꐫꓠณ而ࠌ삞ㄅ\uda6c긁ᡷ좋⠳⛥㶕팄岇ꅢ坥좢Ꮵ孓安⠜̜༝⒋悤ᴢあ麂髷챑฻쐇ʐ⤉헱邵ウ뗐˓ಋ鎂ڠ⼏ʘ嚉셍䂃꒸蹃餱유쨧ϐ璂鋐刋慍椇悖윂⡜譁䰳֠⢥쇀啒帆ࠄ辳퀳⫀綇昈倈僠䑐⁜ᏇₜᓃѰ蒁㪓쁀攙䫐☝玿ⴀ傔ǃ笘渡숔֠퐓耼࣋뫍甀ᣴᆉ졳ஐеǐ蹝鍘\ud837腘⦀꒸鱀౔櫁탭蘈鑆潉怠⸢ᓟ谅ᡚ܀⺁✰袯놎瘎႞·წ衐蹰菘좫ܰ섃\ud8ba蓥⸠႖เೀḇ栘쐒䪚䃣踃遽表렞찐冻⇽蒦䋘Ỏ 㦕끣馡䁋䵠鞏挀씜†嘀ᴥჴʖ⚂䭀㐬Ἥ爝瘳肤㞷摘᳂퓴‧做砋댐抁ňሀ聲ẃ렯ೀ ☠쐅쉐⠇․᠂᱒ኀ棒䭁鵯ꓖ삠܏郊⸠炊ᦃ౒䲖嵗戜砒苤㮓耑ꦃꑃ铁ਲ菘颵짫刊䁒⌀䠉㘯릢ᚁੜ䁈ⳳҠ継鎤ꠅĬ⭆ﲮ辰ቺӱ쐩⎤綴⹦膃ꁖㅅ⃬齅癑ň▰ᮙ錄⤄膊Ⴅ퓎쾲骼ශ숔蕠稀䎾Ќ즘⤧惢ᬏ峮\ude2a蜫ꗈ殜쇃兮䔮끲倲虉氐⢢鍳ƀꈩ⟌螰긻觔뜨肫ᒃ팵뢞⹀ꐈᶃᐞ쎔峻p⤂鏍멀ġ坠Ǡ祡跸⤖٤ۑ뙵刎懌㬂肈痑豶챐뾬᠐᩿댌樂냭亼Ȁ롄同﬙䄲찑䇱캫䃊ḃம蚾쮉䐩蓪㶅悎Є⠩ᣧࡥ峃魳\udf2e䇀㶁̄౧楄ㅁ㮖ᠼ੉舷泵茐㖄⣩⦂磚獔‼ऺ琩҆瘔郀廛ڲ㢅琷盃㈶强ဟ挀掔ힲ㊌꾈⏘␎ৠ㱊H䜐ꌀ綼쇈婚⾨㯣㚭མ挔薆\udd8eؽ쌈솀᠂뎙⤣䮴䊈諳ࢠ聝菎刌Ⴄ螀뤇鳓茾휩䂤Ҳ攊惄ޠ髽쐆㢵䬆ꐉ푩신偲ୀ⎎샜莠㺧\uda85氰聆΀䎄耂̌Ҍ䂡⵲჋䁘ી⁞ꁄ䠀ザ0⬇\ud810ܺ鐇⁒ʰ爇ₕ攠㨌ュ䇊袧琏Ʀ虮鐂स꽭㑅찄䩠切ꁓ䐸鐈郴 ජཀ羯䀸ň阉恈ހÌ蒀嶁縮ꐨᒮ樃໸꺅᪬ܠ倂涐٥ૡ뤇샟藘㢭܀ね爝薀뢇ꀋ─Ȃ䰺̌ꒀ耔萰⺩酿ꩠ̉恟怋悦Ɛ왤媳阂뀫৔晊큝讈⎈ꓨ쟚璀囁܀倇䢤꜀⾠スϑ휬죟跸ଧ䡜귬舉悊ߠ砂낍ꄀ첃1ꒀ᳇ꒊ൨똂焮ኌ砎詀괎惴ೈ㽠΀鰋⅞ీ뤇\ud814譠༆얀뤊䠐ฐꎪ䃴Ț䐐꺂撀뢎悬ฐ⎍ꙴ踆㺯䂍쎆캢䑁⨞ೀ똎조໸悮薱玤怉渐ᒌあ賈㯨눣胰갈\uda74蝨꺌쀎໸訃\u0002ܠ䡣莠ﳪ퀐Ш䎆㢭ਠ༈\udc28殉瀉푊鋡璈ܠ堇⁺Ǌ鰀㩃藘씌⤀஥▒騋刮⃒퉞ⱖ뀥䜘̀阁ˊ⻀᷏棣螠҉惺౐ꁐ梲䄃닧⚀圦\ud8ac֮ࠀ軈仄⠺Ǝ꟦Ổͺꒃ聏Ϙ̎悜~攎಴င觗ⱀ㨌僃࠶鍋袖ࡴ嶀⃧湠됆慣퐅⃌۶碄糬ஆ閝姽豐璋恰ೀꈍ䀽萉〇凗⚉ᾏɁ砏꟰\udb08訐ꏘ攆㡥0撌䠸ೀ爏穀捺鰍ꩴ諀㣎扬胫阶ဋ恸Ϙᇣ\ud8b8谐퐆᩽蛜ᖒތᄀ퐇₤詈怀〳☔쓩怏౐訏乒à㨁Ⳑ樠蹩䂈깡悔쨠ᩧꂑʬ찀肶ൺ⸕냂肆砃䩷₀暧\ud86d掅\ud8d4ฐ⍋曃⊪ゴྐྵ涀Ꝺ첃聎Ṷꒆ㡎쭠伌傟鷹鰎▗ꀠ鿧\ud8ec趩꩜삶쇉稈ꁰཪ嶅肴ސ剙퓭雘ȅ龍݈⬎죬䊰괌ぽ軸硇䠐⋪翤蜠屝╂芰켘ꃬྖ뎨컾坈ᚊೌ΀฀ᘪ诈츮৲茖䳗᱐\udf88仔܀℞뛬ʰ賁Ѡ嵢ೊ詛溈ꫀ관䣷䇈罯Ṃ蛰\udd54悄寥ᕐ⁠ޠ౤똍骶ṫ㡔枈聺ט砅켼䃌ࢊ㋈ꂘ옸鐂㣌襀恲ð㨆庈ꐨꐃꁥѠ䥪쀰ୀ訉⦮蔶항詀᧍챻ᕇ㰟棎黀珀琈ں斆癩ꐙ詈ೈ䘍⪤ט㨂⋡\ud8b6ೀ튏阎ׄ怇ꕲ؀꺆懄ਠ썔䳬Ш⌛衐ˠ髄㢧婀\udf8a\udcacր䊁䄈ੀ瀌䂸蒌ꍎ唎Ԡ쐀茠䊇廅ಀ뢆襔楕鈸璉思扚\udd90㖮踐嶂⇢Π惡෵ἢ냎ᵲ繝溺訂燮怎揀섊ਛ局婞怈ૐ轗⁴薀괄⣔Ҏࢠ་⠏૨똎聈討※굲岪\ude42씀袠쌅ਇ院뀂૨⎎෸堄逰\ud8e5മ稇왰ੀ䠮ࣤ̆Ùҍꄃ܁砆偈ˠꅧ耣褀Ⴤఐ䮓夣\ud8a0됌倢ᩀꈈꁂ苠萙᎔『죌螾縀襀튪㘠ી㢦྄蝪䡌쩠\udfd0䡰ึ泒擰吆㢸藘分鷵殚̅嶽\udad0뇡⚉鐨됎恈ी刅Cᶡ큈ࠖ耰爊퀔඾䠛㗉\udd1a햯噜巸璎젪茜傤詠麉䂖Ķᙀ촌쁭Ȁ㇦րȌ䃔ШҌ耐ૐ쿖\ud805娙뤄䂀宕+݈\udf8aə\ud823ᡇ\ud848ǘฅ\ud842薀螯蒬㔉䮖桢㨣舿崣軌꫊歀⬌䀠嵲ᒍ䄓讈ꘉ䀽躸䘌値갰㺈큪륮젮່쏊汏ເ䁭曘梙惢ஐ상䠂诨抍Ԡ㫨ᒎ㺴搨䁭⸈ゆ駭獔ᖸ㶋邿ჰ됃뛆咝䈹㙢䘄㧔와㕕㐨㝁婿﹤唶蕃璔悝䭴軔㠽融ᗠ拁ۄ\uda19䅞᱐奀䁈稏보ฐ欖\ud8a6楠꒎좊Ϙ惌踠ﳞ㠄莀䊬규倰瀉䓕䝬ꒌӬٽ퐴⎌櫐췌탴0潒䲸㘀嗒䒤訦嘦ᩒڎ받鍙찄㢹Π「レ課ค㣅਎賣\ud81bⷬ橪䡯騮\udf87ₜԠז\ud838৔䊇ꁇ楠㜩퓬諀伆aꓰ眼삷겝ￋ搸ݾ瀀䣬藘\udaa3窴ശ塒䱘Ɯꑛ邯ꆨ힞샃ِ瀇耐๠‽肬阇厾锋⬋袭ೀ҄莠ꈆ偒ഌ⤋ଓ惰旃\ud972ࡪ繆ޭꒄ薅\udb90缁t裴멋ຸ萸⻞쁏쌛瀍䁸壌涜盟葠둓ꂫ㿈졸૱̆㣢婈\udd8c傖Ʈ茹␰ߘ㨇袸腕뒕鬸첋衪Ỉ꺀噅ﲴ鄱볠췄๠遇뒝䆁ᨢ攁倰ᾭ錃H\udb3f菹㶎㘎࢚ӝ빐༢쐊甄諫貤갰똂虐ᯯ껋뚹㠎ე૨掋遠Ѡ흐『변弚왡У퐎⃦Ċ䣾氩⸘ヅʼ썐䵽辙ᯣ\ud803ꊐ疹ೀꐀ碢ꋠꈇ肴ðꅔ⡊\udad3镔⣸ᛳᎧ䘖ꪢꝐ㨽诳ꘇÁ່䎎賄୻ꅠɓ섃\ud8ef藘䷉嚢瀰磣׊\udcad࣡ꁧ₨쥠ᒏ鰧嬆ǫ킄聖Ш홇ã뾋롕릊b刉뱎藘ࠉ急떄翆쒊ظ槧\ud813⟘妱鏒뎕怍 ☱誰푇뤀㔲虐ҎⲴర됆儔ᒶ朲ﮒ枠ꈎ좢ఌ攝䈀互.齢騄䴪ꌝ뢃ꀴꑠ嶀嵞쀙 탢Ʉṯ뀩ٲ笪푫쑲澸㈅䐹鰁䨦돫ﭚ탬蠋ុ樼䏤յꋅ爸ꕶ拭啳坵犐큙鴫洰暶赸\udf87\ud8a6ฐꐊ䢵킣벬๽憝㨅윫୑ܐ껸璅\ud8c1Ҁ똍뙷饌뤂냢ދ꺥꟞晤੄⣢檃㜰얎꧌ᨬᏁǎ怋䁼萕틡諧秔攈ꃁꊕ됀拡ఐ觘崸0쪀෸ᓭ韗跃̀컫ᩄ渄蝲掌倄贝個Ỹ딮૨㣴ךꐏ磑뛘鰊䀠Ꜹ聧袖ࣹҎსಏ纳ꃞꃖ阃\u0001瞥콬죱뽀瘈討ເ棇称쁈⬆䫥튦㌨詨逊䎃ꂸ趗琔惄茀䶢폲㔀㱞﫾◀ಮ嶍Ꮻᥜ꺅\ud8ccր앙৻\ud81a爀ͧꃆӑ⎋邸若뒚뤔蝡爍⻅Ԇ섂❄竐鐏ᷓ葠⬈\udb07麗瀁ꍆ̡ꌞ퇽돘⪝涊Ѹ쌆=蓵詪焜\ud80d줐ҋ㑑䠊䂬饀鐏俷㫀꺉坸0⎍H첌䔽胰杣肵ી鐁毃ڭช蜖콚ᆢࡆ\ud93fꞨꀗ滆rଇ꩝较劄悭໶椃ఐ్Δ輿厩䔘鵂耩⇚ñ疲堃籰ᒰὄ፪‾孪顠蠎規刂ꢊ\u0006ꐽπ疆뙉笲ᶐ\udf84ǁꘀᜀ耈Ԥ⍴㣂苤፾꺄뀡ր稁즄瀸؀뙕뼤䝄掱휠༂䀊疊ധ嬁ࡉ胕ܖᠱ頏쨄ǒς⽔ꀷߘ䠊\ud81c㰟Ꞙ諘漲芴ࢬ퐄脨諹䰨ࠓꡒ旱딀剅嵶㭁샼皮䇙˵ߺ媤Ǐའꀌ၎ꌄᶀ璁疀퐜ƿ時頒炴ۼὙ纈옆쮰첄倱`ݬǪ퀋ꡣ耐กᐔ恙֔ዀ企老梅ܠ㘹煵ὡ숎魸骅䥘鐇贫䀜χỂ⊆­唆ᲁ誮䜮샂霠癧຿ᰄฐࠃ뤝聰ܰી쀌ေ䈨ᕨ렲쀧Ƙ⿐\udc81젗⃲퍚⦀嘅쭻⯶圠鐇ꦰﱄ揹ڌഎ릁䐍䊬侰딈爫䏖⣪ሹጁ삹ࡗແ掁둀蚐ᰠꘃ䬀솨ॠ㊃豄訏Ԑᙕ까缼ྰ刀膒艠Ā䓰䇌꫗℘䭄쨄अ줮趈킒ꖾ䓛঎戁崗ሟ脠홢Ǽ\udae4궷Ŕ仸Ɂ鐏䁸֍⹀윊恋葂遶詥␘䲰ݙ匃ఓ胶엢뗈嘃\ud84eʺႪ␳ᰩ\\摠֣ᐄ瀾㗲趬怦诙䙴猤됥⑹Ḑ⧲頚聽낛騱蘈፶Ĩ⁪\udc35欄Ųఐ殠屖顥ɸᚐ彮ၡ臒ᒀ膉攧倵୑䑐模뉠ͣ躀퀝\u0003ᒐꐃ퀝铉ᄀ⤃఑ⲡ할㳈黅耰ϗ춰똂쀻੣⅀౛ߗḀș샓ɰ圠똇혜耶䵀ᔁ툟碈ꌷ㍅Ⰿ䅁슐\udc2e醫᮷䪨㰖삅ݳ꘸碢걓䖰ࢪ\udb06ꌭ馂୺࿙楟䚣躪⭁堌ဴ⁍乀纞㒻മ壙耳䀐㭁栊̒쥀ố涃逥Ƅ荰䱺詘\ud8ad[ીစ㴦\udb84঱伃䠈॔ā踘ᨅ咮㟠১㡦ω菱凲摌哀ᨠ剣蠖胶噤෢聠蕩叾缠䌃胆Ⳉㄛ曉꛰굃ᅍ倨ɖ⹀䊇슆㤻俳୅퓇▔鸉㈷ψϤ倭涅䇡⿋阽蝬斠Ѝ\udb0c⌔䒞䍲쑇㗻ꭝ堜亠⦁黄ꩵ퀈ࢢ⣤﨏憹᷋␂艰ۡ뎴䋢⾰뾝₯怰Ⰱ昪䈐ھ麀榡魱蝹仜解︯㤔Ͽㅫ퀍\udc18輐᜜،怛ムږ倅 섚ኄ鰁퐿§馔؆䕦䃲嶀\udef7늨腲ღ㩃ᐈ삏ꘘሀ怍㹐⑱⚠츃嚼⠃ᝈᇁ렑䀔钀僥‭楀ಐ̀硖䋵⻁᠝苯蘘㎒谈樹ꁒ؀射䔉킠ো坃⺊턣顄ᰁ셕藀ꀼᡦᐨ׊瀈᩠Ԡ⾒蔂䌔ᢀ\uda97簝û`䶇麶\u0010᥀喇‭܌Ẁ갂耯씕ⶤ닡\ud99d肢힠㬁像ꍷ싐αᢎꀶ툗⻀嚃Ћ냺謀⭀⸙썫졪ᜠ㒶ﰿ畃﬜䁄脢ꐧ匲Ԥ豤閳붗柉嚁᧡\u0013鸁ⷩ୫䙔佨⼳퀔⡚齶㰁踌绶勬ሁ﨤㠄⤉쥂ꘀꀩᠮײ먄㛥⮠쨎젻ꛫᴑ빑쪘㇀柘ᬋ爛脳腔\ud815狒܀沵栈 ┄ࠓⲢހ蠑渣꜄΃ᕦෆ犂聠ೀ彑訖肂蹇鬴흍ʺ᳔᜗頴洺源矊កဃ\ud858ퟞ㎕ظ륹杘ୖ湊ҩ㳜⤂坖ܭ슮歱㨆\udd9f迼ೈ\uda01僤뾠톔腱\udf22驥Vી㩀ለ쁥ۍ達酃齕顨㻪쌆㙦ဩ໭捄딼䰌値঍崌倇聀Ꮤ阄ŗ₺䮦늜ؠᒵ骚 ò劀\udde5䦃ᓩ΀、愩ᇡ궁꺬蘩ɯ阪跁ᰰ쁇쫊䚅랏쁒½ꈩ䠂⩪Ř\uddf0쫆࠭膱⿸Ā嶞\udeb6Փ郠햄䡅Rᶼ䦗漋썉᫕ᅙ爸耕䜠ᤓ픮 㨋鋘∌ꀲ좒ᬞ晁踙遠̐䟒앋䁫޲נ䉱쀔揿ꥰ끋䎌eժ蝒ㅯ䀒䎰ఀ㱆䊩颮苝ዊ됇끆ʳ葬\udf08訔⤎၁ꀊ곤౧憂ď난»눩㹢͚ऀ⺮䂣馨鈖頖㙶퓪ġ\udf04聓Ęᱼ瘅텵줸ೈ㗻⊓꣢ۿ⽢嘀눊⑑ퟱ坔씐弼胔쒻⺍㪈ꁆ慵ᝪꈀ鈼촘욶ɗꄹ숔核Ე꫗噂?ՙƂ五ǜ낀㵬ḇ\ud831舱㦀阅쐰솾蹨✛鬲芮蜐㬁焏擓2铔⬃⠔㠛豀緂坤⸠픙鍶䋯㦀\udf87猝꠭虘ﳨ琥ՠص黉뉁튊㛐諆徳!䩏❡送쀪杠㛔Јᄢ駱䯶ϑᘧ좠ϳ↩斂䬃꤀쨄뉱ɵ`ꘄ玊唁℘緍ሥ㘨ഀ热偠룖袵栤㗛ꥠ㒙膌炌ꕸ崡赧ꀎ䏍菡骋튋퓁䷸剐刂逶偸Ȁ膪옆돳謉暓쀟쑇ߡ炃㈏뀞埾Ồ쉢ᯠ兀爀啩ⅳꀠᒒ鼬⋩ꐘ裠 ]╆㧩鋏力쓀봁\ude53门䅽⑒ṍ뙜䊷謜䎕ꮁ䏓삠楕봄듾炛띑訆䣜䀌쎲ༀ瀞╘ê晀ለ좺ᇓ귔ᢣ耫쀘䊀館ࢠ匃秈偺௒࣠짌਽ᎁ쎸态ꉌ鱖ੈ妛먃僅pὠ؈櫎˒ᖆ떱≛斠✠㮢╃舿覓녁⥁뉒튾艱̆ᘣ댮ᖸ᠂챌ꁓ腹驍ጧ聝럊្풶숷⼄艂瀑ᄩ咱山뜧\u0019邈➰敤\udd69Řͬﾔ䀓⋀ྠ攁蘃ฮ劰Ǡ؂㖊ᥬ¹塉‏냟肀⦀ឭӉ푅ࣳᰈ곇䙋綡⵭㪇璎㮐ꀬ\udee3᥮趌挚Գ꣹⨔ᢋ๹傎ৠ섇↌䎔ǔ鄖噜唏ܻ볈鸈ꀕ膎ၨ錰졜ь騠騔닀㷅\ud80c睉墀僁銐\udc03仈㰃㈙途猀⟩訧菮ᄑ븕ꀮ ஈጐ뻏끃胣ꈢ瓊\udd6e㏼㻦ꈨ옼腞ᓱ掅䀸춶知䩢蜾쇽\ud990฀ⴳÊ恄뇂ޝӣ꼐㕸宪퉯䶕ꐂ쀭ເ狖蠘闆渡㸄㘍䐒ኀ耧ರō扱뀔䂕ᝠ﬎丛䃉쨔⾲汖⨆௄혂녖盖橅ᢽ閕\u001dǩ꒍퐀瀷僽䨺速樃ˬȓ숂뢺䃨෬攅䭟젠ী㾧둃郈䄠朐‷暺잰h砮䆴ể猀踒㱥ܰῊ떤㠽젷ប㨛⵴䑎燹耜⃳✆苘ﶙ갍神്蒨ᎁ太᰻唔ሜ竴袔蒚曃טּ℀繶퀫駢ꀱฅ惔݆㟬ϊњ˕⢺遀耗惯阪艁ꔽ\uda4d㓣Ⲕ졮쭠者釶屵ث鶤\udea8竦瀑ኸ藃ᲁ숆偖ɋ②ࢲᑔƥ諀樇ꯛ浥痉欖먨Ⴭﾲ砑퍪ꓠប쀞㪎Ԑ㗐ﬀ齶퇒ᜠ缮왟ᠵ櫐ḧꚀᰤ哥鲍흋怾쉛롑쐀\ud998Ⴑ䩂\udf70벳胛蟎蓢⍦倄\udbe6豰렌屐豧ꅤ垀氽Ϗ꧕ቖᔝ̍͂溘䓰ʄ㰎都覲ȁꅏ℀ଔՠ⧲멊՚֚㓑棌啴ᐊ邠ꃕ\ud876ɗ뺀\ude33-ᔸ圕幾֡⑥耢ڻ驩퐇ꅵ僘ň坛褋拨搸菀긇쒺蜭嶇ꀄ樜ۡᇲ焎⊊֋䜒윋䌰ੀ၏搦超ी浹侾┃ꌠ⟕晤빥䒫嵙偫崱颠峀㼸隫핧㍆⹺\udad5샡胶ᖀⰑ쒍퐜ً㠆墸⃤⡸⬛೚䠡썐ༀ㎹ᮘޠჵ\ud858Ĕ胤ఁꠇ谣ጁ볶鐂砒ŉК䬂膽敵㞃⁀㎟逧변﬇媳Ⴓח㸑옗긧‪ᴳ焁๖䪖膡\uda54倊㤺蜉渒耓㦁霐⾠槁焎렰点ﬦ⹱줆䀼\udd92岃ᇿΤଓ剛ࢅ蚲䬀\ud9ed獝叆藘❱稛沭ԡꅨ球㕊䀵䱔眡ꀹ甘莠ᱳᨴ煘԰Ȱﻅ⁡䞴䳹१ꝛ⮑Ꟙ䆫욛퀒ა꣢垪‛Ꚓౄ䮣炓瑩굹嬘䃜₩떲៺ᾨ⽈␰룴ꃰꅭদ憃븄㸯딮鄠ﲢ꥜䨘禐⾶匘굫淙禋領䊧僲딀хᨸ㗁哀傖搨胸훘❰믑㱈Ķ⏻\udccb衇쎉ᵍ琲킏　퉖Ց뼫ꆚ삸Ƅ尠枷Ҳ匦停홡჊頀ኩ㴺䎄ѥ㹶ﲐ諨ⱴ钳㢡\u000b忈햔著ञ踆ȅ怐\ud940⟤⒵墆ㄳ옛唲无មꚦ䵗慏컌䏫븝ᔜᒭ॒끐妆▩겧耤ㅴ愨慚貥횠揪倦鸧腉䆱冀速廴ﮚ执䁹온ﶃ왌ဏ훢믎덥嬗䲰ఌ㾍鐝耛뜐⒣瑡\ude28ń哾粡꧙ꍦ䬀蚤㽋䤀준묜猟懞恤⡈왎㝍辡狉崦䐈ଜ間䠭腉೎ᇁ쀔逄㙠릫Ở멶䃩᪀々‱䃉ꨠ幓ꎁ੭鈁䘎쁶⫫鹼씁瀫㍛퓙ᡲ膘‌聘ΐꗂ佥䍠学Ҁﰛㅚ屭怏ం+ꬢე힮搮쀪䋮ᢚ⣎돡㧀廂豲ʗ阋焎ाᐈ覸楥栓㥈塨ፓ쳄첵洭筎ꃠԼ礂ꔉ៝梶凞橎쒌붒允詮ⷍŐꂭ肨咺盰‍搪줞瓄㋧ਜᐴ㱩ꐭ톔ňꮊ︖逍훶何ꚬ蟇 樃Փ赓ណ簌䒼걠ϸ㒹㟧ʑꄘד″⅚ˠ扤뻙遑칌阁톒烆喻ⳳ\udc09場㤹㨱㇁膱鏛蠸늛蠎茬턘`㠇몫ᒜ摠崢罅톥䣨褗꫄⠣\u001c傌蚊〷ꀈ暧ᛵ鹤㷑ᛙꕺ⥧\ud816눢蟩嫡ﳀ聏ⷸ䍹᠘첹ဘ\udfba쀀˯ꠧ펀흇嘐Ⱀ㢉쀇独꿹ᘀ尋긚赒ꑔ꫒憒≁䵐ⰲ푕曃键蒁⠍핖甼ࡰ㡒ȡ婷凍㬳萀ᣦ꺳᷸Ⅹⴽ佐䩯葖里Ϙฉ쀀䀋贳⭁Ⱥ륳͠\uddf0Რ궾뵽큳剹椐삭鸻䎁\uda05阳낸ૺȃ渃\ud9d9\udc38꽁ᦈ탹輒ऌ\ud967喁瞖橀ᕲ倎ڈṤ㾙㖓穨⨋꬈➖욕Hº墮㫭᧲툁솊⩷欆蒳丰撇旘穲ࠑ殦꜈ᦵ⑇ꚭ蹀랥怟쨛⸰嵜肛⑺噢骟潮揿嘠⫱⁒©揄䮀ׯ虤⃗㖄䭡肌堫㔕톎胔㷥阂⛬苈﷌㝡罖Ʊ᧠찀앑ᙠ࿪憄⚸ꁲ챶䰔籞瘴喣疽⁪㰗⡖Ṩᾫ慮橠ʁ屦䉣飼⡶됳黑細ꌁ霁ഀ竑剅㽧須ᖇ艰ࣀᛄၺ옓嚎铙눂⫐諅쥴뇙嬙뀏缤ꅢ≨畈\uda85鵺費牡뙵䕠뇄녥ƞ芫碉耘耰゚鮋\udd08ϐᶐ鐃붲㫳◡ꥍ\ud957蓈骇蝣洆愌봅䶑ᰨ愣뙶釒῔ꇴ⦳穹뼏ꤺ䎕촮〉誜抜蠀媲㫝퇈駛윮ਇĉ鑀巐鑙禡鿥훷̎ß똈߉肎\ud892ⰼ쇾\ud931쀕粕㯎ề鿔\udbb7᠊갣ᐎ恹銺ᥕ뢃輔⬋궄ല≖腋땃뼍﹝󴖠聰䅝݈⸰뻅⛩ꩌ釧⩪涞烾ᜒ騄췖냈戳⤱ⶀ蔆䄇廠檧࠾\uda12顾ćრ卜虦誵녊₧벜ᙞ䈝歾큁錳⪛擠ⴥ뉝⭺夆賈튀쪇ꞎﶬMᣡ\ud91fࢎ껥\ud9d2귍璜怖犺귚깽쵕Ő᳁㐒ࢳ튀촘\udd14꣺쥀礤滑䎇▐ᅓ䨏陃騁惂蟲슻탣릋狮匏⫢쏚렗䭮쨙\udd5b阠಩좲項㣬\u000b踀퓕쨠ᒬᇬ滜ꞿ䛴Ѥ㾈ൗႠ崱죡ꖎ眻妺치굯㢑䓢ظ坙譟곯쁀Ḡڬॱ̛ᄼ쾆怲胰亣ꈥ四༭㲩὎אּ䠩൩꺅꩏顁쬌䦧壨ꯛ岩괞쀐祐緓녆ꅳႍٹ銵\udc8a͙૳㣠嬋ꔮ笲뤼솖ᒕ䇊œ椎⵳浯綁躌偟Ϻʖ쾵誈큺ꏶँ鴌Ì舅趘藆츁ᑀ᠀뗄໸婢䃛䈄襘ᘁ蘄㡡ᲺㅑϢᏘꛋ븎尥欚礅既礕秧\udfd0쩓䩥ꩈ猂㓻㋪匤਩焌砄˯嬶῟쉎鈸七瀟﹧첚̴彨됹瞙焠뽐ဂ壿囋▥鵡咾駅吁詢ﭚ黉孢숬⡶Ⓡ⥮欆׈㍰୒絿씸쮱紘ꐴ挿㗪É风ᑏꖈਧ视䄒퍜Y㟨摒埝׹ꔼ❕ㆃΆȺꉡ綮ᒅ쿆振盆恅趞嵛譛Ŕ\udd32ﶢ틋轀䇗￈檬\udd30㧊㺲⪐ᮀ閦큰䂴\ud820껱⼴剸ಱ甾㝍恝≽뮵ﺤ쨹솩\udcb1鶢渠紂끡臀ᓀ༅띱ఋ䑫઎슄衅員刀윃ꪕ期쀁탇∯ö砸䦅˳穉嶀ȋ䯆憸⼥繻纖쎱탛鲤ể螄鰈ϊ攔磓셪颁튥賄抾揈㳵৅뙣築죀즗䢨卬଻姵坶ꤎ公듮䠡⠇耵豼錹ꭨ౿桅耈䁥᪱띐膓㐸៞ᩎ庢骻࣊覒軣᏶ሪ깁爒㠊஄ڈ褙掱댫苠众骑䀂۠甶⣄些鼀缾澢ᾄ耇熐抠悞畠㕂讳㩋ð䑻蕒䠻₌م灣ﵾᣬ菐᜸秭ᄗ怼ᅀ⻯\\徵ⷆ釬ѫ栀딅䬉\ud9ed辈頂ŝ࿡㲁ຏ膇䚠⣪⣀\ude11Ҙஔ茹殿勞깓驗\udc42詀⩵෋ﭷṼ섄袠侃ꮜኪ伷䢠ꥊ\udc73̙鮂Ӗｄ呕闢캠躅晥۶絠⁐樭㖊쌃w翀礹ꧣ傑뛓䝌氰\ud808ቔ㰔組ﲘീ䟚䍽뛡鹷箯䁩톋䨱찆૔똜ଶᒥ똆桅땗䤉۶䄪聠箒熱䅬๕떣ခB쁫吰꜉듙ްꐁ䇿偷仳嚴ߘ杻쭘뜩萞׶딉誧ንჭ꘮\udd9e嘝ꀑ쏨㓱薍浆쵱శ䴈쀔ꅽ蹹킙ꊦİ쫆跙ⵆ熷䟨ဏဏ\u0004쇬‸壒䄼ኘ쌁嫂\udc30祈獌Ⲟ퇊ꢤ닀ま塷鰠꺃堓贬ஈ饡谚劬ߑ苪犨焇č葐씰者℺涤宝逕⾠泫\udf04蒘戄⟘ᒃ⍅胰ຄ紒퀙奪岯烀뢑\u0018ʛ墀摔戲說஠棕몾\ud8a4Ƀ쀮錷肼ꤡ阄\udc25邤Ҵ\uda07블㥶園묁픣\ud80c룙鶴᢬튜昸՘᳁챨䞻⑕瑨䵼ꗡ殬䂾‍᪜泺툣\ude67棧㳶䆬妝̫ᚲ㛐쒟녯ℭ✚蠚眮ݢ됱놐땕駸헅ხ㜟쮶㛊⦔燴䥰ⓨ恵裓섊⩘⡩產߿舂憃궧퍳텱庁ꠙ㗻\udbc6퓦♯縏恡죹㝤㜂䧉錌䑋趲䠢굍▬좪掵餈ꪙ虽鮖쀉쁲㡬젅쌂ᢊ熹갓耿頢֤\udf58\udd8aぺ聠괂耙ﲳ䓈圎ᮮ떴䇀぀ܯ苰苨䘼⅁鴛쟔\udcf6邠㎓垂ꌲ粍쀳ଥᛮ刂퀎찯똴耧졮Ẁꘃ븀܅ᠼ쇩ꯅꔀ؀䶣प銧젰ଐᥘ䙓䶨昰ﱉ炉⬀뢘殐趃瀋胁၉㠖⎀햆ఱ䨓\udae4෕ᷲ\udb52吠䲃ꎠ䒲ၤ褹瀃\u0010菌䀐뭈툛䣭휬踥좜袡郲쮘갊㤎몴Rೈܰ楈ࠄ伳éᏼ꾨ꭀ祎⢏萵䅁ꖓṢ׫됡힪誫䫠軐싱㥌洷ʈʒᷘ퐉૮먚墡절ð㏘뭁䬖嚣㭚䮁蕚禐뢢耊렜ᠠָ蘦ꟑ좌覘Ȁꄀᶔ勳홍྇ʈ԰밖倀✍擿襂㫴䰈䀔ꌹ⾚堂㻂쪜É쇣׆蕚괙ฆ胆裃괸ⵔȂ蠅뤊䁳⏾䖀㑆ꇈ踌ᄒĒ큊䝏꽴坡踏ㄆ蒟;ϸ⹀鰃\udd88쮒㲑菘͞掀㤉묾˩⬑ ꐃꀝ諓胶ࡍ໎Ɤ柌倵ꘊᎈ؇⪒嗩⻎匯ɢ슰⦺ꮸ灘塠䂏膠퀛ീπ૰ⲅ侁뻢裺겜봊먅‍钷੃ࣤ⬨꧙떥큤끳葭␆䊁鑁ྐྵ\ud850ȱ⹣躀Ⱁ勇餲뢶̚䴥ꇼⳲ䁍㔨耸⦔୒莦↠偧#岷䭾차렜㘢⣥ꈻꓵ↸蓒➈괣죭吥㰘䄮莂饐ܺ嶤戃쁂ᮀ࠼뛜ᢊ萃爢肮èȸيꈆ堋ᄜ⺟뤎ॠ㚺黲堍\uda03ꚜʹ쌀㐊ꒊ䀉怊䡑ல຾᎒⎢뀏䀿︇ꎺ袷⤀븁ⶉಾꪢீ普㯠鰂寤ဈ煎䀦⊀뻅\ud826怓卐ʅԠ㒑쒹耗䤹䂀ႂ̃ꁂ쾎聿ꊎꓬ鲀掁ש岘冀亚⃠䓚뀞Აꠣ춈ꑈ맣ప픃璝䁌৔଄옋ꉋ怟䭜旼齠쐐縧쑳튬섊㠴ⲣ仁琫ꀧ⡒췽༦垰㠉騖貨〩칌鶞㨀ꬢ琫碏큵䩳㳲腰汄㐢㉒̔ȫ᠆悪슍삀尮对䳈Ꮐ䓐㴋ꈥ䍑ꓣᠶ⇳㈏瀔肦δ䯩듌鱰㰉ᜎꩉह䳈൨벡㣋뚊͞ஐ㔰見곅괴㠄芓䩫㌠☱㜃\udf01⃦ℴᔰጩ⟌ヰ\ud941ꢅ蠑죃뀌먲䊤ꁀ⃌‼갃Åጱ䘸ᶜ鉰䖢겠렾\udadcᘱۺ崲埀뤷ꀑ㫢ࣄ鋒췃牆⬱䁁퀔῎㈂Ⰻ쮅︒툩싅ꥀᜰ⨌䨂ⱻ큼ᄸ韂ꌹ渌뤟㘈拚軷⦬ᓰ㤦댷룐ᮡ얝❐溡敦಍웧ቂ蘄帀蕣流ኡ䥊쩿▀\udc81陀\ud99f婠遊膃롨踒꜁䒉諞ꄼઍ誘ꀈ儡桥Ǵ샻ὠ痳렯촠砩ĝ쫠㉂旸㰃嘤岠桕荴뇞짐ꌣ뒃᢮炛҈鮲闫顇䠂剠戭섀✦⸂빇攌阎䍓ŋ㕘⓳ဎ谷\ud9b4숪ᱚ쳢鏡瘔桄㣥䎸甬ቈ拃蠒G䮎᫽ធ\udf8a䓅五શ掋栕貐벒늇ᘶ꓃艜␇Ⴀ䔚牮⾉ዐ쫉讅᫾㥀稫ć㫃ͭ蒊Ⅴᄻ㑂躣ከㆩ쎝㠸㭪㈞磸ᎵⲮ㡔⥄⠄䕇輜鮮焞\uda70쌈㴂䠁ᔣ耇㑎゜귫룒䰐랁섙\ud818騞ฆ鴠퐂羉よꠛ㨈㌫뾡쐺ƫ䶸㚄脇橊䨠効텖ᘘᇔ⹄旅쒲ᡞ닾仈ᆌ༇㺢\ude99ሐ릎\u0015ᝠ诓\ud803\r竕猂ੴ䘂䩈⑕˛ˠͪ펣䏋䘬﫚͟䴈៤劐踈༸栦虗꬚ℴṉ툇\u0014肎φ悮だﾱ蒦儮渉톝ꝼ車ැ୅亩5୐Ͱⷩⴧ\u001d硡叶좤뭠靏츮끔჊ᢈꐉ팻切쎰ଈ꩸垠⿪躾꫸⣺ⶓ᢬庙㐜耍拐Ċ²䝐퐕屗㏠ꖟ㼜갂狂㰩⩐ณ❴ꊒ곃\\璴兝㋢杀刅㦁⋚Ꮢ앝黔䲊씺嚕솵˪㈨眃㬌씇᱊돤~ّﱳ捣႘ᆸ荜攠ૈ⎀鐚녈܅㒰᝭⬂쾐祮堁ས莽憕薸댤潉囋ԋ誼䡿䏼蘎뜡槁謍䋨ᇂ謶苸㸅ǋ稗㳕嬐ࡨ滘쩙䋡쒖ꋔ퇨ʽ⸠厛詍챢䱧퍁鬰ස퀉ᑘ٫৴Ᏺ\udc46㽇栻듂꣍㊸䠁ฆꖗ쑁ጔ܀⾄䊁㑆倐ၑ⚦뜑ᶱ耆㸗悞ꉛ⶞뾢ﴈꫧꀼ㛃ɹ褥땄逃௮ന偒բ᪲ࠂਢᠮ‿ㅡ꛲蹎池볬̐Τ❐떩冄당ܷꯔ崠ꌣ\ud80b嘇ኑ椾贠ⴀ⵲⠋놚勈䯶拍껲葊堊샲롢訢攄硂얄䲏吞諓टၪ醙䨏ꀃ꘏Ǡꑠ໮ꌺ鿍䀫ނ言稀꙯渶蓯Ŧ왌袺튡㠋栠ꓳ䙕䎀ด䢊ᎁ焤邛\ud9e8ꆂ걂귁ꭆᚻ᧳怵ܚ賃᱊\udb1dᎧ腖⒲弐੪퀼磡芝ǿ㹑䧁覨䈄჉գ㛁㌨巆褆ᣧ⯜ܭ╰䂱쭈ଃᒤ\udb13ϭ骡䝂沏➕\ud844\ud89f苮녀綁䴿惐挫曒咦幅認䖦䇽悍趞⧲똃쑊匢ر獸⢀톇⵬겠逅ܵ♇韒ꆓ䨏漴ꂜ̏䒀㬢苨ⶠ⼗⡟쇥윷Έ꣨쎊\udc1a㮭쁝ᒎ쵀죬솼臲㢈ᢆ뛠ⵄ⨟僱ꃹ⫀ⴰ뽃⯁膨胦⌲ᩤ骆⬮ၶ꺛ڄ똁瘁➊ቛ苻콉㯐\udf9b堉\ud83b⁝褿Ⱀ⾨䍋맆沞㐳⧟⒀驅¯处嚱䠭⃡ꘀ媟갳볦ꥠǷ╉ᝣ婈ꀟꇭ淋苭▬瀅耎憠쏛ኚꩠ醯뺊졌셿⻠攂Ⳉ2ʅ♌鯒⾳ఎဏ신䇒ણ▐橨縎㺌꬏᧰Ḇ␉춤ḙ䢈驺ྲ晉몦渆↛豧↜킡효喲ꃨ遶쩏๸㩡撼銱껿㇡뢁垅蘻젉♕䁼나ʂ㪅îꊰ쉃饀䕊헌〜몀頥賛ꌸ뀒馃広䊆褌ᨘ欑֬젴ᢈ䕈Սㅀ苢瀃䰝Þ✀쥠㇘ᢳᠬ္쀟裄陳㮪翢邬琛썦돒좡᳇᪩⃆耎䤮ᰊ搒ﱭ剪砏ꢯ╽⧠샂汀阙ꆬȁ鉙꜀书렲樼捙趡Ẉ똃ᘬ嬅娸ϫ蓰ಐ임䓬츹飫ঢ়诪㵌亰ఉ炷ᇆ扯໋Ϟ揣鯤눜峼焋湆Ṓ鴳䵀璦璇揄⟬ꄒ⛀ꨍ盟胔௮냤➐㬥䉢쉯졇㍉괛Ҩꈰì쾐ْ֒ᦓ锿ꁞ\udb98૆뾊娱윍㌱Í폯ী─酌젿ꚙ뭹쥞蕩幊ᕃ鮱\u001cļ蓟腴銧᢮䡗ꢪ抰ଗ㜞凳倂ꈫũ䮈㬠茥긔ᡞ턧돿㠸໐뀆䩴莆貍ˢ瑇㈇⨝聊捜桱ᔞꁭ酝੔궉渤䑩⁚왅讐Ť羀䉰䂮왋䴇舀Ș撫ꄢ좊ˎꎌ䵠厉鶷솫괹์謥⪡须㡵웻ጙᅅ玉螧⨅榘੩㯔鋂賧ں끯䡑溃㱠⭎᦮೪邻ᕱ냼Ⴘ怬䋣馶ആ渖뷄꒪氜火䍲䊐Ⴂ⧓\udc0d탸䂚⎤▲㨁젩豁ꋲ佼优ꌁ᥉㴿︢⬯赤ꢀᱲ郎爑࠴ꋍ跐䷑ᶍ舢♄伐뷪҃詃⤋琤㭊䃈؎銧㤮琛얨袉魂⊌ꄡ\ud812㏾޿㊐擈늮Ꮹ䎳㕸ᭂ䨌䀙塻⤋釜꺘缀ꐴ᠎˨郪٪㕢\udca7悬ఓだ뻃뒳䊱鍢䨔艪ᠹ犂栜裮૸ຄ惉뢁豇媯抒掬☠෾觠ꯃ잩₍\ud955老ꇠ⹑㷉惓懛靭驂‛ꌦꡣౄᶶ摩꜊䋨夠ฐ㴰蛁㼠긊惺毊㤲⏑鈇\u000e㤫ȩ跪ㆂ펙ﯮ犗悪⃜鋨鐨ﭢ䜃쀀礶⿿뚂濻鈚贓Ъ쇶ฝ྄굫ᩃ易ೝ๚躀㼋ᇈ晋㙳舉褨⳪薪䆏뤙折ᥡ盀↉ꨳ遥샺ⅎペ襘圢쨢뇀0㠹ꏛ䕆﬌籒\udb4e즎㝊슢먉Ԫ쫊䞜Ự皒優ᨲꂚ䣻궾╂媓㯊倎ㅲR୎ᯊ䞢甋졁邬Ƭ趂䎨➪圢ቻ遣蠤拉訂⽉ႅ棁ς슃댘굪꿂㞤誀敀ຌीጊ쪜폨⅀ᢴྫᣠ㤫肞쉝莭።㞫ᒥ适礎蹮辘邗秙΀뮪ꏇ㊃力䨅鴯ၠ듃%炬Ȋ䴹Ұ厠趘渼ℙ䥀ᘰ猫흂뀭剿츒⥌ꨫ倆蔜聁䜹过ơ\udca3І㠓젬b蛜浌͓픢钫ꌟ྄拀ᬞ焩₯䩈㟢빨︉်饞Ċ໦╢ഡ«냭ꆢ⯨䟮룥ḍ纏鉨紀ꐅÍ爎搟街䅚䀲ଉ㳋稊昃兾䑠⡅᷀ᙃ㠔檬͔丟ꉲ﫠氞鈘¼憎᫱㨜ᯒ⸃慐ꋫ㳀쪡㗪\udeb2ꛣ现P掴ၓ눇鎎Რ鉰෸ʩ끉ซḬ烍ᯄ⽺౩䓓腍ถÈȌࣺ腔̂꿋⠂粳楹⧀㦬묛쐡쨎䏕鵦ղ锰뀬⨀胦䅥浠◲磉ꐚ鉝慣䩊䩿ဠꐩ몎檬懆凥엊澐눆ↁ倂ꛫἵⓎ＊㊔國⥪㦲鯜階䀎킖놯≰䠸ᚔ撩쩀錃桒ٴ茡넥蜡䥥ٱ膴\u000f⮠혊䥲躝즕색暎﷈樔ꆦ撨ﭾ䐑㿤攁ꝃ뮛쨦飓㵴誡偄뼱䙳ࠁ鉽㽂ꘁก婢퓎艐䡱㱂庁审\uda21㰈ʓ亇઀寊誡㐘䆌䙮સ䶋戛곢¬෴⹦쫙튠ܱ\ud874ꡧ撀ፚ䨰쀆뤷栈ᦞꞀὄʚὤVŌ釗옮곔᥇Ϧ㙐郻⒤髨篺羊芒毸᭴ි⑩ᄖ⣺梘݀鸀撃ⴭ衏顭͋ꐹᐨ酫倈㘙겾仑ꭀ඲舒櫢ꊋ䰝蹔ȃ\ude11\uda22聋칬꼅ꏙᢵꘓ烬馡ꖲഏ脜˔†㸆右踐並냊ᑂ蘌쌀礮㡊섒ꁯ꬘奀똁빊묹몈嬧ꄀ썓\udb10钄䌨죆紀馣仈ꀧ뫙㏜䉸㟠퉱︢梠劶̔ཹᾀ坐Ό瘛䦣ꍢ趟᳅㝋䩶\ud90d蹤⩱뢁\udf81솑됎㯆晹謴퀀謉栛ⱶ煵ጐ蜨ꐱ瘀锕쉈䄒醬聕耑킶掘ਞ鐀턒곀⚽Ꚓ嬮賭땜ᡖ\udc0e㘛줾싻칚ǌ狓쨤⠗ꊰᐴ⋫显૶魉쨺䶶﭂횆洺墰샭敊霂砂ꜟ崒ꃯ\ud8b5윁⽸萠옧颜ι੝㗐낓఍펦ມ讐Ѐꯨ쀂ꚿ磋ꂑ挬㯘錛﷈垡躣ጻ൧ꀜ묪छ炳頩િ⤀潠텣堸繁駶数㯫ᩥሣ荊貜ᚱ滁ണᶚ䱷愬⢀ퟰ쉜揌䗔㠜恢ெ∁糀ꧬ頤伀ꩀ⾚쪍ꪇ❨ᎌǄ胬∺̔鸩것쒵૯耕豘珠緓\udbce蘹隠恉ꟙ도℅慠甓ܒ즑䲔㚇閧掰॥ܺ泳엢脿萷অྒ進㹆胿䘺覕忸빣븀偛抧뤜丰挅ἵ軮抻ظႜ쀚ㄨ㺢雠ꍔ䋼渮薔栩ႅ觅Ƃ芪✚в됃ꪼا䴺ࣨ鍁ซ㒒퉳䀮♹訄鞖퐟‖⣦1䮀뷡ᔯꀄ\udc72࣎⌕瓌ꞃᥨ쌹츢蟧ᒖ蟄캈ზ鞳껱㏘䴔穭쑕泩它䥶걚珂⁩횴㲤쒊ஓ薆跀钢뀨胩憞ꍴ௢ᒲ粍怕竂⨶橊栒厡墄㠒갷䪈숦㦺랠恝칎肊ၡ裤⑆ㄍ༶퉝莤Ѕ眹锋掊怽勀ᦾ苙ᥰ⼒݈ᬵ郣靜ወᩜ㤩ԭ났ꢅꍰ࣎͡젣ꈱꄑᮖ⯱碕؊肁ᬔ歗臶酗戝椮⃓凘颷躀嫓뽉苀ᢧꉐǔ吁㒩辕汛钝๳관멣ㅌ斩㹰ᇜ٨渹쒅ꛄ砒왴鉍ⱺ⍶핡檌\udc16ㇷ芘槆嫼㜛\ud826ꤶႻ嗀⸪ꢊ쨪甞킿悎̷ꪜ쟒렅候ढ़裶す搁ﬁᬅኯ灱⸅ᇨ棠퐫ठ仯ꋜ䖹姦튣槈㔀상Ǵ፭꠺䨈ꢁҧ㌑䲟㸸᪛\udbc2妟婈싂ň⼰휅窥喲멖]ĝÄ텓爋逰棱஦쥓⦤찱䖏萯骴鍏䧷⓮駃猔窃뢒˻굕끀鄎縙⁪熼읽꣮틁쀎䂖\\悃菖㉒뜐处윞苬訍暵寤鸲䪜⚆樭Ⲕꠈ蕎쀿蒺음찑㈰ꎂ锂퓃Ɠǩ觾岢࢓࢐큛愫⑚ꋤ蹕銢抗磛엷价᫨㙡㣅끛챉藟滸ᩴ♋铏劄̄ꥀ✊햑ę规苏桶ી뤋䠨爞頕䰕ᓡ琊圠ڤ캩왐ˑ晌浏䤷뛊꯺ℎὄꅔ঩剴痓냪莋ᑾᒂ鏥륂ٙ裆ᰀ寲際쑙౛栻贆Ǣ䌪㡝搱䃮ⶊ㩀㨃\u0002ó驀១␨分䰆RǪ᐀뫦蔮怙\ud8a2끣໋Ⲵ\udf83熅粇速誃권늘젋覎ꈖﰺꏭ䷵⹱妱ꗅ挕瑗䈩滥㇨㰇㄂슩ઁف躳⦰꧗莍栰磼鑦䷊傥爺詛졦耽労ɐ⨞欐꥽척頽캒㲤蠱耂銇鈮䛑䤚墑愯딳鋕ᎍ븠풰戋਷寚৆㾮漑ো锊㈜틚䲧៹枛⩢郙࡙㞸᱉勈悈Ꮈ┛࣠季㆚ຖ듵撰隅ࣘᯩ怖钣㩗꾐⧼\udd28丈ꖤ큫팘螴聜䝀⠆찰쨟엘Ϫ礷픥輤廽ꇷ铑埡ẘ쀖渠즟玁迬↘妸ꎭ㴣繾Ꭳ◼逊肢\ude8bִ툋䳨὘櫓⾌聱㗂窒ه脘쮕뤨㘕큱⨐ၡ눝榰髻ꏣ懄鈀狀렋怫㚞恛߸馀摔명㹼ਸ਼䏧ך鏨侣책륩䦜쿢ޔ笊설ᙹ᧗酮䊩ɴ氁熇ㄝ\udcccƢ勪㊄虑ਈ愠볓䭥쒨ڒ⹆Ⅺᴀ䀲䌅顦麀葡翢겺⫬膙ᣊ腦䑆쬑肚⪿傥撸攈∬㊼톩꺊밡击餃琊鈉ি駪薲緎\uda16壂샍ം齚≏긯㸻槟✠ἆ牠绣餖뇯况鞘哘鶂괂ઢ쥘²訆ὁ᪡쮯뀲튓ᐪ챐堜品뎈똂稔⒣ⳣ릸댐ᙋ깁㡥䄠ૠ߮ㇱ\uddc4耑㈒竴쬥㗁ඊ렬㸰〱牌艿ꉚၐ䢝縓\udca1ꎒᔩ⻘ꒂૌꌗ鹊ሩ憳劦盥的㜠╘䠛ᎌ裁띤찞¼뎠䦝ᶶ㓐Ἧ両戙⠕꪿຀퓙戃瓁}䐊凂ῦ懢蒗診⡻诠㑂鰀續抌\ud860꟧ⳅ靻ጜ㰤䐬鍌쒅侠⃹ᤃꀍⴊ떲኏餠癲消ꀐ苼눫ᇔ荂꺃斀ⲍ჏Ꮨ࢖㋸쁪㺯蘭ꠈ兇⇕⶜六熐汵⪫ᅒ⸥뤺逅圼ە憢䭀ᥢᒁ뫃ℬ뒞띆⩸齁蛲괩▐ᢓ\ud947趪戨Ⴘ傟㠙即鲔辶ﳓk唁ꢢ녶∘᠄櫩벢שּׂ梜넳䝓ㅌ賨唐䕓꜠㳊喒萁䠎速룋೯᭴Ḳ뀤䣝膃늄볁֮겺뉱ꤕ嫼댁쭘ឣ똊ᙊ쌕໱⍘㚣ᯆ〈邾풆֌\u0010\udeb0➌ގ哅㎘莫ኸ冇忎溻諌膼ꁴ踀殒⋬缾넜둨⩡潀莂㠂뀓ꂃ࣓矹鐫⧊琊腠॰ꮬ郉袂耳ॶȨ踚ꃨ帧庸耭曎ꗰꩂ\udfa8犊횢᙮\ud9f6汐䔰꬐ᛝ扫磞啜\ud87aᲘ渳볂켦ရ\ud940㾕혋㋄攗˜遊䢊߁見牨䲇蒌솗蓸⥨쀙閉퐒q朶蜱ي⤠酦禴ᑍ登‰ꓐ먧a걱䀬헺进㬀꬘믇स竝㊊䈢䨁䷑ᇂ퀳v剘⯜ᘛ쿇퍴ó뢾쩷꣨艀࿀䠁Ӧ셳骤㩀䥓j栥⬆\ud96e腤㑘䒶본䨳鲨䩍撫ꆼ諎욆揪ꏇ㹘ᄡ爫扚¯䆐言랥⼟婨敱⒬㿪ⵇ블⋂뚡譄ᘀ㝂ῌ㖀᳘逸᪑ꈁ苇\ud807ﳅဆࢷ翘ⲒⰦ酥耦䏇䧘⧔䩣霈蔪遽옌஦ᦰ恮䐬⛙쾰듸洮䄽뱗裤㋴쓋⥦܂H슴押䒠ဉ넧䑂흘ꊺ⌮쾪띝椷ᑄ⠱謙㣡䅇ꯆ邷ꈬ↡਒쨐崁脧籸ౚ䥴ㅢ佅鼒õ旇䂀㊜䨱环葎㶁曖ꄜʤ鐒ⶇ\udd5c㠼鿫砤ཛ횻뤚蝵댱緳劁嚕芙吉깐钀춐劓왐ަ羉⯮⢮薆섦냑텓ꂫ뾸꒭虉찷鰀\ud8f3ည잼秊囋ᾙ䆡劇㰋璣㧺栗᐀셓눂뀛샳ףᝠ鿌搶퐫ʮ蹸굅\ude84猸ꁜṴ㓈釆Ɪ豑茢恃ⵘ纹韊ﵲら阫Ḿრꋢঃ힋窕푤蔹淬㻢ล觀Ꭸ辑䰡檋Ш偷Ă̩⊅㊐쎽┽줪囃腐Ⓐ拔솈}⃵༣ꃐ턢ႄꐠꖻఈ襒粎䢏ȹ⅟ંⷰ頠㼃舏遮䁹ം@朌ᲄᐒ邡䂤ಔᙀ㤀팭傤ꁷ䪩㕀딃ꐉᐺ`짝膔⭀䌢圊ﰒ蠅䎐蛩⺀產뢈툇蠭≒괢᭰欃蠌詐₲㧧䫐ᒐŒ걌覵ꘫ셸ꭠꐈﬂ簽쌿හ߰퉀숲鐢蠠轸䭴舢锁䈸ࣣ䁠쨭셐ἃﰎ犀ꖤ랶৘ㅄꔓ鑄형䐵ᇙ䭲㮨麣窋꠮Ȇ蛃冤⚑驁椕ꐶ釚䝚ꖶ༡㲂젟ⅼ衖逤ₑ艁ऴ퓐鋂伉∤綣솈蘁ࠨ憡膆฀塡캂褘შ鉢䶉⸤￺\udc8d븮豾⧸ྉ㊈讏辥㶦폣ઊ⨸ꢒꍊ謪㲨誣⃪ﵪ⠌硢薊ศ䬘䎪䁹≨R㔈袁킂蠣ࢃ심㌢Ḿ쀈퐲蛾臦ቨ猠췁䟆ઘ㋵툤꺈隤緱玄㡪怀⺂ე䅆혿耬䃒酼㌠滃뼌␅죒䣵Ă㟈ꂎ਱࣢僐迮㘨컸袍∷퐞䣕∶よⴈ좀よ‹䣋པ蘨丣庑䨖䠚ᅪ䵒㣈錣䲋㈼좋⌬課㫈鬡Ё補恀䵌茲㣁겆눆젨晴奦ᯒ਑⡂ꄛ胪ቨ䏲ྐ휎植ꐂࠗ쌠赼ᨈᠣ\udf0d舋遯టˈ毃渲ᐮòへ\ude40ԁᐇᐰꍉ䁱㣐ᩐ힏∳鐷遨辅ܗ랐 鬖蘫䃷䅱ℬጢᡖꇬ䀥ᬕঠᠠ倁ꨖ‡ﴙ偦॔㪀핁蜆\udc14虲趲㜡ꥲ搡蠀ꈪ䂒丏͸᫰穫ᭊ怇炟쮏ʼ٠鏁ᤳ吞쁱⫁㉞ⶆ\ud84d䏗蓚셚ጰ輀Ổ䬈䢉ꀼ躯ꇾ៸㿡᪏︠т프ை䝒剌嚃嶧ᅊ迦뵴൹\u000b䕃삏ܘ๖兕뜎㰊롺Ώ࿹╰怡뀬䃊肤ռ蒀驏\ud936ꐮꀚ䃹্ᙽ㻛Ḃ\ude15屴肴়ź퐂亁쌃噅ꃹඔ⯰밸簆䳄ǈ컣葒証࣪ᢟ₡誱ἓ숶耮䃑ጉごⷃ蠢异舍⇟ւ⏰김ㄵጛ伅࿰\udee3❍焳ᐉ䃥ĝ㎴퍀ꯋऺᰨ鍹䎅>붒ܒ䌋椔汝殉ஊ踥笻鄏㓨+丱㦸ﬣὍ넸ೞ䂹Ɋ౸ภ̰Ⓨ䀓袃㖠ਣ\ude40ࠆ岡僒ޭ㉉喓 䠆欉ᔨݓ⍂栏ᓻ鄥㯾⩓䀓죩蓸㢐謎㰸쾪堄踏逬쵅㻌횈\ud939哐訤኉칁⁙ᗠ儍\ud8ed鉵㭤무㤼㰚쁼㇂㣰\udc00耷鏓삙㔀㣰丂낇⪌厽仜Ͱ県\udd39䓓쌴䴽㽄쟃꽎挼쓦펬佭㩌\udf23잁堪퀡䂧貊㤜슞䨺೒팅䈍㝫ᓘр趏඄폐惒䌴䞂ꌹ䳘㍨ϐנ㨳쇌㌲\u000b᎟侱ㅸ毱ᵈ倱㎐迱㣜\uda00ᾲ↉⣭㍅䈵캌윈펰缏튕傾䶷ݨൠ梎蓽㍄雬㶋夈\udccd옊Ⳅ㡰塋㵎㒳䣠ᔆ\ud821䑊賥抨ⲫꨴဿ玚Ƃ꣬᱊꼏鰱鍥䁇ࡗ㮳﵎者瓹ጏෝ㵄꼍ꌲ肬迏㖌ᇎ眳᏿侷㱴䉌Ꜻ峪⍽췏㑜鲁꒔䤵铦肺ⅎᄄᒠ僐⛅ᢒ겂䈥轜⬳테猵쳬ࢻ츪㉑ǳᔑ꨸颵鍝䷆Ѭ⺠஄⸴嵝䆋脮ᒸ䑍䱑㣰﷓켎턴ဢ폞䌭㯼\udad3.蜽賰௟佅઱Π錹\udcd7ɭ˷㺈쓠ꩈ⸰룬⹬观ﭤퟎ栉皢ã썭⸠㣰伃輈紘ꂶ캉죤ℋૌ씷ᠺ鎍燸ࢀᤐ눁‍돊㍒Ⲭ熁퀀­奅ꢁ҂槮ﶀ媄阠료슁 ᬽ퓪଻쵘欦㲘詣⦊꘺颚揿〔\udb60㉡즀ꘒ頪憩薦빋測쐁ࢻ↵⿰ჳ앁㨆㳗Ⴐ䯏ߠढ댲㌨⼛㜘ヱ㘲ㄅ耬艮䓷꧌適餱譴譈ⴳ㊒쌋㵌而䓏邯쿜㭴픓ཌ밷䓨bⳤड़ￌⒻ峘珵컣㴔᠋鸸೴ଙ䏥Tㆋ熃鞨ꀍ仔볔굌炂ⳍ쫿ꏰІ⸠⁡膁ؔ᠑胹Ӳ저꾂픺ȸ춷ࣜĀ돁젡қၫ憟㜘ⶈ鱦肊̮꾂଄訫骹궍틱୊쿐湤\udccb褯죨닝鎨⴯㙂\udfcbbʼ૸ᢐ捁蒼་⑍ﳦ쭾쵿㮲저嗍Ｖ偧ⳣ㤜녃肳狤獷⹥ଂ\ud893듎スꀟꕜ힤㽀瀉鐎နᰠ䝊஡捬먪ꉮ趺ٓ⫎휺鴇뇼撎輸놛Ⳍ쭚薶ߺ❘\udd62혠\ud8c3挥螗⴫⪬䔴䋢덌꒛ㅔ저낌ꠍ譑Έ襬\udcf0௃咷ᠠ臠漚챫ꤍⱌ髓ⶑㆲ䈯﬽ﳢꯨW㐪퇋ꊮ鲻⋷⌠⼞౸ᳺ\udd31뜻⫧玂豝㗠ย埲㲍꤆뀞낄썺阁ḥ뀊犈때切뤂Ჴ᳈ꬡ쾽㐂\udd6bጾ퀃ꃅ¨뉴\ude10࢏\udcbb䳡䮮ꏎ袺⦫殠溄ḥꮆ꽀䦪㚨몣樱꠳犀Ɗ저∠簎洞偩Ɉ芀㣬⪭옏ꀬ袓͵୼凩\udf27ㆫ䪤⽇૪ڨ媠ꨃ颷굄霒뱋㲧ੜ苊쭜궬뗬＋沼⋀獻⹎뚀ҋ뎭䢲狝猒꿖땎ਘ膀؁뫯⏥]㺈춓꤯ᬲ᫳謤⾗⣤럌簏糄裣쌠଼ঠ鈥㸋ᠼ懱耦႘≡要☇끲칅㏒﬛줭梶\ud818鮼揱蠦゘ꉡ䬋⛄歫쀞츤㹘阮떂聖⾏൰憰ᗦ嬹쐤胣솊謀⻈䆠凍﫼恁␬ⅈ⌤꧅吇↑㏐ύ꫋⿎憻쫑殟쳬보윯↶䛜讼赊럴ৎ眿⫻䀢䷀룆ﴋ璬놷䳆鏌ᡈǰ㲈끋Ɜꠅ偎餏㝦⎛㸃耦ၮ꽖붋秫偯ྊ㸆掓㏤ừ྆飘㒁␫멠纲⛝ஶ䶈込䩫趾㬔踻獵봆灭᪀蛁⑄鋽੉⺐䬌踪㣨趎⸸ᎌ踞᠄愑艆ᤘ᡻⎀稑ꆞ訐◨橩\ude1b砝מླྀ締྇霐孰₅롚袰듁ᬐ輊뉆챛얹쓥쯒괥뇜짓ꥬ\ude3b䳥颲鏐ൌ欄灎䎏сʒ똚禯犰嫏덀눎쿳兯嚻ᛒ淃뢖ޏ⎾雒ꮏ⹱뜘㭸鼯輍倥譓샘Ĝ⟫卭쪩硄㏔.왠徯媺縰㮲갡෌倭䴱뒲ﴫ쩮㊴䨣ӌᅣ뇁ᜄ磬労ꁚ㭟挔毶㿘胢甌ท籠ꀎ萺ゾꎣ躎後჌䜱˄ꌣⱊ넴ⴠū薝꺸﫠꽄渜誦襮❛᫯斶혒᭘뒊准騁伌擑耰꿕㣔\udd4bⵎ㒾퓿䭒䴾\u0006蠢鱛䠏쵭䅺슓鎋詯銽껦老螮Ƹꇬ鮆清뢄函뺲\ud93bῌ厷蛥比똪彏펽쓼㭌㰌찋אַ⢎鳔岙첍㎜у㓒ꡅ컻먎\ud973캺듴孂雓밾筍ꆀ袅殭겝ェ茛䵭ᮟ꘡顣ⲙ虦ႀ刅﫞⬱ᭀ謄邛䋮➹᫼⯯ࠦ쳛鲬笲价댂⽷뮆ჭ룴㭴먾ီ\udcb9㻽쮩춳랞ꐫ࿋㺔⌎璜⼝猌兕垶䫸正漱묞숋졮⼻廊泟끦ᆘ࿭菤›䮮孠ة떄똓\ud84b꒓葁w뀎흻㡬隸⫴ﯠ뀾쵫议᾵ᐢ޼传眪崂Ự殧ⴧ뜘ᡋ雏ꗁ逮炳浐缞Ӯዀ쭐꼝໎Ȝ隅㟭끱넺⠨帆\udd07塅쇶퀎ᇰ罁读ꚲ栮蜓콿謠㳀鯂ﲱ瘕\ud854曝轶㻸⽡북嬪澝襶㗘ᄜ㶄䟯悐硎쓬憳쫠㬐ᲈ礖㓭쁳⇰⌅Ȩ뇱᧻쥬鴺螅㏓ʡ홛樝춼脸棆奆茚ᱨড⚊쓛ዬ䪚ʘ蜓ꐂ焁▾ȵ쇰ᾋ唃⠊ꈄ衤䁯ਲ⦇剌\udc2dᢖ큺অ䊣ធᲓ굢쥞鮚͛㿰㣰⸁⺁,쟶⎙붶⾄謟꒱瘪磩趞⹸梨កᤦÖ곓ⴠ⽠➀㐬搢꒾\ud8fbꠁᓛ緂咑吤쟿ǚඞ㪀䂁㲜㳍뎎ἠ䊞᩸᧡枃鸞砅ⱞㆇ䩬ࡻ釐蟼걅릾ᖯ䁼凐﬍쿈빑︐ꆀࠎ㻔蠱뉮ﮫझ葳瘝\ud829Ἵ諶㩇폪ꖎ阜乙惥螖Ř䕢ꆮ蓞ዸ信㤡䄐ꄪĸҐᆧ䌁ᰄࠒ뙫壤⮫悂畬죳ᱻ泊笵䎫듑ﶓꎁ幾\udb58螎ĸ혠金ᳶ莔䳐⊸寰羚䠔肏ꏌ載⚝ꎁ踹ꝇ浚簁ｮǰ蜂긔熌쵳߯鉲㻯폲ᾟ딂튇楯ꁷ鐁偘鳗됚燬⼰黺螑갞캨ເ卯合姉쓧걅蔖Ѐㅡ얈噢壉慇롩횻깭턉櫛懗컘⹘䍈来箧Ɪꁖ紖ၤ㖜府ﴺ杤ᶡ눁칇ꓮ虿觥㭽礡ᜮⷧ㺪뮫쫒硆풥召ᆶ值ଯൔﱄँ챻컬⟠麴륒䓳렃䀃ﭫ셕㴩⎳굠켳컄肚鳛㝬繏輎犍㥊짋赮앇퇫\udc03Ῥ䰱ぎ꡼닞ᅬ䘅茜᱄焢ʮ浶੫甕怂㮌訆ꐄ耒헅ㄘ笝옃ꇪ켜猱쯧혮屹밾螀彐箙츧펟憻㧯笤鸮牑챧ࠞ蘏萙퍕ḣ딂ﴧ\udb9d霽䀭㍣鴓뮖䷃ 倆呎餼റ㏏챵燶䃩Ɑ薶໘筢꾩뤑\ud827愿먀ừ᩟涋똾\ud8ba弝詶㵛鈜클엘ܬ弖븙஝䙹업쭧侼䛨Ṁᮞ凎鸵윐Z摼鋌ᝍ齚뱱\udf80ᰪ\udc27푤놣蹪ᮆ쑜而鼙⳨䞡㞸ҵᡆ꽈覯ᷦ皼⤗링ᱲ燙쟪Ι뭢￀䬝ᜉ℔ᕥ讨쑴ᒥ鱩힎阾኏꽉甉\udc97쾂⥶嗨耾ⷂ竆\ud975蛟⬎尒羆좗㯮䙵䫔蝛俀笡켗ꡣꔁ맭룉쳮멲Ƈ㦞ꆹ駖뭰岸⦕솄㥜顂吹辡⾸浑Ḛⵯᴄ딚퐌긩退谔Y၌륁ơ了䊿촿쀽䎜筠㌣찇鲀쫄᭄ꉻ襵\udfb8㝝ށ釉螞ḵ쥘ᇄ猟羋㟣낍稖碌逞衶໴ퟕ컍璹೯왽凢柫弨禵ﴗ蘜Ⲷᗱ돥麖蛙ը喠횇娣쾌盩㪀送枀體炌鰵룅福셬虿旰㮽瞍\udceb⹝鉱狜蜲꺓糎퉧⣯遹껎宮汙찏廘焊Ꜿ킾橻쐢갷䩭疸ﱃ㟥ꉖ赚⵨楉덷秲筜\ude9c糀䳳뼭ኂ鄚䐙ᅤ䎑Ṅ⦺䇄霘\udde4瘙쓗斮⢉ⷤ㯻瑍\udcb7࣮䂸극㝩激땍䳎릿쬤茱퉅캛Қ楰ፁⰋ哂㛒욄緑ꘋ퀸峥뉭\uda18얅뭴랹Ꮴ䤊\udea7屃ꞻ㰔䃦뉀૬핈㨺स⒆㌉ᰤ踍稰\ud9f8\udbb5⸑䋑텋钽鋹䭹⵩藠㵻䇭㞼游筭躂ɓﳏ羈Ⳁӂ첕虖͑핢햊銃塍戌髖۔ኁ톀샥䤬憱臆ᣇ⿯쉳\uddcbꏽ\udd42䠽ﭷ觸흳龱紭属⵵狪흊\udeb3몙熂枹䭭䲬࿆\udf70龜켄髧䯎\uddba訩ɼኑ䩃⤜ꐊ鄪䜑캻ᠽ詍菴꒲鏊䋕蓧䆞瞳㧟屈砃ﳗꔝཱᷘ\udd22㊙쳻჌೥瑀쀲躆ț裎㝌賆ﮓ庢㨝찇耭ーϙ䞡腘⍌뼗㇜ꤍ⠃✀庛뿙헸閟噿ᘝ柅ꎗ襞㕸絟吏帜搷᪗虭팷雞데\uda1e岐귻஀⒈픾㰝飅䄻ざ톛᙮뜤諎ꟈ㰻㑭쵻깯뀀耹耹킬⾖桏ع좃\u0015⁪䲫猞퓛툂㣵鈶⭽퍲诲斏ꊉ訶⠛ୖ㾕\udeeb夼湎壮何跢蕥컜Ꙣꤢ쐟ᅼ䖘꿄０詂䏤ꑤ㷠弄잫Ｎƌؘ憲똊辮햟者Ჴ걍뛤㉗㵺ꢇ㠅鮾ፐ䉨ࡐ滍僿髝靣嶋甁쌏Ӝ䝱䛜柲\udc09笝旍ꈶ쇝ꄾ苺ᯨᾡ纀既侚ῼ䅳醸苫ꨫ諗䆶꜒끗紮蕸\ud9ce宏긍ృ֪ꥫ晰爍ݻ껞轺㞮᜾뺎﨧ጥ灕ᕀ㜂욶⨦ḐΏ๕︽ꞷ哠杒ⅶ뙸₤屓ꀀǨ఺켭⮫红峀࿛㳋瑍턒먊ᠷ靯褜힀㐾譳\udee9欒\udfce猵㬼剷돴眨ᾰ\udb07䏘뎋⨻㢜诎Ȩな௮枍\udfa8म；䠂⃳;ᴷ祹参䢒㰦ޕ䳠̀堄啊醅핷ㆺ鋄렯튾뎇⯝㸊뷳蠵⅜ｻ䏆쾂귒쌯묾胰ꇊ寠㹰︤쿏蛍晱췣蠚복ૺﯨ緂᤿泘책\udd9e稼셷挳퐂毴䃧괶荮ᶸ໡猌®碝㭟쑹ꣵ뢶裮⥯썹취胜\ude3b粳愼ᐍ粜娍兵卛隴䝫䛎巛塟㼥絕軺돁〞⾠ẍ瘖ﺽ泸ᯐྲ\ude8a윯泯꒶ᄷ慄䌑᱄ओｎ췋ﭘ곉֫넫镀돠促崋犕씔蒾䯙⽃꼒앋\ud8eb뒼껵໐濲ⴞ㻱ᘊ씃倍꾜㰴痋뺽⻱㫱쾒㺒皻ᮾ蛴軸ྍ὆킬뇉篚⮓샞ﮔ㼷홞\ud9dc气䨼戮雀聠丄羗䆠\uddd0箻쑄޿Ћᄊ⦉Ꭰ힨㺡婢ᨳ鑬㝰뤹챟곳ߓ鞂뻾씛씃ǵⱈἨ绲㓺囯೷葼㻃㠣숳稁⌽輂뿣窻첏걊螎巰⒧ড়棴츌꽬蛫슢調ਰ⢠ꎂ褊㐨낣슊焹쒗፜䓥᷄뻪훷\ud9ab棄聶蕧㝨ꬲ훸寃漥밠ˮ㴩ि㑻ᯥ㎩붤饷㖽몁Ὰ軱ᆋᳬ耎庘삉겅ǯ▋渿఍诺筷뱉竦쫘㶊嶡樨刏튋⁴馰鍢ﲲ馱ꏦ鉚䏇릣囻㋐ឹ麎퓧款⻽跬ἒ㿩ﴯ鉼諲ᯂ枇㱨뙫\udd93괺﨎湓㆗ឺ嘀М唸ꔧ뫯從炚〷뚓ෲ\udbdc怇鸾熗왏值闻덼࿓붱ം⮏뜀헰留厸빺撚杝徃縚᣷Ӿᛈ쳌ﭸ࿟杄ꂃ堿࿢䏰槆Ἱ濘￬㕀夠띰℺䁀빷纠㺇⿯⓵追蠙粗糥喗㗌큺㳹惨ड़㢀笃脀粱蹖ᆽ줷킟퍽捰凡❢俁\udfef놞귰귄﬒밼봾魇醣䚋ᨘ\ud9ddỼ悢ϫ孝困닼䝡ꁆ臑⚀꿵坱舁쮪\ud8e0鰀䭤콫ꀪ냒蜅ウ䵐﫳쯬\udf7cﰜ낷\ud877뀝௽었뼇㶋쓟라겺섄샞⻼㲕ﴞ܁ꐉ拵\\炱鵾滏\ud87f怃萎࠸ﰜ㻽쯈齶ﾈￏ刼좼런뽣ﺷ웗\udefc萭ꁿƺ켑ࢻꚾ큸ᓴ遛뼟뛭叻㗍㿖거䬐맂픊쨁萞Ჿ鞕蟞녟ୢ韾曺娕﹏ඵ㕿◴槚郮批跦⾘⏠քᘋ낡挧쉼췻쿆翨đ볥틟䙾㋶뼡廖ம끟譺ꣴ忁垚ϱ讨Ⱬ픁슱ⶖ꿣삾賀磰฾鏾嗿\udfd0ﺆ뜍쨷蔇㵾꧰䉡㟇먇䠁愂攜裄.⤧螣\ude7f鞘ἰ繠基薃快㳒랥鍖మꆙ䊲蝥৊ᮔѴ㹐ʠ蕂ჰ荧耭鐇⡝裄ɰϲ萕৏쭿뜿粎蹜蝲쿠蟘ﾰ潼﹫簽ὃ豀ಝ抾뽽ᶘ룵​䀜추䡼უ쁹Ƞ▀ž෡蜅ᆀ挀☁䰅Є䫍ᖊ䱝骵浼àݘୢఓ걀未\udf19絧ꐽ\udf36\udd6aȐעൠ㸢㩯媀펰䠀ꗒ쁪㽍Ì҄䎞랹њ谱蘤䨀墐無ᯤ짂ឹ콧퀰붮篂踑ί둄ᘾ䞽偐黲₂䄒⌹ъࣔᅨ⏐䈠豪쥴૨揖ᚭ⸒季᙮볆ᰦ炽텥쏋著ಮᕜ㸳異⦠퍀暂촉ᤌ䴞栂큅ꄃ孥᪉ᰱ血죆뷹芢䗤틙㞅隹간׀蜞㔿軿嘁ᰃ׺矣쀴循偰\udec1\udd23穂뚍曷힝螓ዎ좼쬹超讈℘䈨萌耒Ⴄ⃈䈈ک캡ᑠ㵞뛍걙伇淫췅἗뽵Ḫ붰՜ㅏ훟껿嶁˽᡻蜰嫧⏍\udfb2轭臢ﴶ뢿똄̷詯ཱྀ仝㛻뼃ఎ閘\ud802簦ࡨ⑵쟙\udf82◀鄈⬐渆䡆邊隚㾑Ў䡵覹⋲䟤薪ࡒᖫޮ犤\udea3透ꤟ碧倗扰짊獤狧잟諀胞ቼ렄귴\ud81eၥ鼽臅簱ηإ椼༄ᫀ䗀䊻簉㛧蜓鈝₾䠊ङٿ섅⸐捜妀꽹᰷섂꠸펭\udb63킯⠞\ud85e芽̄\udb2f뻨㌘椢㶰琐࿐w샇횾᳈뮣瀄ር촿뀠﹞⊃쎸믱ǡ⠺ၐ㍘䇏粊멤脀ᐨǀ⵪㓨혐묐⦁梃幊麁䶭菴䐘谱ᑢ㣄㪄暅湁쾀弋簪塚黫쀺䌺\ud874㎻৐厠\udddb㾴殃腟ꔥ琔颟쇢⎗挿콫뙟绐莠鬅躁氝㨝ᄤ⬝剃臇荆ᜳ槤씀࿧䩒΃￹놱꽣濈ばꂟ\ude61菖цੀ⩐炗ಶ䑽꧸釷磪❁츱삿凁䍫ꄉ਌᫒鉋䬰꺀츢뢍댐⾇砓袣\udd80ڞ൯퍿鋀ꅁ䇜䌄矧렲ၤ惱幪㶧履漛쇹걫儁র㗧埓澽鱋ᨤ쀗憑ኰ芩ᷪ㭆倄⛝弅立렀៖뚎Ί\udb29皼ᴵ눀ᓞꧬ퉻ꃳ뀃明찌Ňド쁜셃櫬ᝈᔔ汢⤍鶀㕆分缅㸉뜎↶懬샱๳ྌ쯠洷㚰鮃阆脍웪뀬ၹ쬤㹐艠蟰ਛ旾죗造⊠ကﾀ蠈ꠣꃯ鸆菦夤둽滺\ud84dꆓ⒀첆ꨁ築薵졙丐Ⴀ∪瞀艦蕓꿠핮浡峘쌦쭅뀂ᔇ帣瀨冯Ձ袰【因卝㒅ῷМ쏇쑄좒腖몧͑\udbf7㬀媾혭⪻\ud8b0ॠ耡鄂ꅟℊ鵠 ీ苟챯ꨛ皮墄픇৊猣譏䄤Ⰺ芕耟ڬᵘ㏮쵡⾸\uda76땡萘ᕆѯ灧抋❯쐮Ť⌀賦썍뎙贳칥㓐릜팈츆絅ѥඑ턲ʹ厴៽༆ᆶ柗‥팤ꅪ䋧㭏뀿흰墠勇ꡠ릂ꮵ쨙翝\u0016੶康ﶽܫᬘ㌟鎏忾났恻풶說燎⦿傣䍏먵蔚ᘻ옟覇缁餂젠偂ꂃ䄇ѱꄏ嶕쎛✥趾ཐ륐㮸咠⪢嗆䫠瀲\ud99cꃓ䅨곡隆蕆ᶐ⌘幀铸鏝툊줇偀ꐦ䆿氃ݯ´\udc08璏綡璆⡳ϫ뀿쮏肆♃챍ܒ뛰ሔ㫈濋ڈꮡ騢둇梉턁稷琇臅綡妏ܱ湪萤⳰ຖ㭉蔊⠌㋭ỗ쁊䀫慱耓ƨຘ଍Ӏ憀釦ꗝ䰇∈氼䀡腀䉮萋༖\ud893邰鳾콃뢺⢵蹭㫓퍮颞﷢㢫੨苑ᖛڰ꺈\udac2ቸ풋鰾䩲炔싓耜蒫\udeeb馇㆔蘍즨႗ᩧ\udb1c갑㑒籢⦾ک࿶ᦳ\udfbd隐⊽ᑚ舰\udce3븛疂ꭻꅒ쌂脩˱摃ఄ⪗╡ﾂ骆꯴敥鰢딮烸烹쏩쌥由歬싅葿懡㮼ŁʁԆਂᐔ⠘偰ꄋ蒬얀䩐料ꆂ₆蜏\udc12䷒側惏绊䊦\ud9a6땈杦ሀ⟻㊾쪀跰拪蛕춓갷仢ԇாѪ膬呠ϕ䃔镃꼋珩밳쾎㻏紩蒢ꆈ၍诰Ꞿ殂蚺씷䥪厗萟ࡾဂ⍊瑴ᣊ팄䌀ㅎ㠣┺ц࢈鐰ね킀䍏蜋໒᮳\udb28䄭厡嬃쮙ꣵ獢桛亼蠍탭ꢣਫᇒ쬉ᓒ⍐迡䳌媅䓆頔㰶讈腪ᴊ螷ĪṢ툿먏獐隠誀\uda83딀퐎낍ภǶ꠵ˉ܀ᗳꖋ恒ǀ䊂逝䀢콙ƾၧ饇ᶉ쾘猀샮苂鮇ꔈ愞⠠࢖瘑붬﫼லἣ闍ꍰ癠ᾉ䀆씁㐖耔ﰂ౨葲㘆ᤢຘ䪈팡樣浃\uda84甆혂澿胪䢴釩∲䙤諉ᦹ⠀㠡깭뗣곂⎍⼅怑 쩅ꣃ쌍作⣸殈쏾虼䖄舞ⰺ偺Ἷ솒嵤瀃숞浐ᚡူ풞䗜ꬃ鈡鈓⑟碅⎒렿泿\udbff艈찡㼂ֺ鉗㵪騝㐦桬큝͕炗㐪ᶠ᪭ꖳ㤁㄁⡡廖졵⬣䆥䄩䦓ئ⣿픡ꋠㅘ菈ᖆ⓷쀰偓䣺Ṯ⍚䑸诏⫸侈쥡絁굙ᣇ蝇\u0006鉘탂ꢁ䁢솶蝌㍤筀鶑릠⢎颇‖戃蕯盢ჴפֿ༂Ϲ잰㦛憶쉭౅ᰌꂄ䳘䑵㜤隍≜䓐褾ᰜⅵ맰ꠡ肢ꌄ뎶啭櫅稝\udc65탘쎼蕤萺ᴈ⸸⒑ᢢ녅箲墋設戜Ⴧ횝苞ʞ鑲᧺챝듬Ⳙ뺀\ude44ꪶ㓪渇\udb6e\ud86f㯤弯ഡ琢䎅뒎쨯䡭Ｐꆈ砄㏶̍乚ᆁ䣐뒐혢댍뤃␫衃頧ぼ䊆窥ԞŔ棛ᤑ끜鴆檏筩呿硩ᇻ͔ˆ뙎ॢ\udce5ㄠ炀耝䥇ꃰࠓ棕ၻ䙍ᔈ餗઒渠ᚯઍᴠ킈ꀂ֒၎ꁓຑᄜ솘䷤∨䄊暡఩ꍶ䭬㤢䲈⤖줏⸜ლ冬崛蒴诚ῲ⍠斨캑잂〸蚊흮헟ꑺ欌ꢰ{Ջ뎙ᔺℇ諰堀ṍ笅旲⇡騹棷邟ⅳ䞠캶쒒㕖ⶶᒐࡅ荶肈䤇\udb63퇤遶\uda6d⮽ᤫ㙒じ櫓ﯢ뛐鱃陎⑩恵䃉巶ꭾ謾菚⺇놨렾楂﹄뜈ԙ簭鑚Ὄ뙨ﴑ萀੓敲┍ꥲ糞춠싻뚄៙遙蝳ꢂᄟ톾톫݉Ἤ⎧⺆ᏝﺄҌ텤䏉됨弗mꀢ略臭ू㾘冨뼢݇膊ᴙت푷炰皴촡堹뒶澵啠♠⺖ร⹆ꗴꭤ㳗倐飄聪ꍧﭜ蔏พᡲᑸ㺴뇡豦턙᫅ࡋ轜续\udcd8䁈舧ᚈ穯氀磼㮹\ud88d錞ᗁ䂑↻捧௨᠄鼬䘱츣筄놏푧裎ㄣꋐ㢂贁Ⴆ∼㊘飰燠Ꮓ쀍䄕졙ᣫ釧굣ᣮ䞌摾Ӽ᧸獡봣聀簁裉ᤖ빟⋩䜁补᫆㏌惨诡לּꃄ옏舒\u0017墷⚈ख़融蒛ശ࠰鳘ְ䭠囀垠렔℄遘葛脔莕⊪䝔覩᭒ⴐ岀窐ണ➃룬觑✗蹫㥘䆰蛡힃鏲㔶ቭ㓛䦱퍩☖놸켅膠≣ᣯ螋ᓶı鉘ᠣ㇁䏧ꠔ긅尛潦脚݋ࢶ擄㤷醘퀐툣妆倈–䀷鐝Òƪ鶊燎衁쭌䯘쇁櫝굚⥣耔녘耡〠Ꮏ샧ࠖ진湘뜱獽㏺骊攕౩墮ㇱ\udc28쑁놗๶⅜◘ꚁ阀娇ᩳ㭨䘘谇ﰫ뚔懤\udbc1補ᒎヸ幘轂쾆授踷챷ᣣ麼掊爛蓥⪗쯛᭗椂㭱貹楳㋨瘂쮏㈞憐ԯࠖᴀ䡘ഀ膭澆淳ᰅ꼃倧\udd02Ӝ债茇윸ǵṻষ尰⧆嶶ꮍ盝█꠱倒ꂥ䃊莕ª॔નറ曌툃轃佭ট杫煹賭옖㑷ቘ쏤瀐꣢᷻ꎌὩХ螲ἳꇬꉠ쒟Ǜ᪲㹑뱰땡䧂㨠꜍팃瀩\ud8e9쎮㫴䟌ᐱنᅠ覈ဠ⅚먫즜惠톀拽窇轠Ḟ⹫문銱押맆᠛\ud82c蠂쁯ᚾ苴㥒詎헍雊夤ᙰἉ鴵ꯉ㐒་艝呴싳Ќ䐯៍ᢰ擄ၱ灣휇蚳㫣ిꍑ趭㤫洰✵ꝋ㰌辜ᣑ摦\udb19㛈込\udb38フ\uddf0莻盈轝틼㗸䑾矡釺⯑༉겑䱤硨拂쓬別ɊಔԨ⩐㒠沧省ෛ\udc15흿炷尘⁣럗曁ო긻䁸ᠹ\udfb6㌍叜찟桖빖ꅘᆤ賑ṁ蠼憨㭃᛹膉蝢\ude33瞨ḕ捐磭↱橾㉟㧸鯢ﴛ⵴౬ᣌӲ傔ꆩ䋒薉饗髈驮뼽㉇ฎį艘ұ璵聆༐⶜煘陑㹢썻閉﫢耖\ud9ae‱쀴荻ᛰ݂癸楶ཝ鼰偂炄逅Ȝ⠖愈鄶艖ṙ샇镸᫰☼ᯁ\udd75䬒\u0002䱺欩ㄙ排믱蹂ឨែ䫸送뵩ᓁᴁ갎瀳q룷큪鉼ḹ쓛饸૰츓豹힃炟\ude25徍⣆焁\udc51얉ᑖ㶌攄꣡삢쐸䯵榃䘆ﮣᠻ愂ࡱ蘊Ỳ㚂勏❌눃ǂ⢊ဝ馔\udb3d肃썳옙㋨酲㱳ꈘ끞潂呏ꌍ儹谭䓶〠·ɓѲ൩彌뾜獰㹹铂翅邞鿔౛ᢊपጹ얨䫩᪎\udcec⨄熦᠐뀠蠟ȭ倆襪᳠蟘솩蜣મุ⃡㢳告⁇꒩聱憊换౫ᢗ讘䁢熸膌漘䷂푪蓔㻥扽м俷팢䀰髾涀倡ꁅ㢝脒錞Ђ࣊숺솢⛵泐៕郘ᆰ塢꒙蟖؁㨞ꤩ祗㫚\u001d䊽쟈膱㠰䄛㤾႓蕸봌浥삐ꀷ霫\u001d괟筶눥풗ꃠ牞钽䝘틷꼕⠔ၻ袢覻䱣蕳Ճƹ싹࿐詮콼ょ蠌쵦艱僩Ǌ芋㭻ۜଵ賀甦…锝ᘩ౒䬽횞귱❍⇵怶ᢒ珴ⲑ찬唡ꩀ풅꤇刈\ud8f9择얯袒⍓龏欖௃챚적괐制炊炾胳藓菹䋂콅ꢸ̖딄ꗂꮍႜऩ鱞䒪瘞抔Ⓤ䪎槇誜ʘ෎於뮇♶໦鑃흜⎳悴䚠踡\rᴀꅀ\udcc4禲㺰䐚ৄ离ꅸ⇮넧໩ぬ垤톱䪑퉛햊鬃㘙걢\ud865낫恝왨ݔ㠲尫筦뱭츸ল꬜☦걅颿麩簻┢๽槰ŕ᳇昡閁꫅斋\udd6e㤱걬\ud83c〭执▭舉Ე詈ㄔၠꊨ褆઎ᔍ儰쓀℆ꊨ䐷१ၑ⼲仄꣱拃偉齦駁≺࣮任啹㩥蛋஖Ἤ⅘㚐ꀀ냹橰ꋤꗏ趩僗觥䎺蒢伻ω쌬㼧䐩䊝索㺲【ꗉ琇僾鑝䊿⒋蹀豱㴄駄걉霒焦앀㫬䀟䈶坜ಹ嵌ⅶ誂鈕헍鱎㄀쭁次〡▎ဗᡉ鲙鍲⚂䴠铯\ude84繤겡輚䜋㨚쾃䜸쏏宖౟՘㕼ⵠ폞엲圄췆䐅\u0013ꁞ苠蝼൳旾ᢳ⸔Μ袐룐ꨧ梁鰗મ\ud8bf戢렫ԯ腟͘⍼Ⲕ\udfee痣過\ud891ࠤੇ䢰⥾拊➳뇑ῢᚥꙮ猖噒뿹ᇃ⋤褼豩\ud89a麯ြ렴蟱ᙂะ댎鼀ᦠ䁊ꓛ堕瘎䋿큞艥亹ᠱ≋꧟➈딼籂槪随Ṫ籡須渒㭏袏崾\udfbdᐥ⥎ʕ鐦㦠怍컔沺䙁鈞Ⱚ抔덑쨒ꊧຉ誝츤绅緞л瑢ႃ퀢⟿̶蕭ⱛ尖倌\ud81f㮛潽꤃⍞삞쁻첟꼻厩꽠籹\ud86c꩒䎾쌁郊곯ᢐܠՂᇱ녈囆꾍᥋咅塠꥝憇⤿옣↪䄂ʌ蛋躰鱤ӈ䦐匢쬴㋥ꋞᩞꁄ榱釣∈镆馚࢞∘幃똙翆Άᎅᴸ᱈㣐灩ƞ讠˄ꔴ뀸ၰⵢ퍏墓鄤⩜蒐䅛ጊ⑍並☒笈ŀ䩐굥向枪氃邬䃖ʂӣ䀀᪜肁⃣穆曕앀ɂ㗆몼踆秀㘔넝怐䍳䥷⊣˕놌ʠ㄰㪀铀榀钃Ⰳ堉뀛怮쁽肇àʘ༸॰᫠ⷀ简졀뼈谥᧢搡\u0010䀋Ò̩լ¨\udbb0㽠䇀ꎀ✁丁鰇㠒㩼ᝧ悶፸잀䨊ਬπ擩肰馦臆Ꚗ촦ฺ–胷¡˚ܮ鶭⇹뒤狩볭쮦秇⺗\uda49듘⁚聵ȡȴɨፐ᎐䖼躥蔒퐡쐊䐇팭嘟䂡脨聾쌄榎᥂뙬徖⡑\ud953ꅇ㖅蔇ਞᐂ⠓곱嫮ږ隼ᙚ䰀祩⬀閤䋃ሆ洡듛憪ʓÌڀઘᮼ勀䳀軒猀뭏찎뀧뒒쀾폅Н⢀⡴무嬃䈇Ⅽᴠ瀰삓膧ˎޜ\u0003⍁ۺ癐舸錢送遀ซᴓ쁖䁐㋧ꖡ䊔ࢽ㬊⸔簨؁턁ꐇฏϜ멣逓\ud893ﱠΗ䤳ᮦ⼀㥴뼎웓㣒띏舅☩ࠊ၍䂡胃≊؎䜮诐ȒὌ㵐厇琈垀而ꐏづ붚̅亃㖒硠\udd89귢㚧陋誚Ƚق⣘㉗꛾ꘔ暭㶉ꄌ쭦␲㔷ḉ䌿Ᾰᤦ툁ᢋ俟㩐่Ᏼᬩ壣뇄윗踔衆䤫ˀ薍䥚鲥⁚岌ꅩﰃ憠ሇ뤑洰怕듻愗틦͟䣌֘৚湠坩ր脁ᘂ堗\uda73쀏悶䰠؝⿺摴슈북聥읋Ƙ鴲١鐤僮炧ገ镼᫨ἐᯭ睐⎦掃桁왗ᱨ䳎㎗ȤϓภᲺ叀狩ʁ꟱櫠ꆗတ\ud806쀖胛ꐡ4ঢ়㓐☸泤⃹垓㨃䈋厇☟瑭⣝ゞ˜펞肦ὺἂ⽀䥠툎ࢆ駶㊰털즥฻ᕚ嫰⯐簁瀂墶녧팳圥譕Iöǐ챀䤭⍺滃淩믓ࢁ甂琎\udd16찝顫嗡䊷萹蜬죺偌\ud8c0쾤\udb4c뺗洦穀䳻胝ꑻ丬෭Ⲱᾴ풙忒操ﺑᴪٮ䲘㏣Ꞁ쩎锃ⓨ᧐ᄸ⬠덂꧃ঌꀝ皤璠妛ホ誂쯙脋⨀㨠ˎ讀⡦ᤉꆟ淅怅ಙ\udee5폨|졡黝㉦爐⻩睈輛攠叉后㰡ဏ\ud865ࣈ膀Ĩ஄Ⴀ⋞罀২\udf13䛆릟翊ꀢᦆ䉌攊찱錻\udc78㢬댙ꇁ힤跡練઎婉듿饽鵙摺읥鮳ᰖ䇌㢔긳辅ꎌ攑ḹ鑚퓨䥤\udd85꟬쭀¦ᧈ⭀巎ꁑ漣\ude44粉酄⠫졒ℍ搰데ᄜᱸ㺓俖ἲԀﶏ逍ࡨ妰ꆂ暟亶鲘ᄖ䑌蝩\ud981鶥ꋋ覚瀅節ⳤ駾퉦禤쳔↓⬦儬銙⒳胈云̲㩄⠙쑪툽ʀଢ帶ŀẙ倲漡\ude40粄酪㙛磿폗≦졀๝✶叠ख़挳ᡤ睉閚萄鈸ᱲ⃕鄤Î쬭ಈ㦠᪄୑胻؆愯㸞턗첇夲튝擯䥵鲭≆倠Ḳ㇆굈䭪ᬰ뾦풱턗鈌瀮챍鳹Զ櫬卵塰哒쎋䰈踉ᰲ㡀⅀Ǻ쮺ቪ〶卸耹\ude32ꠦ\udff5퐏ꈫ뮏逻〢쀃⅘­柜ᓣꣀ緾桡페瓉ぃꙥ謀\u0014퐀\u0002厬߬⢀耩鰜鰸硱馉⇎⎊䜎㨋鬋᥀쳲_頓Ⲷ氬뭡涤훍뺗嬦♣妉㋟ꗻ䢬φ\udab0ⵠ@薀䄁舆氎蠁䠖옯谄΢Ͳ๭⬠㨠Մነ虓逢汍㚕騶셤䂬짔๝ⶎ朜銲♧ナᰙ㠰졲⠬쯐୨᳙᪞⸙㩁樥㭎렎ꠑ錩榎늳Ȑ߬∰韥駦㼸Ű苢ꩧ倇Ĉ›泩⚹Ơ膡眓鹌쇐ᶬ뼀\udf32\udf66旊吃윴扯鱿㢁焫ᄕ촋衽…䶜鏩炳⭥蓊뺞頖뙴䲇뎟Ꙣ쩉黽›柴㿓쎥껌鈈䐐ﱉ냶틼ꇀ֙ɇམ㘄敠귴源㠀\udb96휠깧岐롰ᇑ´ҫ銨ൠ⯋ऐ骀✑䩒껈ꀵ艼暮臵Ǯ쪕鷻㤨獈홱⊦ǌᚖᬼ੉켦\ud88b冿̭䟗Üᴈ⥸퀀敳찂嗏춟뿅⒬猺맩猚乫鏷㪄繘胙羲荧㞍醟蜥剳㍒\ud9fd珤켉鈷㥎壜蛙俓㛎鮓謶湇泠玲杂ٛ雔ⶥ釸鶤᭳嵠覑뵉ุ耮♌吶悇锏㕪ⰼ裳髤\uddc9㐈椾\udc9d⁼ॐ䪱ಠ⟜렠\udf73䁆ﶦ鞒렚Ṛ푰좡პꁽ䋺菵࿪ᑄ䁨⥢쫤蠀꠪릹겷馻㑆晱ꙇ雂㪓贲∉୒䠥ⵎ쿯שׂ왫༒褻̔柡䵺軵Ꮺᶉ᭹ｑꗏ떙봳䀯쳏\ud907퉋曵츾鹛⁮桌씹㓲內훍覐켩뙔\udccd㤩㍙쫭顋⵶怌벙뇒ݤ勎⦗洌袙閲蟯蕺ர⑴囲﵀侟:‧礴썠Η䪮栫㷞往巙﫳˥䳋㐌縂顒‴䅣鬺ͫ蝨฼ኌ粀┃㞥⠀倞䜫䈟퀓䄘臾蟽\u0006ᤸ籶౅Ѕ⎗雗脗耪㧡摲Θل沟⌮玬앩徳﷥ㆌྟK剹Ӏ祸珃躓韗✾攼꫙퓳폍䖜弽乫姏ƴǸ඀ະƜ움흦駎汬ꐕ鲫㚵泗斱슯䲀铼ⴘ⸴₨ᶣ햂낆젖䀹瓤砀₾ʌ졟铃⥾濌ሠ澉ጢꌔ뉓ꁠ蠯⯠ܐਨ赏ʘ粈ꨀ⍧䛉ꓣ忌ﹻჟ찁芐ಮ䊀挶屁㧦⌌㨄琨큖뎣介ဨ⬲粔ꃹ鰂觤蛎ޜܡ䙏᣺㥚㎷ꔣ콇郗⭺篬숀\ud8f3㏤질ꞟାŰ\udcc4օ챧陟㴁孬샩०ⷉ즙\ud81e빙Ⳃ饃늠朎䄡譲赀㔜ㅹｰ敂䯉せ䐌셣됋ױ탻΢Ӱ墯⯮拼쏙骀䚧∇Ē嘈㹁ᤊ끪ᆔ⑮Ź啥⼂㷒Ꮣꍓ苶ꌊᴄꅤ琲薱퀪᝻젌ઇ詗茬໌虀奠椧斉쬞驯㘹蕌넖ᖲ샥聝̎俈\udcc9ó㊄䀩輑Ἥ셠䊘ղ牂ᔍ쩅餓⻺兼딹鍲㓦쐭얐邻뙭粨ਊ明첥鉓ばഖ⚊ᒀꉥ漨縊耳\r맴뀈㏌⥷꫋ᥡ矠⪅껦퐩傻栤졡胅懤۴ດ๣ᤐ揀䐱櫚奁ꬦ茀㱯祜ࠊ_銟➸ᾂ肅邌㰔∮잖㤸혩걳墖녢샚샲轫ὔ櫏၉ꅒ猧﷌촬㹱슉憑ᐅϠ䇱Ԥ늂诉겊쵠嫂떅좮혞椤淋獟書ⳋ麟⳺㐂ᜋۧ࡛炲Ⅳ沄饨୛朼Ⳮ量➶嵼퉙鼊鯧ໍ쬅嶓鐡쁕男叾苩霻⅑笢뚱ꈁஉ倒⊃\ud92c㎚╎ࡄ᜹㕤Ⱄ푀좀簐䉍ﬓ퀸怙䡞膃è⡣靷쫄冂㌰蝅궄댁꼃ᢁ㺿銀ᝦ䧦鴣㈼值鼙⃳濻刭ﾑ﬿﹆糔胕獗郑댧閟☖䡌蔹햲௤騯ᮖ梩鹹粸蕳玭ᘤ⳧鯛┡綢웹䔳⎤濾좋樐똑䐼℅ꦮરќ偘뛜ᅢ얘딩䬖瀇䐈렻院ᡙ\ud994貔荄◬ፃ㦀轣䷙衠︂ꠀ鄏㼼晲⊖ᦍ섬͡ז⥄ު㍀杀ꬨ႐⫇혋傄〚္谖腅ၦ쌫鉸볍螋⫰\udbb2䱦\ude2e넘蠼\ud9a0≳⎍Ь傳ұ䫌徖㦐譓Ⲃ눬搭쥹ᐟஒ逨몱瘜졉\ude63鰕﨟ᇀ襞搂졅酈閖䂢噰뽑形꩹愋酥ฯꞚ肥뙌\udcf6\ud955ᖼ⯭郟㲖䋢ꠙ䮋ຳ㝀汅䉜줆磛謈鞱⤢婙Ᲊ甀瑀鱀㖦㝈壮崻ꙿ⳻얼ꁗڞⲤ撀Ჺ䶀㎎乑졦Ↄ\ud809␑/䀇胡_៮캕鋃ⲡȢÀៈ衧ẝ퀇葆磩ǁĺꛒ超쬱嚌茥ᑅ屷Ḏ曜㩸솎찄\ud9d9⵲ᴩᱸ㎒옃\udc97ꄯ汑ᬺ慭롯֚譓⧔宗ⶦబ㡘硁ᅡ鍇ꊅଧ녬鲾□மᚍ칀彰먡揂쭅闲帔ퟋᾜ㸇鹘찾秫猲ᘋ질刯㼡䒼첅땋ꋧ픨䖄謒耶′胗獮쾱÷㳀ᒥ籦㢀榑꜌倏幫䃞륶ⷘ埚⡑䡼酅퇣뱄鰩踩쎂틘墟倚钭⽔冏⭑嘼ￎ敳૱⏋惣锅⸑界렚䡲⨈嬀닡冢섥⩳蜔韏㑚⒥鹸鋁ꕉહⵛ邼ᣮ囜잌츧ᰈ眸早燁靥쎄崈ુے鼂皕㷈琋池㻦Ŏ镹⪘峤˹׿灞⃊网茩픁ಠ먙峚旴议閂䠫ᾰ롑砂텅轋쫅㘬잓봹酟ᑋᣖㅬ恠揰긴쀨☀焹㢁ꨒ먇⩓䢩勖씀挹Ꙉ쩤鸉⺉嬤蹱尗⭰摖밟鶿흘혂沱竜Ꙋ嵢솈域眞ᫀ誖鷳㧊넃奦攎ぉ宓즆塨ꁱ熢葥쉊Ḕ娫቟Ⴒ煫실蕀㉤鞤⻸哉饨ࠨ犀࿱駐切求ဤ璣㰡쯴䉫⾱莬뽉成ꈙ衡逃靎楮崶銳엥툘螗享‹圂뎥\ude4a뮦㪑∂䐉눳ꀏ艄ㆵ搡✵ͨᵦ䱨⏆堨錢㡂ⴆ쇀阞炇놨Ꮉ춅ર뼖㋤緘ᯋ轢黆ꬢ떞ꋞ씕닳⾆坏━扲鑥ᗲ톖Ꜫᩙ貥湖潣䧼ᒵ蜗੏銱⎅ᝒ艄淍幟벧숦\ud8b0ꄮ⮻鶴뇮䂣䓈ᄘ∤漺셧죛Դ䩫ᜆ쮬剏㗁珒ௌꞙ넂ᴢ㠮쵢똾Iᆋ⨆妧ƺຜ笠㻹Éᧂ鄉⢫鹬㋗莊쾤剭쭎ᴊ봸ٰ顔虐梲壟˫䪢ᚗ쯪岜ꉱ笼꧅㶳맧挬ᴣ푙థ硦ↀ턞Ꜩ葆ዀઊ씈됫瓠ガ㎁鶍癗ઘₛ䨙閫젌࣡ఙᯐ뮤達䳎禎꥓峿캒쨔꜇찧鮇㹙倨ꞥᥭ乺ᭆ㚂Ȍ\uda05둩㺅㵆▴숶艭ᐥ綶炕䈫츗딪롔ꜢⅢ㊑◌钧⮑嚜ꗹ棒ፊ縕䴮ភ邻椸볂藳䪂哄꼶蜒뮲◜諲ⱔ켴晞꼠怣饓锜啉袺堘જ㸊︋\udc56嬩ﶔᷓգ苬ᖐ਎⑰ꭁ潒붩멋㎨ᝐ꺠\udd43몀尨斉⨯韶⬑印븹淲\udea5䧋冕撮ﺟ⊪䥬\ud9b2䨲ᒔ쬲舉ᴆᤸ劦픲\udd03䘔匳ຂ쫫ꢷ債사꬯ຈᬢ㪠狩➋䲖Ↄ톖䌶멖⨧䲊穹⪕鐗㓐↼᠀燠稀ᜰꀜꨟ䃻bݒ䁋嬩ᓥ朕ᕋ椗樯㙞䢺팁䀓馯⯗樬꣹彵ᇪ᷼来ꏀ䐑Ʇ艝拘ᕁ賚뛜茐5\u0004୫㔅灸둊৤ྐ앬₌ᇽ灖숂൛؂ᵬۘꕳ댔考\uda93췁摓덷샦泄ϙ눅ᝐⰀⳙ뭉겷抽௰Ꚗ쒕奛ٕ浬㭈碗鼭쾕늠䥎쪛䪤吜곉嬢룥乊駅᧊툕簮澓✏帓끃貲ᮒ豨ཀᥲ襕浔훃镔眺ဲꫦȜⅫꞗ䲔蠊ꕒ⢀狩抡 靍핓퐌쥡ꪨ啵੘晡ь谘ľ㫌꓈\ud88bᴃ᝷⼀蒙봇顙臱顦샱彯솼液餙上ᶕㄭ➒슱䐩דּꘘ⋘拍㒛σᢎ⇁䡱뎠活嗋琈랞⠷櫁䖀刎ᐝ༙嘨뉥睢䤪모酒㢦ⅿ勇⮟韺꣸弸닥匦紒潠酂俠䣍頋㐲ꬸ捎귡蜺ꆘ㨠墴⚀㍔㜫\udca0辷⫺ᥡ訇隚ۚ货쀞ആ∠⑀럦츃靅㥏먶ꉔ쁸䇦͚Ԕ侊ꓙ婼ꀢ륀遂鵝쌛౉욊꯿噿❶咃삶Ⓘ巀禋籣셄ጄ☓ᑰ飯ꢢ怪꫑髸ࡁ䒠楀亂⩒㪥퀫셐ᅾち茱급訓ᶍ摌烸⚫展ￏ㕖\ud8ad畯㒠⥲쩅喕距噼궩曊︥鵊逕\udc2c酜貣╸禾꬯嗚⼹喜렵後䉄㺡꾡ꉅ蘉접ﴂꥈ樂悱ꦓ儓ਦᬠ乀뱫즛頇꺔⚯륗銘喚腗鎿葢ୄᗪ瀒荥亁늓绂㊀ꘁᄫ㐂₽\ud86a陕䈋싔魦ⵔ窨赐룕꼆鏥畆쫧嗺橒唉⯙姪뻹妚褥✫蚖뼯䯮㒠并䋢関吔ⴤय⬭畔岵畑䏒㕇䐌嚡ꕽ㊦镪隡䭴锏ܲ蠵ᝋ紃硃檠敢ɕ㖣⩼噩꧇ᇃ\udfcc縔豌\ud96a檠ඨ檁縐═谁.㆙편씜藣౲㥢빅릤涮ᕚԷ왬哓薥歸闩꣪奖띥䞪錵掊괔庨왚\udb4bᥛ떓䫚훤⣫彦䮭佚뎵ᝪ\udc60ﶆ뭝ꀨᕛ䯔̴겛塴뫁ਘ嚀鴫캗ⶬ卒겿骄䑦緩嗆ɬ艖ꡡ敔玵기껖磆咥娚됍棊ꋫ䟖討쟾罊襥䌫继튏잓Ⲯ骗딍證캨婎뱎祀檄淌蘖뎯嚉괓鵖⑽梎ꭴ힕껻堸럭熚퇅伊ڕ㼮ݕ暳㥐櫖땂훍⼩台ꋋ⪴敵ᳫꓹ玭琏ࢪ♍䋮ס誻ꓴ갑☌针⽴镙ਤ∆\u000e镏邡醴ꉥꦮꇓ஦ཌ㺘彉䜩ᅒ쵪䪄⭪혃ꢳ導녅堺떹Ꚕ钩蝗㒦\udd65呫ᅣ홦ꞏ屐ᬐʼ捫嗦楙꼯楪灪\u0004➉켶䴑๑摊답㇫멡垯ᒭ砡䀒딊欉嗽⭛倮뜞䀔糒엗䕍筒ܵ㎊졄끉憒삥諚骖⠸ṵ᪊䶔ﰆ鹡∄蕟聾针(坻쿈৲๏렯嗥ᯫ䥣鋄ꖋ뺤給耊맴詴휄⦎嶲ꮩ冚鏕툫๔絛얗㵳嫼쭂쇅鏬௼뇽ⴴ\u0015㾗꾮█ﺻ絕Ⱊ壨臟ퟗ꺁妎똅撠砕燍ᄓꔀ輿誇֛毅혻⢁㵋蚔愔\uda50흂ࣧ튉ꒈ쨎䡴᪴ꃩ䉠큥ᖃ怂휱瘊䀕ꦬ\udd5aⰩ組뫶䨂芝ꊧ༔ᏽ瑲턕꺫翖騪䙟꺬쫠ඖ毞ᗎ⢹嶜붃孱瀥补삑띩傪ٝꩍ⠌᭴ꌰ氲荞딵催쪀烺\ud983䕩쐛蠾프聄灾ꃎׇ⬀⡢遫㔃턆됍딟‫\ud810詗䍂ݨꂨ΄趭砠侭㙙霻⹢Ȳ륩ꨎ꘸渥拡ꔀᮆ댑Ё嫃麡瀳㘶氉࠶ちꢻ쐭袩឴㫊쾵嫫鉔畗꺴諳㗪ᮍ홨溳噮ꨆ昈鲀禄ﴅⴏ璮䀲䓊㛦쒨큛ࢶᇢ䕂獖햶퀛癹瓉ᆣ⇋喾⫮騙Ნ㳔ఠ疫䨃㨀쐟쌰咤苴악䦈莛℠\ud8b5㵵糺蜋籕榭ޜ꫋뵾䀣ꡄ햚굵遆ꉣ乬ઍ鈴꨷ᛅ罗᠈꡹鬥跙덻ޏݘ푪ꯞ嫺言띐ὂ㺂級㓆嘶䗡㘢檗貉듺ᗺ蔰띈嵷諧떢᪨㛓㉈푾ꢅ窀叵搪⿗ꅘꪸꀉ嫙෉픴渽岡떣怆헲珖莫Ó貢ͷ෢녠㕞쏰꟡櫲鷨넷ὅ㺌㚽ᵥ諝ꕰ⪩슷㚤빭嬇矢媱溢㩏ᢟ了\udabe햵誎ᐫⷝ咑럦眊톉漢톂ᩨఌ榰혔쪸쁦⭍ꚵ⫿弡딽啚뾵⨚\uda37햩Ô⦵衸㪟蔚냶偙斴茻ᷮ⡅⠌㨀㛤㩮햄榿嘉꛴䀞骕洴گ≑븐硆捧ၯ਎✱㈵䉑⹔ꣁꁃ䊆膬啥ᰴ㎬鑊狄㶬\ud892䦶⛻ꖔ᪇垈欫鴉볍黔晆雌媡蓙畗\udac6赱쮚㟿ꫵ坖봙瓢鍵膫ᴕ䃍ᚆ䀏 ㅴ頌膆ꅔझ㐚ᄆ⫍탑欴脃㫎蠚ፎ檾쵙귋꘎椡즱ꏝ榠Ⱄ꧀ﴁ꿁퀜穷ᣤ၊ړ฼⫊泘چ谚덌㐺춍㡇啘┌ීȑ趦덥쩪Ťṇ琉옩졦ſ\u001a梪ꥣ斳㊠漬႗걪⩗֨镂᛫跼꩛㑮궖僱꭭學ꝥཕ弪㵗ﺧ鍀ۯ嗼鬤鞧⺽嶡렵汸෼魀䭐綴럍㓝爎㹈遐뒞䓴຅닲ඒ롛锁ᚬ敕묺ᠢⶡ殡唯쯈ڄݦ鎠瞈㑁鴁切䉁念됩擅뱅눓ഁᄥ룲ᨖꇀទゴ崫숊᠜덲脕ʢ㇄扈욑謣Ⴍ暀怾╪䝔뜳韀ﵳ拕땽鰱㎹橢䗥뼬ྖ赵\ude9a叔ﶬ鳚얺獖窎跓譀㚆漀\ud852눝䳒캵◫ᵡ䕬⌖⭩狨䃾孆핦櫇冯ラ汤诤䖛祗၊걙䖮蛶釫厗훣轉槙᮲⽤ངΐ꒣แ皯奄泲聖¤걢폾냍劆ë෕Ϋ鳕톴\udd62馝鄢ꀉ餙輲ᴀꦴ妡⎤뭟ꭠ궣金ǔ☏១膀무漴ѫⷭᜭ⠩ၕ蠭ીΗ䫍δ㻀⛈눀畧慳嬆榰啽ኬ熃ꪏֽꯁ刕꟩焺뾙ᚪ쫥嵫Ⰳ醝훰쯢㤝毪\udfd9೫䣤㇈㮼隒萱犋氝쨧鑼琡ꃮ핑⫦锣㳓嘊쭍ꊫ睕犄䶵쨩㛱䓤\uda12埔殀帹뱅䬖玲۫콗枮嫝⒡獜銒馶쁓⪟셸轙ΎƎ獤\udf20ﯦ፪犌䶭쨇鑶淞偌ゐ᎚뚍曰狩܂䌔׊\ud8da栞똯쐏₇紥恜湴Թ䥆⿌ۨ㺁莑䓠▯뀜蠴民핲聗㦺檍断뉀寀༁잀᭮⋖霥앧웸洇틘㫮ꊾ荽ড়ఀ篨近홑꽍૗캲ᡨ쒨텯ꇇ桾蓽᲋獖갹ꃚᑉ\udd57歘햊᫒嗟ⴳ嚕ꁓ䙖郍쌴ᩆ\ud900《ꡂ腖逌䕨/ⷋ㑶쳭龣ꈄ뀊ꦼ浓竼昤醿㑈Õ겮烶海䏕崊涇⬈걥墪냏捡櫑館ඓ楶蚍暶坨콝嶱歐뚅ᗵ\udb79槝䮕ꢽ奊ᔫ꽨喏ﰽ筶ꠡ鬚嘷ꯚ单멏耟㟄൛槖㽮㘪붥תּ갵壅騣擢ʔꜧ쐛椦ꅕ⤶癩\udb59ἤ譔﫜뤹偽ꄺꏰ耝Ầぴⷭ毀Ѐ펭殝\uda36ັ삁톃ꁀനҠ⑰蘭旚颴坯体嚤ﭠ뛴귧\uda9a핥椔폰ꡮ㛜艥筳嵣ጪ㚊䲠⨦຿核㪃ꌼ꺄ࡃ늫䘺䷫黦暴鐇萕礮볹떄骛㜂੻傃ꎫ墆側鎩⣟க瘵䈢゛넻釶꧕眶菭槫꫗ﶨᛖꆶ뭇ຼ閍\uda7c⧛題끇䤲첅㥑䱷껀뇝묘Ꙅ\udb53茳⶷ࢆᦠ㇠ڭꩪ媷ⵍᝓ䖣덤㛒禆㯂똛젉횻᳇囬⬝삚䀁蓯黟겿ᦟɘ\ud9cb頶ጹ⍨迌ੈጌᘘ铛ᬷ儬筛䶬敽㚧赐\udab6Ꟑ\ud8c3냻猎ꜝꨚ耶룪宑綬楕刷\udba1헟殇奓꺆ൎ옘찰䜂䂭釖ꦻﭫ䫩㻍ǚ5棉흩봓䬶娘픺ᡡ퓨ୂ㪵洳⮌睿鈊舕పє⢨烲␷ꀆ칍㔦᭨盤赨㯢뗈汊헉꾛啶薭氺虶㖯燖㎳湟ໝ뤔眈\uddf9᫧疍宝酐\udaa3僉Ꙛ즹杨支狋秝‰輓꙽椆ﬅ欂㱮\udb5d䆲㞘는嶩\udbd1㓥䖅\uda15ᰪȮᠢꦠ퍃ꚍ粑騳㑖桉\udb61떇溪嗭김潀ൕ态잁퐣䠎㰂픠꺗밡諻㪸䚦譍ἆମ꿰沺娨⓯컗ά᭽늜ᗴ嫷뗘탣뿓漦䆚㐴譨瑖ⶾ葾趸\ud91f愞㇏২Ნᥲ왝㊻닩ᴊ총ု⺤崕판쁚꒼\ude2b늺棼\udf46ặ薨햝ᜦ蠽汜‥ǚᒨꂋ霗㴈Ⴒ⛈둁㷡ᶒꇕ͒鴬젌怣옱詣᫊ࣴ톭ꋒ鬡䩔六즻嵄䷼\uda06瑱桫宒ꥅ䟲鲭ᛪឮ띖涃㝡豬\udd66テ㞕槰툰錳岎欺ᮡ黒즻띧첐ꯞ瓯䵈턕ꖛ⭮곝☰㭶ე↺譖鷄뭼䘜䴳࿝ၺჄᇨ⓱잢䠲麏뺳靤톚ꓮ辻걺ӴⲌ亄샭엓熥睲亵\udd44뫨뒒晗℡㍠㣑࠼㖃縇㍠椪赂ཪ䓿새枏ưĄ蔀ۆ鹕崺땴쵩헒톭譌痂\udace嚭椵팧˗隚䊰幠怒㠅瘍㨃䰙犾慷眏䔞衻뉺༬쎑왱Öᮤ\ud883骤ལỰ㶬ᆚ髙ⷙꁈᘏ烦ꍭ랛㔀㄂鐆傆ꄗɳ偛úݿуඥ絬簠쑁熅㭜\udb15똻汎\ud8b6韦ٓꔤ녮ਛ究㣨೗즠흠ꛎᴍ\uda41甔겷徕릷窖㼀ꩻ菋ꧯ\uda0e馢溕鷍쀔ŉ⪮쀇彺令\udb62㧬禁ꞧ൘图疾숃⻑\ud8be띇唆췝廛쨃催⺀\uda84̕ᤲ킫ꂎƮ袞ꯓ城칍斻繷Ὧ戮譱Ⳍ㶢\udb6f埖ꗎ尯ΐ긠䋥엊좋뺮⺆鞣㐆廪핫钌፶尫↹岖쩆쁫Ⴢ뜬䌃骱枿灅ⴏ諃ꓱ젛꥾帺맨ḑ봀ꢧꈌဢ䕄ㅕ\ud8e2޴Ʉ஘➼◝ᠪ婴偬䇖鎷Ֆ퓴赵쬭须⦣告㳍꣞莩楋⛴፟결ꀅ㔩穋ꎥ軗뢼َ⯊쳠蹔뎍朞⨝鱚跨玟矲꺋튓룯痰\udff3鎴궯ꑕ⺩酅⺈㙛脁앴뛎㶜揥膁鐔⇭虝ꮯ퍊Ổ궧\udbd8皜ꠍ屫늯因磘憁벡∠궈\udc02逥幠聀⬱ਏ뻎஺읩滫ﮗ薮끍悔뉨扙Ö聖⇴ք৐❢꓈묛໻뗁룪낖蠾㑂棄텉ꎓ䁬퍠ꦧ䴶苭ﶫ띕婯蟗ꞡ蝒Ồ絓鬳푓홗몟䷪鴍할㱀彈䮊效裤ꓣ䕗\ud8e7鵟䨲䵽뤉턀텵ᤃ骡ﾊ隌쁅꬯ꐿ㋄ڥꅣ賞徭茡乕뜇袤ἑၕ衤䃠℺ך峐᎒泠洨쾳읶苝鵿뭈ﻦ氟櫲汚꨿梀⡍뇺祖ժ쑑ﬔї뺼栾憎ꇻ讐螯발䐸ꇵ镒ꇃᰎ蜞뎄㺈붕讗瘤弃꘯倜ꐝ罷좋㏃哀耞⬨E䪉꠳\udc87ꋟ欎銽햺꽕桩덖岫ᠪЀ餧溺ᇬ❁޽ᙶ䥌쌬⇱ﯷ⇂ῒ㾧陻灲窱隯຿ꍋ䕪껩英琌࠸꒔䃳鈑˗褠ᡑ㖦⢜ꬨ꿔꒒钯ᐔ绊刃祖星톇ϣ姮ﾽ녑蹠؃㦊䮒챛颾寵ﮌ眳桰ế嗇⊥뀻嬴쿩蟛ើ罼廇鶑덞௅ϻ\udf86뼊夒甂䐇칠滂릈ₜ胉뻮鵦ﭵ훯\ud833뒯懾歚⇊\udd41렒缴받ꐤ㇑銞⤩韀擦㄁讘숆湣퀆㱞㇇㕡쀵贍﯀ퟸ漋崁觕㻼쨠䁋洃曆裓栔儫\ud86bᖁ胝͡з讗㕹嵤ۈ뙁鬢뙀ꛖ㾢녿ڃ뷺鶴㑾龣먛曾齍䥛쭵ﳮ燓⁠ｦ嚋㷜㯱所槾儩뿹璦ꀕ쮐ﰎ㙄࠿꼝볰鴰⯕㗠泔\udfc6빝䍖젭籝෦겄偭뀐䇐붠봈吓ཉ볽畐♍Ժ峫ꔠ┄帰鑐葢値ꀴ\udd4dꭇ懞Ⰶ仴쐚\uda92㪿 ꀹ㻧窺ࠇᶫ폙儨г뫶髎䄜㦲坿ᑞ⒣ݳ䎌᧐℥ీ劶寨כ⁾獍㺝඄橼탕屺Ư奖믽朇ҡ谝ኍ灺饜ꠋ뷣箬锷⠛\udf76ް๪莃嬇䭔炃ڼ⵶၇䀄듿ᐩ\udadc쥆⎩㧨狡ꀲ虄炌ߕ礴橮ͤ孎퟽엩襪弴㣌瓰匱᝕赯翉坍늈莄뭨띄Ἠ頃ꪐ죌婃ጰꙢ\udc1e⟑⁹⭅滀춳髜盖嵽ꆷ淶\ud875࿛礌툛ᦀ⡸怰\udab9᫻瑍ꦪ훸蔌㞄ᵍ︚੷훇὘徬⽬쫲颻䪪挌Ʃ蝓Ʀፌᾰ氚⩢娞됿匒ꆖ顥珁㐡⦯ퟆ\udd4b垼\udc03硪좴棭ퟝ沺奣Ǖ嵅\uda8d쳕\udc28绠잃篺刍節砷澷譞礁ⵓ腘̉歜蒱᧝同읃픱唠\uda1d琼팝ဒ우ﴨ#ꢑ๠満骀窡쾠⾼ꀞ䀤酃ၚٯ䫶๺㳸濘黱נ曁ፗ适空在簉傒ꁈ않蔩̪᠔Ჽꎛ쐎옝ᐴ遲띩麌㶶喝뜧佲臛ʌ☐ඈᲱ埒ꈐ᠌鴼烢呷䩓蛒ꋎᶰຈ᪼拆聸⊳쉂흈逎崶:㚺쌂篞⎘ഗ⹜౨䜃ｚ㪕꧁䐝ㅺ䀬⃸䠘൑歽툡ꅠ\udc3e躝掣₵封ⴤ탿䫮嶥ﮫ얂标襫㰤ᆈ꾆Ẵ苪硲烊呋쎙凰铛䎶谬ᇚᜐᝨ҉﨡䓑ە縭둻梴䞝ꊻ䑢㻐敭稑毱嗘\ud807쮺얯㬍﷑蚷殌㘨擏䒡ꩽ\udc5b迷줪冃Ḃ䈸ꉿ끃兘έ敬⢸ꪈ﬑Ꝩ\udda0쩫痘놢䀜纖ᦒ腖冝ㆀ鬦ĭ㇥밉텗鄅瞡풟繪髶襙ຆ᪂㛙뙿挒얃銽聠䗂讈⸼屆蒏䤤௃챕嘊鷇떋㜦ⴓ納軭쑧胠囇ࡂ跰꘍䓰찔昮ᱜኀ젊㕬诜뮺ύ䎝媖ඎ讈㷳ꂯ峖闃탶\uda29嫑垧䍠퐞ミꊒ♌ᇙ㽨䗅䅇ꋢ蔟쨸霝逺‘ꎪ蟛阡螊㿽⡙ց뼍苺韧嚭䛀穞ၫ涞聨జ買ꨞ溘⮪ꏔꝃ二䔓㨶瑜통긌㯻╗慶ጫ跴\ud8ec흗灪䣲뷉ګ眆漳\ud97dꌠ\ud943錻鞯骊鴝㨩톜텁ൊܨ㎁걻俶苍─᨞䷘ꈝ\uded7鴓뭭㖣岝И집골⺌◬ᠻ袸怂ᠢ릈抐육訔豴◑빕秚񓤘㟞뮳喿⪙噿ƪ澰睦驒\uda80ꡋ퐃ݮ䨷ලࣜ᜼ᣤ욈悐쌡腃ᚘ횘蔎䤘䠸垥蝴臏ꎆ믊ḍ劝⪏⵨ર䘡慣祆ବ鴼壡ొ插왩跌櫎貥넌⋠뛠炇癨眯䚹Ԅ䤞錕蜪遆宠屃ொ꒖ꈂ␄鈆ၭ쭻揶웇␻ѶẰᘰ᥍ꫧ㚷磞豨뽛誖맨魰ꄩꊎ㠻ᡶ࣠凘카閬⺬ポ톁헪믊❕Ή\udbcd꺨﯑헃牆腵䨚ŕ遼卟൹ܿ陇᠝茜漸\udc71뗙깻㾴吝摿䭂⌵獵㒺聑莄Ն᪌敼\uda31舍ᔘ鿓䒪罹۹荳ﯼ貼汐啠೩꧚䕣繶휝嘱烓冣崩蜣ꐕ䈥觰ἦ๴禀첁찃ᧂ㜉籨ꤌᣮ১辅┨㴈ฉ䜈㌣巓뜶潀蒑ఫ셸㖄䃗ִɄ࠲᫼哠୑쌀ᓭ︼ꠈ壢㺑挼۷孏Ṓ㻼絆⚌ף㵽낁㳁禆챲Ჿ〓貕⭑浠齸쵑髣䟛辏휜樿⑨ｏ䚻ﶸ筈惜쇏ޠ࢏焜†쐀죶㳆禊챒❴埌澣\udffbꞹ猞즣璩蒎臬꺚‟ꁟ䂳᦬ᇷ䛿મ\uddb0쑪ὀ䋈⁏擂㱡풂퀣၁藱ᰞ愐餑㩂籄쿌湄㾻ꑎ嬴Ϟ曑瀮鍘홢Ő亞㉟눈헝う㞍섙当䆱౓됔懌ʠ읁覃ᬆỺ괽訠탂؄髛鞤띏㛦ⵇ쟺琵ᩚ홼獘엱\ude8dᰧ炝䞠䓯䛨륈〢䵄飁薃ࡢᴞ뿝豻õ鹫밑轟䳼할倠ű\udda4\ud910햁ꗹ箥髣ꔂ㪉⬘酵뚍妣툑ቕƠ숤ᕢၤ۠）籍ⓩ쁰ⓩ䓷뗍勂传쒉㚃᪤鸣̎韭﷔父㖳觫ᚃ䇒ɵぁ⭕戈卺쉩炋ᬟⰂ汉ﲉ姫슦샠ࠪ\ud870퍫ᾍ熰\ude4d⛄虜鬃㘕燒\uddf4⛺眙태曟䊑똓ꚺଠ㨀뗔ㆺ흨웱贀꜓恼饍舊痗炑뵷﫫䠋흚䁕ግૃƆ䜶䵙Ꮠ㙒֙ⴀ縮게⢐ԭ浏쏘檄賜π࿋걗炮텝䊺╷羽⿑檱擴ﻰ쏷䞋럁ᵟ崾詊ಔ㤨刱㝑⥀䠫᠊⣖賫Ǖ䃤䉈蓱㛳믄얪끓椦页᧫헖螻Ⓥ৹Ϙ竸劲蚤иṦ疦䆬㚠彂篭锻─밂꧅⢱禕䴆⾺鮳匰ᢀ库େ觩ꃍᄃ됁ⵇ\ud820݂㝥⃰褫ὺ఼芀衡檱齇⩵퓂鐥匪倮阕ᑬꥸ\ud841쪻䮏㌚蠱呠⣹죰褎쨺萣പᅲ㤀꜎坁寥乁鲅婾爐䵜퍄鮛㐖黲㓀沨ꂓ\ud8e8砳⑺ᓳমⶬ☔෽ᰯ倌悫檩狓䶧朣嚘岅뢺ဴ뫹ꍡ檗暨䪇顿ಾ鞰퀘붏㞣ن䐑ᄅ瀚뎠러鬎\udc53ꈶ绑끤廚흏ѓ隂ؔ౪鶰㇠戲ᠭ领༈ⴉᡎ撝鈶㩶ᓄ㷜䖔悩䎗ꛏ෢⋖ⴣꐁ᜗㺟Ɖ̚ع਩pびꛘ氲墆࠿乪츸癃餮⨍倜멺틗捂ﮨ茊∺記菈₂타떪䔓䁦骨ﬅꀬ䃍瀳懮넁蘃ᗴ迓급컴歌䩙발춧ᱜꕊ䄐笿㟨綴뜙嶦ﱏ䄟櫚뉺౐꧒ⶮ닦呞읣ൻံᷬߘ侰蘑횘鳉笇䳭\ud82dզ焽ᡊ\udffa烔퐽㗚帏㔚혿匤脘㙂톡厈Ô蘝䫣㵌괳垱ం㌰晧놗墪娽盤䑶㯗꧘폢捁쁅蠾ၐ쑘⥐쇚ĨӨ֮㺰很쑀퓲욆ꎼ鰗뚎掕ӳᶶ怦씉溴ᣇ蕌ꦬ蟐챫죢駥鎽ꝡ輽斧঺୴㛨᷐뮠㷓ꩮ酿팤ﮤ迕ḃ㩪熸\ude7a\udfa3ꨪ蚣⬃僄憈䡦衺⩺켷䕮軝๤⃙늀\ud881ꆏ죪钭抺팵䈫ҥ'责ῂ鲂䆺⽙ͧ뮡䄬啝泏逍킃ೌᾓ㣌炴稻䭌䒂贍ᨗ題棷Ů箂舎簠㨴灳ᰑ㓯携편듀㦶̨ﭝ퟾盙팮뛴﫠ᖮ噦芘̹੸퓃馃﷉蜷๤⶚䎩靄鸠ᷚ堀첑鱃庀⼸᳽雐猘킸ꁃ鯧톰_䛩攉湩먀帑숿衤䁷슆⎟䍨ᦂྦ朠ᆨ竺웅⦆㌆瘜ҋ놯䌍顫㺦潔쒑菣땇Í䊙㔶綬퓖Ị뵽᪑丌檵툱뛗潆ꕳ厱嗌栧圹\ud907;䲻馵汳圬澹鑚껤礩띀捀켭踉➽⠹砻䃩Ĩ舛쀠ઊꒈ⋞湄Ᵹꮝ鶄瘋맄獺滋跽鯭㚲稛䢚둦\udccc曒얽첝喾暜डࠖ㯨㞮牉셢ꉨ✺鉨瓤\ud9ba♍쾎鼵㭏꫏据ꦝꯎˆ֏幬ᘊ䰣Üᗴ龨唂硬䴸໐값曖㴵萉젭䈬䗒૥劬䚀쌻끼遘෦쟍㥩⒆\udcd4哚ᴪ柅ᐘ㒏뿩抪쟓钇꣣ﱝㄐ谊呍珱⟊ʡ莡힮溄ꍓ귶젛䠳䕄㫿ꍖ딃ᨩꍇ᧼ﴜ㟳\ud881쥶ꨄḳ౵杋窮惭Į쿷⽏㈘撸ẏㄭ\ud9d5䜆˝᱗烔챼홛줯簮Ḩ㽣绅ﶅਫ਼\uda9cꣴᘿ慾쇽蟻្⁖식褡擏崙ᥗぼﳟ釾펕䙨⑤헭괝璅嗢庎␟漽㙳볍溹뎠ᙸ畸턋ꃮ吮鸝\udf90㠮ぞ셽ာ薨聈ᘛ픏Ᲊ틷㕇돎\udc80쐛퉚െ᪌ꄅ↧ꀾ쀓凌돳噈԰櫨ퟙ죦軶섙켶瞺⣕Ƹꍢ\u0012跍ᯬ摪⮅鍐밭庛쀳쁼泈ꆥ஌☻칓㙮疨쫆鄰漩氁甘㢢\udf13ᰝ⁾ꏎᝆꆸ声딵଀ᣑ錃Ꚍ혜\ude0e䩫潹㠚烮耽貈⥝凨ᭊ⛑룰㓠ゃ멜鑘ꀘ⠐傠ꃁ䎂貪鄊ԁ㵁➀\u000e䳷눇櫄ృꀢ⅃腄芌㤚ਬᑸ⢳᛿䴓鶳㙏ꧠ﻾꓃书铉ᶕ⨈꨽\t\ud953돼遶艴嶱牢ﻅ馋烉滉湜녯\udcec獔쁑㢝:៝㗀赯羹鏓䆁髠㝂ㄶ똜郏触뎓﨔촬駭〒求흙있塀犅玀熃츗鰺捍婊貈已ㄍ뱂ퟮ鞥௙ㄯ㧁쒾㌾◊ୟ᭵첤顐벬挤톹뉳᜗쾎厛뿒谎＊ಽ恖㄀ꬑ菆䙑沤픥湰뀤轖櫯柡࿗⦢ภሺ脀斍ڪ鄏銞༽說嘻憻⌈襪\udb87黂ϨᄑⲀᔔ튀ᄓ\uda20\ud83b⥩ﾚꪔꔛ눖䚪庨ຩ棠\ud96a웽꼚손䇲殎媓砐氝咡뇃扆사藺粵魀溘ဇ遲ꄀ㋍ꠠ쭆↣护婜㺑栌옂란㩳뀕ﰇ펟ጰ칝㤀팊䌐⤩ࣂಁ䶜뗙曁꒡᠀蓁ထ✵崰泖㥠ޢُ蘉革䗲抍ﱺȶ㮁དྷᮢ倜凞奷悧雇ㆨ䌚ၔ謉ᭀ嫰䦳恙먻郶秿ᕣꋊ徠광ᖓ眜ꒋ뼳ꝷᠮ킑樞퐃꠮儬呃띧曔巋뭑㲲鼙㋢薕捩鞍쵤崃㷞权噂㙻‮쵇㲽딒ꡠ譗亣㦥멼牰堨ꗎંẝ榗Ⴥ䃹ﭏﬠ⌐쇿夘죡꟦ॴꎟ﬷ិ浶㧋鵧飌ꏚಲ苟ۊւἋ褬џ帶襡狍һ쮬霍캓鰀몐摧繊\udc65悺籶䵟ꅠ⨑ᖋ⡖僈꼞ẄԌ甗䑎씝뛠捤㨆栋革鑳⠻딄껙䀩\uda25欜롭꽧쭘ᢻ☮䱚舅㇎椶턩辉࣌帄㤰ᥚ⦂敪慉⑩⭇ᘍ丙㹏맠魯쮋\udc97㉡ꘙ顫ヨ雜쌥㊲扙堲뇁࣊劘臻⏸蟯밵㑢⳷ꇻ၍ᘞ%鸌્Ϡ逥쐰⪲쐲蘦푂᠟虇剶耿寡圃桄늼椒\ud8a9닣蛺ᦷ蒰趱啐练ᇖ⴫᲏폨樢\ud898àቡⓆ噊錝☼딯䜘겓頀뛥玒켫ꪥ鮵鬡月\ude10ಧ盐ꠂ겣曪늓ദ㷢豀쁗㬯堚㴥ꤡၢ䏻Ꝏ쳺ϴ൙ዐ᎕⃈諺쌠銩苘漽皫ꭴ▒拵孫྅穲ﾅ쳳玗㫍텘芐喝૏弁裛ꀔ莄芧ൎ☰㦋윦᣶鲜\ud88e曜恖怇붎퉹噡幮ᨡ璒ꪣ㿦泏㥝㢰顽壧䚮䮊䙹⹤ᆀบꙠ뉰ං蛡匃뺫鎄൩丨㗵㡵♎䳵\udd4c눬\udc35떀᷊ꉧ醚徕뫕騦钹瓾肝Ɓ쇟Ǩω−൙ᇧ仑먂᰿겶ࠔ孅豘順뼧ᅎ࠵뤀ꩱ퓣ꃮﲋ龜阀ᐩ萜磊⇌忂੹紟乔嵫ﾑ\udfe0᭞ʉ춶음懻쭬鞘꺍岽封瑧濑큝셵ጫ앧歀倮뒉峀텡檫书ꢝ嘁ﲖ꠽圴㵉⑏덖쩧ⷠ墪닌殐\udb01힫ᢣㅆ܆씃訤ၮ⣯ꕧ奢讝欀✔˫뛗麏\udb5aᪿ﹵쫹얍挛蜉꿈쎏⏵ස㑂姀妄譑书匸뫎痌ࡹ횸ꃱ䂟㯎琊쬌譀뼱砑鸭꫋㚋⼇涂ꇖ暦،׀葑Đ䕝╗ﶞ亴婧ૼﺭ먧်ʨ댜퉑됓힦촏꩐ઇ锘梡呢ꢦ㣢ư欼쭽悪ᅔከ俗醌⦄䑅䢽䫘皹௅웃윒奙㭅粬墲爖᢮Ἒ抲㕾뫙黠差흸登嫢됣꞊ﰮ埫㾬ᒫ숊㮭콚⻫୊㮼∢ℨá灦Ꭼ᝘溰偦竆峪熪ை힥⚣墮㛀樆솹痗ጌ뭛抱୰溺익赃柖Ŋ鐰蝧ﭴ랮듂鉑ᣖפ捐㫑뎳봟孌杘숶ꡭ竃ᆲ䱦稁ၹ킈䋶캽፺ԕ쉋㺯慟鲹繺᭜᜽᭳퀗ꄯ䘱뚽ᥢꎕ훳潆㈬ꡞ粷⁧⋶뇍袩틵豧䰶㶝㜺泴̛츷垢飝씾ሆ棹늃졼腞ठᏎິ⼷ꕍ츎ﾼ벤聲厵套㖡菮譕閚ᇆ즜奴␕븠溁풭촙䝢澙끉랰ᱸଜꯀ퉯坉耎윰坶䶚ꛡ′ꏤ\ud8f4뢠넕濵岻襕쉩岍顳父젪꟤⺛냹綒쬕꾣࠶㐮搛ᓓƷ⃠ૄവ郻ʮ䝜蜳杲Ɒ愫ს⑮齍偰隂頭鵿훏皨\uda70꣦귈朷竳⌜䌃֥葖貏䵯地孫㊉祌꯶쫔얣毄隍ⴖ娼둅桬᪥\ud896蔭ሙᰭ蕨疈⺕⬰국࣏ǀᮽꮨ꼰\udc20뤮녕猪ﰣ푳ᗂ\udaa5塭ॼỌ毇ឱ굈᤾㌊矆쭑휫쩥\udcaaꦔ씑䲨᥈럅ꃂ\udb45뜭̖聕佣薖\udd93䭿뇮毵வ柌ێ仹굾ჴ츼皀캘淯✍萛㘐窢돩巏솢쉦見෩∑屘җ誎壝鲽捫趐譚㌰轘뎔ᙢ췛㪌幣쫙錶썢ᓭ疳譜㟱꾍婮렇&ۆ뎧ᬚ膔䑕ᘂ鰓嬴棍波쏶⍸羦햒⺷첕뫛堎撳훀놕ጊ뙘擬棪䎳⣣塹鶇ꈠЅ⠃젅蘌韏痶疍뱫挖≭ᚶ킯䑂鐍ᲀ鱨ࣂ煄莠≏੎┉ꯈ탂㛟䈰䭡䉕跀謗萲\uda72뎿븰\udab1폣ꛧ\ud96f❉ᨊꦆ걬듈酹ነಝ㾶킜ᄸ扰䝮䧃턎蠇೎㷲⟃ꔷ⭢Λ榹刀㽳街晃♕\ud92b厐再ᵠ샫㌃Ǹ䜶䀘ᙀƬ압瞷듚ꬿ웅㇤\u0018\udb19墈ꐓ蠻狶쒜㇛媡땃୉픁稏呧飾䧪⟡낙뙻눆輛ꦖ홯㭚ම\udd7eᓘ㨔쫐ęŧ횬賱݀ϱ艀釒䷢땇檋蝻ꨯ呂㯨腡銡⹔ছ瘭੍켍燁蔐᫳ꩡ\ud965გﲸ喋硲藋舽㵭ꨄ\udda0椅䨱ᮀ鴈焊㙷볬쪽딉\udf81沺䊍촄啁曱鎾륡㫰쪿뤻횳췚\udc66\udf11쮎躨嵑叜싘訩ᑲ⢔冨ꉪ䎢迕殛畵ᰶͭ尷ੲ瓷栗\u001d塸⃖䈑軎ቖĈ㤭┲뱐酃⊅⻿왠뮖뇑ǁ⭘\udb20Ე쬯䅒묛Ѥ琈袘쭮줧䀞ᅣ脆݈ࠪ坦爱퇍罏쮿⻕ᑼ뮴儭愠颓㯙㺬ﴍ왋䵧쟵켳歡相ⷸ綑\udb02뇐✸⯍ᑢ´Ⅸꅶ⬘访᫆돂骶溪鉤䕻覑Ꮽ➘ὑ嬘ૉ촙滏㐾棫睹莦檹똽뷢Ɽ샀ꬑ짂쥟䟑ⶖ㑕민턅ꃂ摭븗될읩鰋䀶襬鉘긶챿囪릑㭻氕䗥迋ࡐ€牪⊰애䫁⹣啭녞塼뀅愊쓇븫Ᏸ髄䘛怊䁭ꍞ調ᯗ훟聯⭑矶寱뤝㚭跢リ镡⌇薌쐭ﻮ堨\udd15詏牖㨠ɀ얘ᆞ\ud80b共ఝ瓄く띢꾇㏜\udc94컕년膁ꚨ櫉喝ꔚ눙䈘\ud9b8䆤ᜋૌ귛䥦鞹䥬둤䯜ṋ钦廞ᇔꔈ䨄\udab4Ȱ寵₁翔례䶌鼘陝ڞ耄㓮㦡꜌耂桀ၮボᨛ捰⛡⫅ꯃ閕慘綘렑녇\uda9b謟瑸爛ቩ즥㶢䙇ပ᤺㈝Ɉ±鉅ῂ郜ܾ쨲䔬立㆓挠⧔幬복譛႙ⅵ窼츙齀獺좗啟槚伮黉엦孌♦켳\udadd딃↸ᫀ淈㒁ꫡࢢ䗅踗墤瓒ﭞ畳\ud8c6䡟笙᮹캙㦪ᯭ㸄牛鄈晻쳂\udbffﮃȾ쀢ଯ녯ᱢ鉬ᶡ뭯稀㈹蹦룇耷⸵鬾褅뒠㥀璖Ᏹ䱣俅뎈ᄞ縠ꨥ᝔䂹ଋ䐺ᰬ龢䷠縰옃竟丱ۓﻔﱹ쀀皅灲\udc5b⥇์变誕佥蛮\udabeבֿ뛗沲\ud903㛋秌驚靡됀䙖낎嚃⑯㋠὿\udd9f蟿煾ᒎﮈꅁ櫚ᥤꖾáΙ⻤ꚩ삋蒣ၔ蟬∠專藎䀘㈂퀰爢짡윁晔Ⅲ䍐躡ᤚ䚄ﱸ娓軚科㴽玒췅쌎홠湰\ude8b뎒皎좘눡횽똔訏꠱쀬뎔Ṿ歐烐覡ୂ⃅ꜝ渁ﲨ垰⬣⫐겑奱쇋꜏栿묊릂ސ⣳㯳仓㨅驪պ䅈ኙ䡯獪뎕\ud829\udba8ῴ榬醶꺤⃴瘅耜砰䎙㍻걎腔═罐荁⏀肶藖䏟鶳䕺黢닇鮺꘣뒺茤䊼銑Ცሙ뒉㦂嫞帵뵵곧綔㑒媊么趡噜᪘먟⌜꣦⚿䇠햝묌\ud8a7㈛憸㘢狘윐\udc00Ԡ\udd09ﷶ࿒⎴㦤䤰﮻琠 렟薗ﲊ燍怏ﻋ́ꚋ澗脇쾀ᒈᣥ룅䦐‌礅됍₿퀤칕铦肊途痀퀈꥛眎웮⭚馵㸆籍蒝࡟፮핵盭踬쁕㋮˜쯸஌Ƞ嗯搚斜홲ṅ껈஍鞏䊕氜᧐䈝ࣤ떶넱থ钌฀氇❱囅ꁠ삩⢔戢▙ප缐ﶠ秫뜴珴첆盕芉ﻊ䛳க๮阹\udcfa됑暞\ud897߹쑳䀃㿏⎑﹍᳂㙴犽됊шଇ樠ㅆ湨​葵訁ᇎ籛꓈踋䗹断ƩḰ暤굉\uda92甥裯ቺ㦽氻㮂ᲂ\udaef몝撴\udb01ꙭ⩓먹橄ꢋ퇶셆鰿물篈蛱㝗몚Đ囌胵滋ਉ秋﫲㬓朼渾壤냝瘮굨蝬५旧ⴽꡙ篢\udb23ḵ⃴笘㱣鹙䦏阷鵍뽽㇢컄〚솔䰤׌社燡흴胀ꡠ감螬ꨇ逞㢠박餳⇒췮镞䒜䋬\udac4೫叇緣噁ᯉ጑洚븐뀇쇔櫛뾮濖쬎㲬蛛윍⤕琦㕭ᐓ郷㔃㦒㛣胸箏菢蟅뿟啧㕱嶥笕蜐쎻輟㟠쏃빳ⰲ끒蘃ꦽᇛﰩ隨Ꮖ婚鯰謜읎햀築胻됀葫㭴ŎΎ뎪迪Ბ\udc68犭⺪量灊꯵⸎ɾ欬ৌκ๯追㨏聸⿋˄䖈䬓폗ⱁ햊넛ڎ⟅触憖ⓖ䯄ﺾ⸽툧娲䄝薡␆쐶䞙⼬\udc30礗楡줃閇瑶혞值\ud873䃧懽Ͻ螴愸鴉㧢祘螊풓ව䛰䈸割჻멯ɬ\ud898䂈悑Ĵ륨者㙲㖙鹜렓됅Ⳟ휀㇬﫺띦㦇럔ᱎ䟄朠깚﹃尥롏붜┝둪悵Lr㎮牮\ud83d뤳芟ዜ锼ቲ㞠嚣駍ĭܟ鋯◩룰⫦衶⃛ᶃ젃ᓾ厧葉俜渖㲣듭渆챝뀳镻庢犫뉔䘻⠄⇷캊睰踩䒧ꔧ孨黀龓뽺繢᠊Ꞷ侴ꃌ飝䨔닐♭棓乀㪑쮂晒䶆㙰牑⁣螧熪Ⴂ計餀බᶤ쒞坞댸쭵盈쯖רּᵜ墇ⶸ焋㻴盼ꐂḘ鮂硨≓꟠蠮麦\udbf0琕揈샔腛ￚ栞簼泶ى⇆⣲䔼긼ݨ䅐횁튀忞ļ\udb70ᄱ펐䑔⣎鱂─侔芤섋縖ᳯظᡷ뵿죺㧅啎뙹\uda2e趃뤌妢㜌﹉麫娡撆㴆㐜엇팠軳惦票鉎⯔ṧ皉ᔝ쾯뵦웶骂읩᝖溵㰍뻔쇀ꦄ鹂묕┠扊⃠詅鵳㼖筨蘴ࣵ頠벎塤䚡\ud998﬈嫇葱Ԩ膃↔迃⽨益갔뷥茥㭃挽㥈Ѫ턘싸Ꞁ乌趃砂ç퀉莜†⧐涢䁹鬌䃆뎧秇՘끛뼓叮ꦻ鎯匽陼펦꞊켝껀\ud956穠㾑袒젎孆⩅\udbfd鱾␎猀踁Ȃ䵭䇍떷좘乽،鮅œ艈ƌ嚫畎쭀Ꮚᓰ既孡伋ꏑÐ襡።ꜧ岈鋹ᨢ溇퍷昍䏝쁲䭴ꮠ⊵ꈯ㮄䊼᫳娲ꥲ쀂፦풊밢᠞ަꢲ뼏直폥૎噭᜾ぴ콩햊윸ḤꝊظັ즌㻹௎愐鼼䑊복ᄵ䁗츺鉈薾竡ᡟ稅탄峀焃硅ᱱӶ噃琅꡾Ⴥ\udf6c㇤᧳径ὀꬑ겎㡃堰딇꾺㱝ﱘ㟇衏ᭁ楀㶶ࣗ킼잍輆᪳஛催⺽둤浕天ǒ첇\udcdcꄝ쁶\udf6b种䏬ꞑ蝲鶉瓾犤ꇻ翎䍮馆⚺䵲㕅㖘핱ꬤ뀰뷡箏օ즆끃夏㍝眸蘛㕣譾າᾒ頥ꗌŪ₼尠䐕猄༔塳︞怃Ȩ㫹왏ʞᔼᆼ吀ᗡ㯮䭜鸥㰎‑⽩엂竻붬몇樽찿ஹ裼试ச⻨싍ӉD㇔ʰ૰ꗳ쎃⹛ዬ◂䮚硑⺃ᚖ죡඘ﵐᆀ妈続澝혅뉱᪚̄烛䁐♑喴塶픛Ꙥᡤ烀梋\udfc0둑ᵝ⠙릗뚝㔭⼤䃦㽩竌줅ퟋ⡧뼭᝱碗툈⼊暈뱝擢꿈誫㛷췉鸑끔刀厝亰鱏⵫◞韼弋씗衲ퟳꌇ賷⼜፛ꎸ≎탎ͮ笤都㍧蒒餝⇥컋ꅸאַ엠⫅翑주ꖈ䍮䲟༬梹繊礁⡤À⤤貣櫉ꮺ빩픖펀碈겒ÂԬ嘕릻᤮᛬킪眃餌같砌Ƭ睠㡟厼\udef3騉㰪ᮠ菃ꕾ༛擔㰅ᯫ膚ȋ㤜퀵朥\ud9e3鱫ណ䠞뭟抵̡泺諥덚⫖칈餩鍶暕穗粯詤༜낲腪犩䁓덯䋅꜎酳럥뇩ኤ敉\udb52唦ꩀ䏄⃽\udaa1ୀ뛺ᾕ姎硄ﰶ梴\udda5䋧Ꝭꑙ关嵯◠ﶂ霚伧䶳\udaab裖ၑ⊚ṻ㒇溺⣂谁贒헅別吶꽋඿㺤ᆏ抽謥庶쟭勣骲쀢bᦙ⃩澁㬞뗝㓏芘罀ꆈ捃瘞춇ꉶ蠗놝봤\ud80f嗠臨磥뺦雍劖햟㣣\ud9ba얞毛暏鲲䉕㮠ﲨ⭗ম\udeb2ﲶ왉∙븫簗᳸⦭慷씌늌篏䘕񕽦鵝龞螻볩\ud95e흍䏎뽯蒺ޡцĀ盃ᅀ系◆⏱圃⸽㰍綇괒౴㠀䈐眀쯤먉฻ξઇ깛ꁝ營Ւ⥡엑⾇庺ᚥ땫䭘ᱧ蜿蚬ᇄ㲴稘蒠ᷘॳ㺙捃㐅脼벸دꉘ老袃ႍ覣ᘘ腵猑먎酄ﴒᆾ㐌䛴ㄸ戯涭懮둣祬\udd63絾䥗⤸ほ嗾䮟ᬯ꼪䃟Ƕ\udf02闽䃘钀틢ᘤ屟蛿턠戚㜡襈\udfa2ţ焈糱䪛찌熿┳学刾㍩ꫩU撊╕낦ᜈ₣㋞઱䌣닪⋣㧆厪朲캜뱺㈺랁ⷍ఑專砑릊ֈ䄘쐱難ƺ㕹떾\udd9b蝗唏९좹\udd76쫣坷᯹螹⻸\udffa렓畸\ud9ae쭳隻蘴\udaec羳췈✾漄ገ┐䮊殔칪쉓豀A者䕰倍囁雄笠ܰ聐룚㞺幼ᷘჵ읊ℜ鐅쁡ꇳ﷉嵹渊\udc08⏳爠頂㩋ॴᬓ㘧♉䩕䤱綑㔺䀕豓㱎릔陋劦纭\udebd㱿佩ⷓ㏟⿌Ἰߓ袼嵤㺼汤㢸⇀닋걉㛬老\udbd6쑳漺눓訂͔⚄ꙣ稀檂ゕ布鰰籱ꃜ膍ꋔ쓅ᝮ不㓕畃탏臂銲휘쭓道ⴞ憯ۊ빬髆䢼匓㾡ਜ\uddb8汇盪،\udbb6쐸젶༽뮪曶ߛꨙ\udf6e樃枀䞁斑ᘘ♇젼䧙뫣ഢ該놡ꍧ⹵歂≂䒗鈹ቊ⓵摩聃峬犘\uddb3䥶ꕷ鹬ᄡ䒟鷕ሡ矟㚩쀒检熥汬쾫薇筯뱯㺽䭹㩠׼ᘡᣀ⽫ᰯ꜁甃㮝쒀幷櫄⢓쮹崰㞓뇹瓮위[闗ⲗ煬쬌砛ᴃ稁䌎㉻㘝釀ᑳ흨٠裡̈ʹ뼧碻渶㦹呸뭪闡琒○ʯ苸铺ᵼ㘗踑淀눘\udd7a뛻㧓鯘漣窝癟᠜㉻槮쒝䩻ꢽ巢寇흚\udf06\udb4b碊恣晛푓뛧狞韂佹异뷭簞⮫ᯤ䰂䬲哬抿鯭ꂇꢮ璃芧㙄攊竍己珘䄝䥯쪧ژꑏ帐ʝࡋ䒏좊播ﾾ䏋鴎଻앷迼Ϟូ㦋쳚樅ꀼ텨裼䝃┿矠᳽\udbcb픗纯륜㭺﫠ﬄ쁏ퟢꀘℕ왶鱋唘쟷⟯\udde2뾸㒉ᕧ㗼覈䀂䄒꾒餤か噰㫼鏎㚏ܣ㱒⼕騇顠㻙좲Ꮅ\uda9c굩茨홋钗ꕇ퉜蔹摚퉿ꒀ졧圥㻗㒦븒쩧酯ʝ궸ꕲᓽ﷯ᮆ꘴帉말턊ᩞⅨ屰檐㴖钌㬳ޥ谌Ṧ걍芨刯হ羐繙㨳ꀞ솿ꡝ₰咛᧛䀠谧陻삁㌛✬싔⹠\ud9c9呵ᵂ᠉㽃磼淼芚쳐悡ﱇ溢彈纐⡾琈쇸᤺䬙ゃ䅆䀞艞䉯¶ῶ拻Ў䶜ჰ᫧巶ắࡩࡒ区쁜虋Ꮜ㔰ᖀ᜶Ꞹ砢ࣽ⏟艑ꌈ⸌ᔟ׽螹လྜ늀鱳沟骁旫㈚섉뵥볉郺Ħ삄颈ᖀᭀ룫嗛ᕟ惲뛱헮ּ境怑ぇ鼄感ﰐᓯ恟∛氢送聭ቘ窑禀搖葄຀귆⤡ᰌ꒙业鉔゚䤮齗뵠꽵铹┤ඨ̀㣵ꒂ㷋꾂黮벮㝞턃\udaee翞嗭ᒇ㈓刖摁栀䂧تझ㳣컇쮏獯풒᱿퉝倊䠝狥4쀺䳹쾠॑찳혙錹ꔃ飤ꈍ⍚⪙邿ႌꊫ뜴අ쉩鴆瘃꼅湫⠯䣛৵\ud944瀄佢ꄐ䒱쥄⯜瞸齱뻠⌇贏徾ᒗ롯瀾셞䷉ᤢ鬷◻∿ພ裰뷙菬㴷ᛇ柜峕䣱晶厢䊞뤾ﷅꛡ엦ꐘ\u0004耊滬閷࠸汖߄汅\uda51⊪∋⃥蒡밖廓⿵钝఺沶ﻎ밧Ⲯ࢜ួ▹糣癔ẃ侬齣銚䃪䢜軰ༀ哤筅Ꝇ೰鲉㤸析낑麽랙㦒焦븵闋씐莖焁\udc78ꋖ啻痫⯅ᜃꝞ㻭렐﬩ﯽ짓婎㘟倾\ud877䃯懹θ黣㲧⁌礳썰哏㙎턿혞ﺾ첪鰄ꁁቂ흧¶꧉螥ꈊ퓥嗹퀺鱺桼ꁟ渷陧퓇煎샞禜\ude9f\ud95d涹㧰룅뙊㲎᭺䲎땷앟ᙿ磵ﻣ曓熰௼㜿⸈\udddcǧ凉䎮樝蘰璽鞫셄イ㛸⊅◠䶅ṑ⊢敄ꪈ\ud837䨡˷⢔됸ផ䓳Ə鞓蓵穟ꐏ弱䘀싟ꔸ護輺ꇖ厘뜅黢\udc2eᡋ盱ﻩ쥣騻旎䐽폥뢾㬥叵譑꾠뻊⌂ȋﳀ瑀⁺鶌慿┽₶瀺䀸릴䀖ꄜ栃눨裱듕ᴠꯛ隹\udeca鳱㝱୍扷碇䦎鈭ꙣ๝฀ג㘍שּᒿ勶璍䯇됩佭泄祋痱䧐㌲⌐腐欑程猞똣莃ꐏ悔뺝╒蕃ﮮꃑ芲눜н鞽悌껉뷋ངㇱ頃쐲킞蟐₼䙸\udfb1邿㞠៍쒽胵Ꙏϔ黯참稍ᄢꖬ룠횲嘼Მ惽藣菐揵켼ᾞ㹮捠伭஢䊲ꐱഒ稦䍺ᇭ鯜꾽῝㺤봅딉⡣쾧靥妼宻嗲菘燌Ї䒖㤽礬姵竔譄︀⊓垟ﯬ\ude7c潶姾句延葲।憽盗膊ዹⰬ圯倳䪿㨥瑉嗣턫錥я湪莗䮪旜믯궒ﾀ萄琉᫹痫删겖曈Ậᅊז⑃ڈ᫓훦ꑁᵊ윅ꡍ팏숍ꁀᑘ䆣刡᪰䨂⭫綾띄啟ੇ䫡ꬱ愲쉕蓫शᆙ䱸ﴑ컛ꦯ摟홮阸ꆼ業[놌䊐ѻ獬⧭薄䬈홐⍸\ud845낕栰㎲⸺\udb09輦輲备沆䳑茥쌲\ud93e％⠑燨麂\"ଅ䏏馴໨ࢩヱ풫\udfb1챳㛝蛹䷥愚숚濈\ude19ⓧ믨ﮃ폇\ud8b7뉝闌晼毙鯜⁐矠X賦綀럄㮼舐萣ࡁႊℌ䈸萫꽐∪禠ᄅ흋믧栯ᾞ悾䈺浡辕랑⠅ᕭ뽄█䊟ʃ꽏浟쐶\udeb8㋴壪軛叒\udf83嗫먁獘蛇缡ﶾ萤໹႘㯋걥㞝⾐忼Ձ烼ꎨ㠮䭞쌾爍딆뇉䀋㏄㳅圱鰰Ⳉቬ㓡繚\ud906끁ﱎ섃舡퀸聜Ⴎ羳瓕\ud82d쩗冇⼿\udebe볹跺軪뎖箦ᬂ쌛讪鐔ݸᓤ窙㣭㵽믓舗Ӧ켡\udc09誘ᗛ椐䭀洁ꈜᚲ틺ၽ耴ᤊ气犮ﴓ\udbdf氒ﱏ뷵선嚶ᦎᚯ儶䁰᳙▲㱤፩頿跚涶蕸榘例鲘㳝뙀䐙锣큧풍솝ﬀ虾䥐࿣撕榦꾀ﺶ䍸縒狆냾㯷켔⠇䵲윻륢ᡌ쀒úꯘઉ쁆鐵疯厃푀댢䅑刬ᐒ腸빜歫跡ᨢ️速䐾궒䃾쳲홿ꏁ埵澄帗㬡㰿떋樟볇桿緷숻컛垳ྞ鮬鹍숢칃諞⭞\udb78ꉁ檼ꝩᕶ᝺篆㞙俤忧벏\ud929鯦茘⡤わ⼐㐧턪ꊓ軩밑伖糛싆ଚꠊ\ud9f5샠π겥쌻஖ﳮ쏚僑嗬浑둑୅⌮︿췢飾랂\ud924⟱妘\ud913観\udcf4筴ﮅ︗ﳏ啗濸掟統줕\ude0cⓊ솰釋ꋋܓ须츗캯䝸邵뛵뗱僑⏘䞻徕珑鳔\ud875쪆窟헡᩿仦槷蒚㦕\udbd2龔⼙糸﹙﬏伬঴탹闁⨥풌襤呖筨䠚絡⚙ﮄ踧ቫ\ud857惏拏←淴柭鏎뮫⧞⋡ލ\udf13令䨠쁽捂節∍ﬄ﹄Ꞌ啼ᛐṒṜ䪸鞨웢㪘쿖\uda60苿〆뢐숋弲㺨꽅뢩歳ꋏ陾陻볾ꅮ띌ꇇ콍몿⺷ꚅ﬋ﰗ憵龞䓮읞쯜磻竵ᶯ\ude9e泣鴖颶ꂼ텚쿏ꉬ琁ᑍ徔儅쐉䒪ꇌ浚\uda47㲋쓷ꔗ㪾꛲ꏦꀭ덡꼁\uda06밀灕卑ﭝ밠㦦쑵錇韾귾忢飸㱫뤬\udab3죩୞즓躪쀕毴ᠵ娲魔\ud972﷕﹐鞗\ud8a2ş蝞뢃ᵽĊ痤Ꮲᠹ德弰캴ɕﲱꅗ﷗놯뙎ꔫ婥ಅ쏿\udcd0키䅬唺ƙ铻⿐ᾒṮ묓ꌥ焐쒨\ude6e鰬ﰲﱘ씗쓯皻察⊞뜽雬륱䀬\udf3d裻ᇦﾤྼؕ\udde1ᕮՌ銚┸液\ud9ec겳ﻂꑪᏡŃʷ뀅㪝떙텲\udf10쀝砨ṠꝨ⚁龖ⷹ侊퀫ꁔ혗ﭗ神㩽ᗷ胥ݱ쟙⼃減糦￬䔛ἷ奵娂䔽䉆⒔鈿拊祤鄈畍놫﹗캟茟약ꋸ㺲鮡ᄟ췢㻝Ⱜ辑ᐳ춏鏇뿧ㅽ᥾엽跼ퟔ೵龆凰⣚올숾ᶞݶﶳ⮃褧뷽⒀爜鈆쟃张趮鲚﹭隋ᚁ쨂雟㴱풛쾧⌔譃≻왡ᢂ翧\ude3dꉉ냼\udfc5쏴ﯹ ࣕ엟辿ჾᐏ몯㥞㝽뻺\uddf8䗥侉彞\udbe7籂湐െ띗逃វ\udff9拵倇䓮柋秦Ꝋ캐绿㸐ﰚ닔뗼➰墥ｂ隂鞌䜀\ud9ef䚁㾬ﲍℓ﹀郾᭯蚋晹᣷㜬䌎ꟻ\udce3诔퓯\ud9d3ﯛꢜ躥챰▭꭭袢ेꁹ䞶ꆤ郓狕䎟跸寱鳽珳宅䁛ꐄ\udbd5遤ꋖ䦞ᆡẲ晢猗掞ﭯ쏦枫勴쿞ᆛ顂ぁퟋ햟▵圹雛峲㐽珅浅缵鄮ꔫﮬ闥㌱໧鹀뮞䖝훔ᯢ┽忛✂叚ۚ薗䦭\uddd2❔ꥧ丶꒠⪵ɤ䠬졸ᵭ舍狼鲯ワ\udbce睿㱺ꓟ믩뛥럇탸؎䶢菾ᬋ쇝撫뛞䇼⁻㷾㯊࿧ꝵ䤫ᰛ뵎\udd52޿쿱몤뷿羃滭\udbd1瞏澥\ude30弿㺨䥝ﴓ\udc78獀行ꀍሟﱓ㲫ࠐ恊ꁠ煗꾚蟕陈盯압烿활靸삶巹ῄ㯒圽ꪸ㰌磜﷓ﮐ蟸ﺁỼ뿆蟶쏙쑗衟˞⊜䖲趧뉗⣖ࢿ짾ﷹ⯤闓ꘓ蠾쵽陼딑﾿ፖ觅봡掊묊弐⸹⑯ƕ崔럧兩踜Ⴟ뛎ྼ䓽⵽﬌ᆀᶜ㥪\ud8d4⛒衉퓥纋ﬧ쑰圂鰀忙뾛쐖ｅ＊뷹枎@ⰼ㻬♡ᇣ⏂彫埣⭐￡￡磊莌薯쾗嗩辌皏怊Ī颅\nᇀ\u001c躵禺\ud87f쳄ᇾ槝⏁俻Ƕ讹完⃯랹뾁ⶂ멄കꥧ먔깡∃᯶ᷚ쐲릗ꐷ｝﫻풲뤟ι姽绺癞ꀀ恕⊟ᄻ凄໸鏱ⰲ䬟摯읜땔뿵￵ძﻧ綶뼄\udd6cᚭ跻톐濼ⵑ敼馸牭㿇쮵❂ẳﾼὋ盞춹鲷矾嬧旡￷㾑晥蚈悧ﺡ빑嘪郕溶仇닦\uda45䢁䩣빘⢩耾聤좎ۻ@糌밟Ѫ裌껷ᩗ縚\udec5庇쓔ࢴࣴ࠽偌ࠨ࣬࠙뱘⡬纵\udee8\ude3f縎㹥빎㺨㺒㊷⪕㈏⪵㋿깈ꀄŴࠌࠤĬ࡬ࣰ䢷똆\ude20ꩄ绥툧뚾谊䂽캍쫴㺔뚮䪛쁴者㘞悶Dけ㣘虛鰱ᩑ㢯惺쁜삂ꃰ꩞肘᳀预żǌࡤǰ䠅㪬\ude06㈰癒멒ũ汒뙩␅䪊ň훊\ude7b૥㸸Ɗ㹸Ʃ䣩䢙䢴更䠅䡢ﻒ縒﹌㙒ﺨ븽㺑뱱︐沵泾ņY䠹䣁Ǡ䑓੒鐟ၔƥ洞끡툩劶찡绣쁧⊾ã쁒铣庢깶㻴ŪﺌŦ븋\ude25㋁긜껜钑꺬䣔堁Ǚ䡁ǹ䣠䓺䪬჆炍툗帊※縜躾å퉥ċ縭I邘䀠⚻⒎ۧ닼㉱ຝ訩ⓟ調訮䃣滊ࡲ꠵\ud8e8郅⢚ࡓᘆ밯滍ⓩ桤拸ﲔኄრŬ躴ǟ纪ﻐ绪ﻙᛎ㸵蠍邧棰ࠔⓡꀲ䀒䣔ꀶᨥ㉊ࡩセŪࠇůᑓ뻭⸤ŕĝ\udcd7ǔĵ࢏Ʈ躦肬큮耴᣻³쪛鈯悀⠳쪟誔ĉ䀙낷긗红빔ỗ纡严䪅㺻䪠⊠脪ࡻǪࢇĺࡣ鋔좴죴젥ꑌ죮䁖੷ﺪ互꺏ﺦ廁ꪢḮ訒Ữ訡낞訲ṳ늼臔⣼膌좦⡂腟ᚄ㋼눜ꂵ-ᘲ郈࠱닕邟詛习灓鐾肒¶耪⡯蠋倨恍䠢櫤䲈뻖뙪\ude72繑Ǥ際ᙊ腴젪ꠂ腪脬젅㩊隦닚腪뺌븤人㙣撿퐀ࡴ聀ࠠࡳᛤ똪P驎頞䨣㚢틲㲑싶㛡膮飿ࡅ袱腎膽ณﻛ뻴脚\udeca⻏Īﺋ㹯ĵĚ︡똺왩틺욙퉆욘曚۟臙臑膹脜訑昄꘳䘔Ⓧ퉝鸂竵끈ځ铌ჭ蚜㉻䘵ࡰၺḽ隂蒰隷绸تᣎ䠸ᑮ䡺삞䣞䢚竊ﺷ丕膥빳\udeb5Ɵǈ㹈绛㺨繻㸘绵Ŏ䠮䢫脞䡇쀛脀ǧ詢ⰳ䛱걅ꨣࣗ커ꛄ䂴䀕鐱訄ñ쓫胗灎耞悀⠝䣦股胢㋹脳瘮膑ě못檁娎鸂ᚋ婢纏腩䨵䳢㑯臆ꨋ脘☜纗脫脭ၫ膷膚ꃴ僩Ⲝ䣜䢼䢑栨삈゜飋䡬ᨤ䇯䇼䢔䅂䡇ﺀ繘벳fⰰ窙໮᫊䀘뱵鬒Ⳑ\u0018밁㋩黒粀糔ź縬集뻓廋㹲麔廁ꨈ纛㻈縻㹨绻㻰縞Ҥ䅼䠔䆂䣋䣷腐蘻䅄昼窞幜䄳䛑﫽稄衖䨕脁᪲䳈嚤⻸쐾颟誉詥뱓♢ᡏ눭炷䠞䘞ǯ빅臣\udebb빮ૄ䅦䠖䢆⃖䢬샤ࡤ˄瘗훉ᛵ幒繣ﻡƔǒﻑư鳞ꚝク溤費耺悅\ude9bࢬၚ速灵免癷갊냦䣇ꃁ䄶䡡䆯顆뻵䄰绥빰绵Ēヘ傱鐄⁨゗鑁櫰纁䇥䅖䢕䅶䣊꺢Ȥ䄈脹䇛怜清䇞빺jᰲ遽黦㠟嫻큊ら⚦娍큭s퀽偓ਘ虖é岑ฉꀆࠧ傁渠컩 稺본䘣찍繳꘵䆤希Ż臕腴皁Ⴌ킕ꀺm\ud8d3䲆悕졕㊓丐䅟飇䆉䇴\ude39㛲⛗䅊♁縯蘏䆶乤膅临젴璅 ۻ킚똫绥䀴㫞Ⴞ䫍뚠셇䇱쇉﹑ﺅ庸Ÿ嚘䄔蘢䣬젏炠ꁫ䀼졽큖ィ﫬؎聧䳩츍幱䇸몒︨븰䆑솜죌쇖䂬쇼젯䄳\ude6f䅿縟ǌą僲!꺜긭ż셌쇜죢셼졿؋ᩢď諎옉囙꺴峎⻣鹳탳㈎肋홷䣍灸諻᫉昋偸䁡꘻䄎隶철继ﻁ腗严帝ࠖ좖쒭=ࡽࠃ࡟蹅블皭縙ﻢ脝縺᫭ࣖ䙭ト\ud832邵␳‖븾셝ࣾ솰솃࠰臓䆾븓䛯ჼ닻貁빢늳䇳偎䀫绯䊎ۈꩤ䀸耲穥࣏ࣕ幼ࢾ両臽溨໦죅銮麁踲综솉䅮致칱䪝帮㳝市檀賵精ሶ뉮Ẍ곭࢝ࡾ섁셭A셃࠻뱴䠌䡌䠂肬䢪໢绖㹢䇊仼ṵ䇯ǃ솶삥ꑷꁈ삯烽袽裝⡜}쇗傫섬䡶炪๖ﹽ뺰캡爂㊎٠瀪담鲉請窇ے胺쀭烇쫇麇츷소䣢に섏쇬䠐䅲⹞ǅ脾ƻ櫕㸼㹭栲僽邊嘨ℊꡨ⇲K䡍益䉒셐纻膲섇섀ﺜ뙬Ƿ⪼뚜ǵ㋒ⅲ⅄穘ℙ瘒뚑曎Ŕ똙育뚵﫚阘樗ၞ웥䘵盝੺\ud87a肉暧桎ꢞ耲帰㺝쇾二︞默Űⅉ䅊㹚㋤뛜Ⅎ똭噅긥᪙蠚胚胤㢟ဆ븽ຐ䇌﹔쇰ℒ詝찧麷繲ᘁ䰆⇢ꁆ℺⇺ࡆ⅕ǐ縸躺爸ਹ阍聆犐胄躅隞툖牥陔軨耬퐃큊f끐咼萋⁦遹邬軋陭阶᫁뺖~犾᫖ﺨ䂫죥㢁幢ᢎقບ뛡狸찻㐷늎ႈ幞\udad9↫陭㛹⇦軌‚躄ﱁz軞䁘멞Ú蹴鰷賍ຣࡍ〓ࢶ탓ࢳࣿ찫ڟ 㩥狦乺퀣ﺍ㫢ﹼ섑Ă솟뫡軱᰼ࡣ⅓࠹ん⇲⇨䘢腪⸟Ồ䄕뻤໫๔๛ິົฌ๑䣥£ↁ烣ⅻ№냫図↴j䉻丯惍烳䛟庼쨯悐䪍겼ࡄ됧櫴셗灞뀝颹㣷炏炬ᙇ↟幣噳帺ᨍơ깜깪쇰繐⛝肐ꆷ瀰ꅵ递Ųꃽĳ䙶ⲃ㊒Ä㉌ዣƵ틦䩒鐹ꩴ㸅븍쩮ɼÕ䃉膖䇡橕껾耥\u0003⸁聱誩샕邂ⓚǒ粱ꃀ糏袱쀢䃤섂ꩴ膾䄌膠≅䠐ꄷ烐ꆵꄇℼ۩᫄ꆹƆ㈣ąŌቅǅ䈥Œ铦泝幘주泌ꄾꙬꅕ牌蘊恞队䡺䢺큻ꑆ탑衅↛캛꺅膲绐䆬욌膒᫞ဍ솢䆠∍샀ꓶꄆ䡎ꇆ䣳\ud8f0ꆚ䆳帲䇳죦쒵⡈E쫣ࠣ聓⃤ꐠ二๶ꅒ逎ꆆ䣎ꇪ샨肾縯踴䃏蛀ũ䇥퉅\udcef膪҄䀴䂘\udabfℶ股聝삠雂章皒丝㉥ʎˣ삕ꆕࢂ죂좵硢젒좡Ƽ섔섾䆭廓ﻮ腛臅뺱\udeca컈㸇癜㩇瘞훞㨂㫜嘢㫃ꆸ䂣ꆩ倒젘ᨐ빖ᘒ嚳⹜솖Æ깫샸첾\uded7혻ꄢ졣ꆻò⇲﹈䘖\ude2eꃉ裚衄穕냺蠧䁆蠦衳ᙙ᩸籮\ud8f5䳖ⳃ磿삨䩆\ude40憂沄㋩麵Ⅵ볐℞ꆪ\ude36ℊ㻪ℷ縜센渒䆿縥츟䆓ꘚ製聊炗倊恡〤㢑틯ꄺ衟ꄆ袿ꆌꇖ恬䁎᪓恀愹ꪠ懦䊒䘬憈惋퐽䃯脬⒝슆낇糣툄鸧꘢䃠倿뚧\ud8d9졽鲔憟ꅺ蠴愷ⁿꆀ㺉࡬䒩ࣩ࡮Ⴑꀎ﹭삎碮셻⇓١ī℉䅪ⅽ섴셨懓鸯爄塚豜昉ࠃIࠩࡩ࢓ᢚ慄ỳꅡ쇩️ﺱḒ膈曋詊䩫說䩠ც䩸㺪懎愚憙ࡾ몶º惚脎완晽竻↚聊鉭Ḗ聓♺⛃튉뺿ა⛉昀ᡪ砬ⒿⱣ裞႓裓袳蠈ó衬᫅愓衟灥愻耕憇яꄗ鸓底ƯĔℸ慲섀﹦耬䑽聥ꋻ飅僣䢲퀝樊蠥憵懫棥懳蠰膧Ĭ籿鱸墂戙扸⡢Я₷Ô﻾璨ﻵ蘚눭灚㸢聱䃍ờ਍샩ž႘갅㨧Ĥላ憁ዂ拋憖₰蠈﹄좦껈왻䪴㫰慫麔쇈懦慱勩ⳉ裀蠙衙袏ス袋㙥牬懠憆⊐懖Ⱗ⋿ဆ鸵䲔檥目ǅ㹝섁个Ⅽ娳ꆼỸ劀裲렠裠ꆷ︘뻾⇭懋ꅔℓ囸懀ꓣꡤꃻႤ憸偯੸ 衹蠦犱ì懡ⅆӛ倹ꩲ˥툈惈૬ꅋ䩪癍邮ې媉빰ါ㋆滛偅¿ゝ蛯物멦\ud8d0䠿ࡰ䢭Ṉ䠩技㪀Һﺈ䣈䡍懓⅓ꅞꅫⅩ횰䇕牸籑ꄦ빕脫ꇩ٫ꆽ蚳ꚿ栺䡦憎ု皨ᘸ肗ꆚÁ쫙ᠱ䢽袐ꂹࢉ䣸聘嫅≤慱\ude1d慔ด๕鹗ⅺ乵麌໑䣮⓱䡉䢅ꆜ๡棏鳄聪㋥ø䁚腿뻯驩晄䁭滑ၖࠉၻ갼䢉惉躕怕簛⹟愎渿憮膂쇯櫓ℬ쪢䄻뱯倛䀕⢦샛ӟ聊졇躪ꛅ仓亥乁챮\ude86憾ᛆ憂ᩣ\uded8ꄭ쇨憇칋좫젛젗䪱첥髰㹩脙⺺丝仝亦졫죊졣걓䰳Ḯ\udad8䀟ჺ⛶䇵낢\ude1d䠭꫚칇賩ƿⱿ蠀䡩悞䁤だ䠐䡳ᛧ驾þ鸄者Ģŷ㺓섐泸ᇴ䡄ᄠ䢤ᅙᡙ⻮\uda24郇㊊↑ꆰℲꄥ腩鱯븟繏ﻁꩿ蠶퀓䡦䁻逨삉堽聺蒑튌ᇌᇀ䠤ᇾ\ud81c盐耔ᄻ\u001aᄴ풴ᇻ૦者 記ᇯ셑먀\ude18⻳¡郡ๅ䡘䁦긧遹뫸剏ࢧᄷᄤ黂ᆋꅆ续终ꆲ䄂ᢈ繛㸨纻㻨縇㸟껎ᄗ偮ᆷ溄纊雑昴䂤縲Ɯ躐칹똮욆ᄑ誎ၐ☡肤䀙嘎캢颛⡋᪱ꂀ⣒籪衽㻺愀鉚繰皔䢆쇐໅暻䪨砓\udee1\ude66懄뫥ዜ뀽䡶䠩顃䡟亣䢅뻳㺞懷﹢脾慑섑ᅇ臑ᆊ䅧膬ᅽ䢓ャᇃ䠔㻭뺭⛐ù긾໦䩲ࢆ䇌\ude37㻷뚻⁥瘎腄蘝ꁇ豥㚄ﺃ숈Ǘ늂␞ჴ暷㓑ꡘŘ䪳ꅬځ媁肧梚뺴섥祉ᄋ뺖챺䅇ؘ밂먹뱺\udefa㻁臸ᆺᆃ䠻ᅬ㠢䡦硘꠸衸袮큄袕ꇨ⇍帡躃໻훃ຨ䡘衘釔퀸鄇롸鄊㛲鈭갸婭깨䄝䢆⋛谢뫫튒¥ᅠ縘愤廒쇕ǯ䆝愓噲䇇脱ᅊ䇧膎䠔醸衔鄄袸鄅⫩ᇧ諌醼賊⛵犜酗㸅ᅬ㻡橇储磁肗\ude6f틙냮胑Ⴡ幓钻␪㫸쳇䪁ᅟ늎ᘲ耓䡓䠳䡳䡏䂌ꃓᇺ纅칳ᇼ渫㻡ᇽ䛭䘅ᙅᘽ䚥᛽䛣䡩퀎酠끎鄫₡暽캜⇧諳∐虐耔聈껝㋚阂㊴䁞聲者੅䢒稍쁺蛯ꪱ幜晶鄡鄞Ҏ野샎釖酩亱䄄鄶섃ᇫℎ⛵끖躥﫥曤뚱鄈㰊퉸䙏¬麳怺ࣄࢤࠨ瀔࢛솫ầḜ绸ࠃ酬䁃釤ࣛ䠛驛䈹뚈䨷惈䫎욝ᅾ⇩ꅢᆾ懰绝꒳䀇ァ䠚샨火킠虸ࣽ醎ಃ釃釛䡣䛝腔ꄾ纙ᇋ킫醻耚酚ỏ쇝틙䠉鑄っ옫穩憱ꃋ竳軫耬벥骱幟ᇾ☂ᅶ↳䈺囫ဦ・ࣔ䀽惇ࢧࡉࠗࠡ섳ᄆ繞懳ᄦ庋ᇉ퉡뙵臁㙑뙍脐儇ࢨ儧࣎뀘冠蘜웿⨏采ᄪ嫤ꇠƸ䲯ြ幧䱞聳킲揄虛㉎\ude48ꪳ肢裚倀ٸꪠ≄䑻࢔兇ࣔ內࢘凈웒精耹ꚴ臼ᇧᅥ暌ꨕ暎찰癃㚺밂汬冤×ﻑ䄚晵ヌ衰逊됐䠜蠃ࠑ䄼ᇷẹ麶솃ᆾꅟ䈳빭찮셮⺱颃ÿ⻸肺Р깐㊌衦冬袖冽쓖养ᆒ뙐渄晱·\u0005㚺၉櫻큒聣쨆嫸3쫄䃸첹釠灒੽鰡儥郦公衖兜袕鄒一绦沗꺹䩱儛⸁䇸졮쁄젤젫탤좐倫껎䀍퀭釮凘憟纬뱡⠱닺棎\ud85d퀨瀎฽䇵冄죄좤젭农〿⩩䄤耵ႏÜ聯낺ዎ⹇豼ࢆ訹ヘ訾飮胦胠瀄﹩㹵긴᣽健暋冯滋兢胈䁫償ﳣᅸ젻䠍儳凍儔좤ﺖ愇뺽ᇞ䄎凵釶慬ꣶ좚ꁎ젢撮좣醪繨\ude2fǯ醬뛒꺼㙈㘛ꄺᚨ㘢㫦 쐠턡呠턪C\uda88ᛇꆺ긒噥반蘬밸멖ᅧᅾ䇐\udab3\uda88ᘻ䆻䩼쫄㨁僀톎졘턮젪]\udec8ࣜ棸쳨ࡁ硘࠼瀿舯빋℧ᅐ䅶꘿뻥챖胷ꘞ愸儞鄧↱ꅧ℮㺘컦₽〳ꁇꀠ⁽頢ꂜ皜톨࠼톘ࠔ⓼텏셡约聾ံئ膕䁅䣩显๛纬큭ᛦꀂ豪袷깆尺퇜톖蒼턆털࣏\ude7f嘬訹ࡹࠅ࣎倒ȥࡥࢋ웊冢톎儾ꆛᙕࣹࢅࡁ테쀡텳뻘䙗窺벩岆틥ƶ㹴ś醡ᆙﺻ釗ᛎ諢Ṯ詒Ṟ課Ṿ톱톁퇅ࠉ퇥࠼눱嚐蛰솈悩岍퉎飚陁웺삽ᘽ傡᨟끶䚶⨴曕ꪱ쁨惦㢂儖踹層檙\udefe䡣肁䣁䠷a䠑䡬⻇䫑ႛ醰턹톑쇞醦蒀⻀︠⺠︐⸓텓퇁턠䐑䠝躆泲⃶勿⨦能軩塋⹭⺌穘좛愂竺삓㣙ゎ䆟″ₙ뒞隄鹉郾貳⃷䄿凝솫ℑ턀퇯檉躧텧副刞䱗퇋鋃軩숈㰏퇴諎퇬ﹻ텁䠇톡䡇톸\ud8b3툞墂谫ၧ졏䠯䡅ꑖ㹣酭諝髥視dꋌ캢몰퀍织䋒糍绁ᆈ㹭纹턄全㋺裌Ҏᒩშさ®ᢶ퓽踥㋗䡸ㄏ䢄㇁聯䠧驠ń졄눪雠캞멾뫍炍ﺅᆲ늽怘ꪄ䀻๘⣣☬뱚諒ਸ肨砄}鱂ㅷ䣸㆏䠨㇯䡡텈懓ꄄ\udacb䢅䡸炛䣷ᠻ䣠免퇮醢膞醧↍䇯ᡝ绒\uda35칵츊\udaa6䠫䡎ㄛ䠹袮ㅗ쇄踾\uda39꫹샰ㄉ曲鉚醱쀾頵瘘諺쀛繱찄\n냏嫁좒ꄔ퇠\uda54퇋ڲ솁ꆥ突绦泱㇋⹣㹾칡㇫䠮ㇸ좽ꃀ쫚ꀏ옟ࠒミࢿ࣋ꁳᘎ肣몒ꄏṵ釐儨慂ᅥ臛脢ᅰ텒긼㘠멈퇚ᛞ홺ᘻ飭㆟࡝ㆺ쓋ꀘ᫫䪩᫸텇昄㚶좨怊磟癎ᰟ蓯࣋ㆁ뒫ㇿࡒᘊ軭盫㪾老䅶졘䑤ヾ젮ࢬᛮ\uda5c쁳ਗ਼\ude8aꪐ좼萝⻗컰︅䄻途耙턐绥脓ㄫ턋ᅫ텍䄍ࢵ낞ꀄì⣲惺烽凷㇮㢏ㅾ좃꠯ㅣ䱿ㆫ⻮\ude40놵Э톄詚肒耱檿ႎ䅳ᣗ\ude4d郍⃳僆湞︥䄞젏ㄾ졏ㅘ녩퀅ㇽᇃㅿ懾䆡ၺࠆࡆࠦࣉ샣䳮悋㛖ㇲ㺶ㅜ蚻겇縂놆ࠒჂ녦ࡢ넅㫌ャ쁲쉸糖ⱨ幧⃩麤蘎耂ᛝ儲솙踿九亽녂놣\"뇦ࠗ㛌ソ㋐3丬稑ₜ횈홊ㄦ퇁肢袱ꀯ怽ﻩ晹¤䀶而绰꫕ࣄ䀶멂죃톭㄁傑裑袱衐퀉袋㘨ㅲ嚱녑蠱裘넧쳟㚃칬빸듄와ㇱ䇸仿兡軸์㇡쇞愾㘈턳ㅚᙞ횐멨㛟넙녱衉뇲ٛ㇍⪧ꆀ籦醀希裇䁠점졐젰조좳悶긞㇯⹞ㇲ텈ꅱꇁ儾击耆䀀긁净급髁函뇠졌놰죰젫넃碤縏腐₌窈깲ꄫ᪱怭ᙓ铯꡺꓾쨳⃄䂒뀞惞⻂愶耿ꃤṞ䇣ﺈ憒뇞ꇒ놲︠驭긔ᆖ챧⹇Ȩ긩腟䋫聍邷ᲈᢠ죫놐젢ꃃ뇛놿ⱁ젡졡좿偹긨壑젚庯焑좘煝聈ဆ넂醔⇆놕竬쁂裦¿Ǘ備룕邭飨听눸熡죱შ熑죑졆텘脻䫙䣑犽ᛷ\ude4bǟ帶聢帠죧Ꚁ⡾ჸ䢈⇬䆘욖ꅒ諹èᙊ償넘鄴칲츚Ⲁ㸌퀋탦ꀄ耇蠆䃓\ud8d3頩憼醓廤ᅡᄳ녨㻊䙐晪䚰暚䘸㺈暚煻蠺熇裺燺イ㻗嫤㸜谹ꨚ㹐칉愖耖䑭溯怢冇憸諑爱ꀒ耘䂟詥벂蹖N娓媅넦懅넼넳퇊㺞熪㺺볪㹐湵㇛衎燚熺煇蠆燚혁傒ࣤꃑꂲࣲࢋ였쨯暃⩤텶儝뇢퇎凧䋭Y㨒ࢸ惥焲ࡲࢭ㣭郄熕膂酪ᚇ癸뺞㪜嚛ꆨ퇐몥煝燒࢕煽燘肵煟黮窄텚⸏㘤瘴驝ؽۤ⫽ڎᙇ䢽뀣⠐턷︠釩燈\uda14㺢晃胆툂䱖첢䲨\uda5c渭慙퇋턬ㆫ톖燙郖熪䘰昚䛰昺䘽䂇焙샇焋都⠞煗燞燲⚜灷焗谽쪏煼Î⻖耬⒌䁯媬탕뙔뇡胢䠄찡聖࢞캉熵鄠ㄥ녨橜曻煀ңઔ麾캆쓫㉹邶悬釢䆵䄽儻酬㇚ػ똄\udefb뛄\udea4\ude84ꅽ뙌邾ꃂƗᆔ㻦뀩⃔ჟ豸~梞暑횂㋕ꩤ䁉牆倦☊냟ࢩ胒\udee2l櫀鄢Ꙋ熄醅ㅪ먗狖ǐ瘊ᣊᳩ鹖Í쳥ቡ⇷貑⅀틦犥⁯豶₄ﱾ钐튁㠰툡졕젵䐴큑㢄炶ズ걅∵ﳱ⢉젩죩炟加j僠頪グ恀騤㆐퇞텧혃ㇶ元ㆪ冊㺥脯焰턐뇯煐놟焒部쀶Dᣎ킞㻞㹇谽種㺥飥왫ꙉ愄)囖聢﫝・꘭炟庱犆曠䩭籽鰦⁥泒聳⨑샑\ud8f8偧냚憅ꅧﻖⱪ졞惲ā\uda29ꊱ恇Ï焕Ư焝셝턬ķ⨕㉴ℵ㉏⫵㈗냗纑是䩮䫥튐㈴䁒_놚聇腏㺒胈ᆅ\rꆿづ㙒嚫႘䂅9に၍祉逌톌갉⡒钗঱燓ꆔ턗쇼놷⠔␕ꡤ胂ၶꣂ遮ꆫ麓ॅㅅ幤놼৥꣤৕ꣂद熭慯燿凐넭书놝丽꡼৲ॕꡂ঵꠷蚰虀丮뇄걮넦耞놡纜煲늋ǡ牗豱諥髕ꇫ㉤져셳ძỏ爈䄌칄ꋪ넫ꊚ넑 횦\udedcट䣿ꢀ栯ꀠ桠栐梺쪶児﫜뇍ⅿᇺ쫤첟ㆶㆊꨁ膩๞๩©軁脃焔ॏꡢẮ誒Ṳ臒ḽ훍碶㐽蠱ী梠棠梂킬蹊阑﫿ꈯ脥॥盩䀞䃳䇍渓쫚스黺넗좐☦퇑০낱७उ०긛ꡇ䄫ज़뀛ই쁜놗縤嚑犛ꇣ샋鄯酷詼왏訛釣넟ꇵ䅌Āﺤ쐥シ䠱衲⁌⡾룧鄅倻५৻খₛঔ샷释Ƥ纯똙噈䩯鄆섏ॠ繉愗젭烡聺⛺ㄓ쩇賄脞ႂ㈲諾肂ⓞჸ쳃턹뇄蘟倛냉쀂撢釖턶㇍焀텷恖ࣜᅥ০熬㆕ক麗↺亵麷⇪棤襼褧ᐴ觎頕๗ັ瀅䫌胤Ꙥ죩\u0002㉊〙訪뉃ᩒ竰꩏츀雿幘蛦⚌갼觼꣔视呢ㅝꆒ襠躼າ覃ꇗ‘⣞⢸⣸⡞砽ӄ⠗䆽꺁腺愿ㅯⲦ㈾뛥놸凞ㄊ톾ㆸ瀹ࣔ塼ᡲࣥ壱뀆ₙ퀍놶襘⡏倎褄⣎触⺧髶⺱愖৆닡븼幘⡒胭,癳킿뙍ꄢ䀈䡖࠘︟ЭÁ졍偯㇛갨۱ᰱ觶褲炎覄⣄⢄焮꺛黉䄈艹⛽滩ⱷ㡏䓸䁘兮鄓뇇↷麰繵ŭ聹\ud898ッ³砒Ȣࢢ킁硷툽褏褯覀囂麪屔竵⸽⻫肓㠂䣒钵㡐⛿腍Ṹḹぺ녯蠲遬ज़깿儩熑텆營冥﫵噻覩師\r繹á≫襽褮젃覯襳⫭棓끝桔⑐᡽桎肘မ懫٤똋鄔뛒뛔뚺↏ॅ㰐䦝棝栰䧽棰䤕ㄜ覓ㄟ熀থ㋀ড়똜Ǡं뛘䥐䤽械䤃桝膐觧諚⇨䦴똟釆텦胨䩢੣阸껳꣖労昶聮育sᢏ覞ꅍংᇩ⳨꣮ꁯ죒粅끟젥ꢿ좋욱ŴᲲ䦯죯좊䧟젪䧇৒ꆩ়놱ھ襲턓褍䅓覸灹깻ࠜぽ낵⑜쀣퀯죲䤟졊䤿좆同໪6찹ꩠꡢ\u0014㊅\ude93Ḫ⠵ࡘ䀍ẵ墶\uda70ဿ該ꡅ꒴䁂葟훐㨬膨庾ⲇᱱ䚚Ꚇ㈁䧖褶梆瀻㢭棲恮᫅阷剶隢⸼옺㋰⊈≼↏冐兊昆䦩煛劧粶梹䤎棽肅䤮棄觬ٷ惻ㆯㄋꇌㅪफ़針⹡ꪻ홑ꪔ횡㹷鶴䧶棹䧭䧎梭隥䧖⻲阎욕䧌회麝⚈怵䧚雔䀸쇤⻦膎ؠਞ䂄䁖!耞䃶聾胔䃬仏梚棚棳탄烺梗둬⻍酫ꇷ䥣わ䦺栯䥆梄䧆䦓놦䥯ओ嘼褺丵鸷⇱ꆥꓟ䥜塏䥺栆栦‒覗ำ䇷㹚皞肈袡䩌曙愝ꁥࣙ졂੎䃙졃쪻䫝Ḽ섵鄌觟녢퇌西녰‣쥏⛗홞㺪飘ꢍ棍棘ၧ熤癗ㅉল㹟녍熔쥃๞\uda77惽㇟㛼ᙋ텿놏仕놈㚵넨㘾훰롵棌짟ᒬ줹溂즛㇈ᛛㅝ놎ၫ蛲㙬ᛟ郲줍梊쥵遬짩ⰰӁ⣝聘꣡⢑⣑⡽새ꐎ蘝အ⠖중⡑⠱⢶즢줡ᆝঢ়껿ꂀḿ긠ṜƦ줎쥡⡎짖즱⡶牞쀻셚酋㙘ꨫ㈢穜㻔뇮肩⣚Ö飖顶臢狟홥䩜즈雬৏褍䦯覦襫샧㣝幙䧵ꢍꠙ큟蓇顭ꠝꡥꋝ꠸ⅅ큍꡵즭꣭ꢝ꣝ꡂ⻠蛛ٷ䅞쪽騍Ⳃ머þ黝⚜渲暐婇偅멯褊⅄䦐놞즤䤟ٹ쪵竵竬耥쩍穭줭ꠍ쥝쥫뉴黊阹ᇞ縰虭쪑暃䃛Ä꙲☏☼幉첖耀盓칂훒ਥ㘻遨䁲空膣৖ﳶ॒䤭ረ呹⠅⠗࢒別⣓頵ᠵ熵噚㈔ᅔᄘ벹ฺ冠뇐퇠뇮쥃䤾㇦䦒ᆥꑩ퀲ᆘ\ud83e⢊ᅐ㈀⧋䡀⥅⢠⦗急퉐⁜窺ᆏ蚱噴仾煮耥@䩂૯廕ࠐۨ蘞⻂ਸ਼\uda91䤤징釴覃㇄覿놠⊄⧹⢆À⧅⢥⢟㣮\uda6c㉚ꢸ蓤ꠚࢬᛑ\ude80짣覈ꇜ㛟䙮횞㨂㘊虲⦤ꢊ⥮\u0018᩸텪쥒㚨悠♇倎⨌뻮\uda10熉邆ヺ⤊⦡聊⤅㨴졅왟짤즼즠ㄭ焻밋桋棟鑵〄큄稛棌⪉웦졋쪇칾⤳老⦫棁⥭냣낥짻᱐滴䣄ꉣ䤀놈⦡솲텀짪⥦䤇脢胿ᢓᣝヶ\ud88a\u0005낲큨ࠚᇢ\uda51⧋梁⥫校⤬ૡ틴䠹꫕䫸녈覟鄎肬퀱닀؊磑᫿髶ڌ䃮聯᨞䣁聨恘詺䤪冿쥩ठꋣ湵蠾჻頲ò䃞ᛤ滢⥒⥲㠫⧊ি⧢쥨⤇膵蠰ᢺာ胦䁅撨큗湔눛⤋⦵။⤻⥎3慰臯溈腟滚ቔ溴怬턁᪪Ǌ뛒聂慣脸聉㺷㓮肱㪂燼橃腗慙벳懰臤Ɵ⤷ſ湴膲煟䊋滊ੵ䥩⸂⦥녻빟凡媖\ude97栲丷桒㐜䂣ꀹ裳텛鳙॔ꦠ⦼ᅼ⦦懤꥔쥮즃䦇⤁触䧉\ude5b텆踐⺴꧗桪㐌꧷根蠧톧勧톩躗턂⃶닶ꇎ훨鸶뫆⛩䀞⻇ꛖ쇮肘쫖䘨怷㛧䳖ࡽ鰗桗桤죒ꥷ桌ꥄㆧ劢걽蹵縲爖沒ʴᛶ個梮샼풳\ud85eᐂ퇝䤄Ẫ㛒熭셑꤬⓾ꤞꤾ㪾焩⧖⳽ꅀ聍䤲昒녞⦧ত釼ꤕ노凃䦤䤅⦚硺Ѱ偒遥⧅ﺦぽꥮꦞꃁꤍ⦻㑍⧰Ẉ恭䡼þ䤙⦶二䂧桖䘃⺰櫣脭ꪷ㒶胁ᨑꡒ耢袾耑聛బ풰졋젫졫좐䀱ꑰîㆄ牂沚軱肧㣺蹒聭찃↛鰈关짓骁ⅸ踡ℙ㋾阞થ阔軤શ狐耷蠟ま쑮堯桻䐸墯倅\ude00뇫⹢닖࠵࢒耣♁ວ胀ꧡ檹儴젤\ud82f恩䃻ꛪ䣩采儉겿ჵ뀿ꁥ犔ﺷ컖눀楽阣♹ຠ椡혖⧡톹ꥴ컒র₳졳ꦋ죋좫젂烋ꦛ죜쪾胝゙횔桟逴桴梽䒒吩戳⹉챷䢽湔ꥊ훱ﺬ槔梴棳ꂜ榌桍假ꦨ⥂꤇臻Ы(硝耿꡺Ҥ肧ア隽혢槬槢椌棜榵ﻁ﫲⚵ﻥ虖䫩䫈Ẩ꫿ᛞ肘麇図偤䃲﨔⻄긇ࠀ꛹짎膌襼즬؈Ⅴ亪峦汆槾联于챦楕쥧頦桦梩Ⴉࢢ哨존觤턿즒৔솔ꦑ꧲踹狹꥾襓넚⦛㚣燫ꅳㇵ녨톡楫짡榖棨죯\udab8㚦⧡혘뫬쫼蒑耻\uda2e↌톇\ud8a6棹椖梑槿࢜ᇹ_큮壜碞烾桐烇꣦쐡꧙ꤒॎ冥華턩椦䦹⥵\uda9a⤲꺅⩓嚭\udab3嘝\uda38ࠋ嚓䪝槻꠽楇ꠧꠣ⤺껛㇣\uda01耔詛儗ꄌ븩넿皫槝榇꡽榧꣪빸䧝⢾쐬⢫᠃⠤⠈䥷怹Ꙙ䥷榽⢏椫⃏槃탢䤼쥃椑蘣ㅞ\uda5a↔똺Ⅼ䤼釣椹⤱ꇓ놤䤴℠़뙠ৼ뙗⫒⠏槽⠿楃⣃킌䦀乜Ⅰ䥲뛭⤜䥖溮\uda62훦㣰Ǎ겁욎胏㹒鐀↢廹ㄋ䠹搙核ࡺ梎胹桹ꈳ쥼䙋ꨀ椕곸ꊬ梹梜㫷⚰稒ㅫ⸨⻪À녇嚥嚅즒䥱楿쥐⤰複脊낰놭䄈넝䇈뇝䅍䇩桂棬梥ꀍ컐耒䱒免뇲넋縀뀅懫㉲聄䁁郇嘳늂ⓨ䁓븓袎ꐕ逞渓ꢫⁿ䀳ꡳ꣎䅊縧﹥騂汗ﻟ퇭⦅ꥇ⧲섖︵빨ꚽ᫣꣦⃡ꢓ\ud8d1虺솀Ƶ턠Ɖ嘳䘹ᇉभ炳ᢪ劌ꘑ焀䇕郵ᆄ䃥찪⣎䃉爤ꪥ鈄樅ꠑ죎覎䥛劑৲ゞ⢟瑻졬碇졫좢ण\udea5㹌︔짞⥼ꦥ﫚抎随४䧗⃛죳邋ニ棒概ꦰ覉좼郟뢜梆倨磞ワ考蒗왳젧ﱇ졝꣆廜慻焿娣ꥑ몫稢ਞ䂶\uda76搑狾胼㺉⛳凳桯⡥䆟⡾ᐿ蚿⡳ᛉꦸ胦汩䫩拂拧⸧ʺ볻䃊᧯⣀᤿⢶楥㸤榼ꧼ쥏঻센燅ꧢꂥ꧅⤕꧑⡕ꦕ⦔ᦨᤴ᧟⠠䂶ꤤ聥媑昝쫸ᦉ酓䙄ᤓ빃ᨊ끂젒肕档쪂⑤䁎ꡄ〾ḥóF䐲䧬ꣃ´ꣴꡦ큌ꠤ࠮醑䆝襗ᥘ憆놽凢ᄻ髁褕䠙U蠪选끬ࠃ砻髆ᦦᥑユᤇ䂖ᤒㅰḙᆩ褗詻,ꇬ䀥섽⺭癣难帋㊂懍凇覞۰滑찅㩮褥쑺慾\u0011᧦ꆕ짴ᇪ䦾᥯ၦᦌꢁ᤬꣄槮楛র儑늫삮胩屃\ud8e6ᑽ\ud8fc⠊쁻⣂⢢⠣襜䄤煆녽儱뙱邤ࠌﱜ퀻널ᦼ⡭ᦂ⢝᥂耜熸⺦胹䋦肘竦脫窘섗좢ↂ␳₇糖ࡺ渗ㅤﺷ혵㺄ꦑ늅磛ۓ᦭ᦠ\ud8ed᥂⠢⡢⢃楅쥓⥮腃ᅏ꠯ꡁ撂ꠟ꠨ꢿꠐ⥆児⤽炎⚱갇襩廚넩뇣㇩觗䦊鹷ᘏᛴ幪鹳닏ꠐ쁟᧯ꢟꠋ젿ꠄ縠駌홠駌혐饘च뻡ꤍ\ude11隆鄍踺ᦙ難恨惔䁑㠌ᤛ꧌᥹ꥦ\ude3a겋蓨饯꠿ᥟ꠸餽籨桽밝肜炘ꐘ衭八⦦먬ꡂ饘梢馸梟冉槆熊织ﻘ䙋빼ꚫ븁멠熇䉓鐚ꅚ⥙ﻕ빙湹廒餘棂駘桢饣⣚䅲톝븾멲ㆤꙶोᦁ᫒肂ꁹ졢⅞⸂团໖耇䳹3⃒糤⤓꘰减䪫숤ూꠢꡠᢏ풒ꢬᙥ犏싨볳¦䚐饈⧐餂ꤙ榇솝䃗࡙\ud819킵\u001a꠱馢꣱餅ꇉ饫ᩢ䚶乻嚺쐾놌꙽黐ᡠ灦脡Û㐚腞캷䢚刕ㆤ꤭庯ᦍ䦠犇縕饼ັ饢ꠒ꠵饑ẳꩁ⃑植煏親槪㘀뛁﹨嚗᧟䦳ᇐ঒蚸뻒虓ꛭ檺⥐ᘁ냋饹\uda3b楦⦯Ч㘌븼蚷饋餡∊邘䑅呶炆ꢈ꣸䐵谫꺻ꋛﺧ簀妰ꣀ姓꠵貺餯৻셤燯ړꁼ⠭\ud8f7ᚮ耵\ud804耤ҁ쨰奀姰ꢠ姈ꠞ฽र솕삃䀢늞䀅㚯텥볨ᢒ뀴䁂혯텈ƅ磺☪뙺긞꺟짵燉धब饤椉椶᥊馥洞ह躰䪔夵糇鰒먬椻棁擻桳룇械哥\ud89c쇶᥽ᦎ᥹퇲〨砊槄ꃊ椣戋ࢗ웺棲妇桊妧棬຿躆榏耦榣鸱줨訌䀆ဲ稽滿診㇚血椂䚧桿๤종'챖\u001c餐泛桦备梊大棥\ud8cd觜꧉燅즂⧜ꇞ榴岾楶妖\u0001楼옕ﲬ黼聠飝⣰栙₻ぷ\ud885훍䥹奰桤碅奈栥妕ᦛ楤雩훇ᥩ᪊ꫂ⹥䧪ꨕ䦇ٛ䤖氭嚻\uda47駙⦚馸懘窣䤤훣䥺⻑꩔횽ᨰ棹妕妈棅姷胋䤪ꨐ蘶⻽ࠊ陰꺎阐虛䧶奚꧵蚫⢢蠛ꡎ츞哭蘏녠졉権Ⓝ캾놦♝渥髀簥¾⧊瀇냪䰺⻐㪩삑⦏妪奎姴燈ㅍ妌馘儉夭煈妮熨奉\ude92ႆࡘ䣔瀅傒ズ䁤儾ꤿ姏夓⢯姚ຳ鄊냉爫鱶椏놅碧᪱鋁놎ဧ䧍醟皙㲧炑⛋衕䠞ꀰᙾ槦汏㈌慚ꇮ纇㉖\u0002榊駯襅㳴\ud9e7\ud957\ud991쩽妞㄃夨夃ᥗ⪬Ĉ䧈\ud98c\ud997\ud937৅ꇧ詜\ud903㋃Ƽ\ud9b6互a녡郕逨恸줟냚Ƌ腲꣦醩샡놘ơ馱楛駓⦀통챜遃룱驣铝ᥪ姜鸧ꤵ胁↦ɹ阄ગꦀ퉦爷ꥨ職ꧥ雺䫺タ僘衉蒐怲iꅥꈣ骟酜삩⠀Ꙉ䘼㋏袨湳᣾웪ĉ肰嚠\ud92d襝㺳ꆨ慂\ud999㫬؂㋕㘈˽\ud944\ud9a3遾\ud9c7爀뚖\ude41梹怂ⓡ栏恑桫餹鸪⤐\ud9db⻿麂\ud942奆㩖ꦴ僁栣\ud961栬უ\ud930偻⥩馰駚섛퇺軛퇩\ude10⹃\ud921梣\ud99b\ud991栰僲ꥆ沊ꤽ車ꤣ胠椼혚눬ꚗ\uded9す㆒耄誱쁃빐☹觘峵끇ꑳ븢蹗퇞ꤢ⡍샰⣬ꢨᡏꃙ烒h⠀馡腞\udaae\ude30盜⇙뚄䘾角\ud963襺馃奂鄵脂뙄\ude87똏䁤\ude31뚰⠰㦈⣰㤨⠗낲\ude71㘣Ǘ๭ᅕꇘ䃥᫈ࢸ許䃃麐ꦺ醋쩘⣂વ姌馳\ud935ᦹ쩇豜࣢兔㤈⡰㧈⢈㤧偋셨ꠘ꣸샘ꢸꡘ䃸ꡡ컰袄㧵栚㦋僿灝䦐䳴䢦%諩饙⤲\ud9f8㥲\ud94eᤡ㇇셔頺뀩됼⛜惗盶债㧨ꢘ꣪㥸ꣿ瀓縒ᤈ᪑曁諚限⚎ꓖ飫䘢੫偒ນ映ꉷ䣳Ą䀢㦀馮\ud9b5ᦒᩒ聻㇄䅣⠄㑓⣃邳⣳⡎둳ᘭᄰ瘭ᄞ쩭ᇹᅺ℻\ud9c8⥻\ud969椆駯ঊ속Ǩꆪ솢邬㤓⣹㤳⡳⠋⣓䤊里㥙ᄜ踇즕㧜鄺測⑆䁒ฟ娎乶肘쓡耱닳,⒎꒾ৢ犀釒聲ꄝ㦓⠸㤽㧅㥃餞⥱妞黵姨隞큓ꢫꣂ瀓쓌ၛꠁ\ud998慁\ud91a夕ঢ়耭욻㛭웻㚲驋ꡭҗ㧫꠷㥻퀿ꦲǁ뺧梜犻姇\udeddﹸ䀲竝똵皓⚺뛳ﺓ㣘丩␋⚇㦍\ud9a3餥줠\ud98dٟ㤫ꠒꁗ㤛ꢷ㤌溅\udeeb⹭㘠릯츁䃕㘲⥅탮傥怨҆塃꠫삋⠫껡乧䰽즛ٯ簩톋ᛞ쪙ฒⱺ儕Й傆儨㦮椅脀ᥪᤏ㦃熤燲\ud939쪟۹쩵稿٫즍窽ᨍ꠴맽ꣴ맷䂌맓䥻쥞繽窇쥃穧ว짎ᨹᆯ胧텂릶乇ꐝ䣁肸諣黩曡넑牒鑆偠賰낕\ud902ڽꢴ뤃ꠌ뤣ꢛ⸚낶롬⺀绠驋¹็ʗ껩鹓쥷䣩臐煁륌릜ŭ㤅ꧻ\ud90d㤓嚿⺾儋뇾兀긑ᦟ뢌뤙릱ထ릙ꇥ詀ƹ჈>廲然뤸셨䂋훚q狿骄䂴䁶䚺쐶䅗뺈惑냯넼姜즌ᥕᤧ㧐择ⳣ⁪⑶ꃺ裚铡Ⳋ梪桬ᨋ릲棋뤊桊株梌졩Ǥए㈼腐ຐ맖ⅵ姼复外憍\ud987↪⦶㦞冰\ud9a0깳녾冀꺁儕릛륋맲梫륻뤶⻯\ud876妋ᩫ᫙ๆ\ud9f8䀄黇农ۻ꙳ᢟ廚㈬쫪⛻탟瀬槧좗죗죇꡷젏좀飬줢뤃ﻤ代쁾椙夈䩁椓쥡乼榬뱅홧졦좘礷져秬꡸禱奨뤼ꥢ㦬馗饰饲椺妊槺妪楆多椔栘祗젌秷졌礲騶妑昤礎夆쇙夽ꦟ腻䳉訅C퉑㠂ꅿ腲낝ꩦ㪛䆳틺⡤퀨㢃倦⡦⡵穛劈堪ᐆ祆⣆礬Ⴆ神캞稺饗뤐뤷맬禛옝褩仂妜秹뤠줡똨倣鑷롺\b㋠遵デ蒨㊂ㇺ禆⡆禦⢶祯胨肪퉩껕䁚限ǟ\ud992肻䫯廮屲裞聲ꡈ楁遁帢껉禯슬鸘飭塝悽禜ᙣ퉞\uda67䲽夹릙饹맵㥓椙椗饼㙗饏鸊蛕禝恵禓亭祢噖ᘴ뺗븊冤톤짴襡餄ᛱ槫♾穭⠵礣礽岇쑁␮㥩怤္⸽䥿觼Ļ禩û祙祐\ud91e儰\ud9f2륤䥜뛬Ǵ⅔䥗⨗禂큗社\ud807秙襾椹ꩺ\ud91a陻饕\ude6e首聇倍ꄬ벩慨頤逴瓭D䂄襓樽倔☬秓\ud96c礘릉奥爜\ud98f㈨Ï㈼\ud92d䆂椰躇ꈨ듟顠䁣놘⚤杻႔輦マ祝移臲솷栜ꁚ䀜桢〩좯蹴理歷落裡胰自耺溟虳萵࢕ᰪ눂䥆婼橪磎\ude6a娢衝䧏ᦛ馓兞\uda12輦幚香৙죝覞꣞ꠢ烥ჱ퐘峷䂉ৃ駄醴칷릑燎짬豈ﻸ惙瀢⢁㠕瀂ꁒႱ삫褦龜衦量ꢖ金ᦠ杻ĵ꫇Ꙓ聞왙觅\udc1e䂋穢ᡸ껙湒聽鳸怑낦料ꠖ更ꠘ乣婒턮\ude9fᩒ煋\ud9d4꧈偀쀶⡶⠉傎⣎⢮⡷㥼釤↜褤䦁觾禰㉁礡祈㋡禑퉖⢥臨⠕令Ⴎ⣁᥵ﻲ⚀焐虰釈Ỻ臰꩘䁲㠈蛇䈝ꂊ炂灸᥄禃龜㳃暈䄐氝泌졥癩⢼蒕樂稹৖憊ધ棤ᘶ寧熹캅ᥥѸ᠄ᡜ壄ᢅ搐悫냕簾燙턞쥅ꦁ襔擂⡅咸炅砟マ晹ꀜ뛙梷濾᠏捻᢫낑鄠仡晌䤯蚔뙍쫌Ҁ᦮餞ვڟ驱姴失爥䂱ꁬ㉖pღ酝䥅㳀׸ᢠձ磻ᠩ㤒뤮\ud953䙫㥜࡝詥牭鄨䧜⇼氈֕礹偣좒耭傿峓젙닔ᚻ馺즣젰ꁜ֓죂⓿㤝禩楎遼㫓榈퇒줓熲짟ԓ젼׿胏饡혊㩑㪘먞깲㙜쩻饎礈愮禢㤘菉⥣恕䢵ၿ჏鐡隂텆憓ꆞ⦩㦋秛駲諕հ梶Ս릇漣ԃ䦝礲ք㥴癒膅통ॳᣵথ텖Ԓ砶֍Ԛ脥ꨍ텮ფ꘲逢㇯髑憨솱ꀳ㊉樤䃈ࠤ긊㚙ऺ䁞\uda01臼鸂梴梔萜邵냢梒栥첄社槧♔첆⋱곸䙊¦ꅹ᦬ꇂ륑ꥻ곕Ղ栢棵ֆ咍Ե\ud90b秝利䤼쪨碌ㆸ㧏৐\ud972맶㦚椇ꀊ槰衺킂㢾怉飭廬梵֢栍׽ې聒礏腭ԝ쫶웴㹊M쩦ꆽֶ乁邎֝儠ۑაᦔ䀳₅享\udad4䂂⒇䘷h삱꣌∠祩옳뫉탿Ԁ藀႔՚數㤴Դቒ⤗䉹뇕榚꧍愿\ud941֓楧餣熽神ꚶ窿梐薀蕀\udae8蕋燸㛘Ҩ㪓옱ꡱ꣮㢉꣉꠲ࢀ끋⫯绯၉䧧玲覬︛↌갿䡌蔉ꡆꂬ薩ꠜ蕞\udad0驥ꫠ驅ꅙë×깄楷秬ᥜ觝ç䘄ꢸᡮ停⢎䤒\ud8b1꠬꣱蔩꣬薷偽論Ỉ颗㸾繶姮틗깉憉逽\ude92끯裀䘹՟낆驊鈰橺禠ᣠᡊꁐᠰᣦ쓴삠藂夼蕵\ud9c5㇣馌걺遾薐ᣐᢰᣁ藭癮肘⻪劊꫈\n꣒覨\udca5ॏ마夯릏禍女称㊈㉡礨㋭鸞ᠱ蔣惾藱蕁蔋᤿옒姏鳩ꚮ駖頢蠠䄴怿酣쪢⇦ꁍụ깒쐨\udc11꣦⢉⣑ꑻ䂩⡶z\u0019⣯聙⢓\ud951竎\ud9da懶酂쇆ǃ藉⡣藩⢙⠑Æ㦊꫘泥쁈९쁶Ɵ腍睊쀟컳լᤎ᥏㥰\ud914䦯礪\ud9dcŉ⢣蕩⠓藫藅㋿秲⚻蔅䫢Ƶ툘्薠率邳퀍뀝䣻꛶츯ᇕ郇胦㣮䅞َ䂙싅梥栉쐕棥낒悦囖ᦞ积覚裡릒륯᦭燾ꄄ찀䥰䔉簈䖕棈䔵桞\uda6e墿ಂ먷怨⧘儶㦹蔏秋ד襬젉簈僥뀐悋ࡖ놙的䕥梈䕕栨䗨耔䕐䃔䗷໎夬㈹囨詡훯솶椱ฐډ遖隐噎ꢬᱍ뀄栤킼䡱梤检း↿梚䕄栺䗮詢⣽\ud982֎露薲Խ礅禄뻓㪆䗚䔤栦䗩骚ן麡⩎\udef4빗曓⇮亨亂饘䗔Փԛ躁䲻⣻⣎\ud847⠧⣤냧⣬즛焳챧¦䘠竊퉽㈱䛏聲ࠝ\udcb2ó㱜ꫫS竖쀟õ⛊耐냫숋㲄粥愈悶Ạ冖꒐髕䖾Ⴞ逖䗺馾祴癲깋暚⪫昺⨛晻⢗裡䖌墑䕧⢀秥䖋碕䖜ℵ䖎쉒I懎榐䗳nڢↅ碳혗죑ꛈࠄ뇲੫㥒턊粡䗝䖇⢽䖧⣑䕾䔒䤁䗳薿넦쥗⣢邷⡋ᡖゖ쀃O⣪蒁媯狜솜ꧫ駇䗨律䕓ԍ䔄㥞冓ꛞ줟꺾짟껀ṿ껢娗䔷⡷⠷䖏⣨䠅⫀九쪒胡 㛍íᙫ㉾쨴䁆ꦪと槝Ḟ䄅㨴他㘈았}ֶ᧻꺠앗䗷⢷䗷䖢泤胔怫젨偐ﲉ⤈䋒빃솲뺽庹㚃幣섣幾᱇蕫㤚뺠\udef4얔어앰蔧䔈蕣駴嘹薋׽᥌䔆ࢲ倒惠퀼ù悆悫䦪波얌엥Ì앴긖⸁纈恿偧廾빀륡뺈怡뻅솠丑빘ড옚癫㉻ꓳ혾飦㠎\uda5e오쓙냆ᇒ詛ż偏ゥ惸怐䣄Ⲯꇛ䁯劌妰兩ষ\udede从䃤맥갺酲簧楴᰸씄었씲엯䖁䔋藯機䕶㥚奕窊뤫줪맫짪뤡앸아앍ぁ話엷컨脶䙉엶\ud9ae窟釩䛚衰რ䗫ᚆ嫣慄䡩ㅽꦩ샖䛾耘苈燥⑭Ⴊ⡰ꨚ⡚⠺⡬⺯穄㘀쥧藪妲맊씕씮賔炴桼롂瀷ᑌ쀦᥃耬늳씪⡪⢱⃝큋앚ٿꊅ६ા໷恂닯腠䄹䉿鄄뒵㢝싨ꨏ녋䙞ᡥ볒簒燬욞๢夤ꉋ苊ꪹ煊⡳얗얋씦엣蕲씥양駃⇞\ud85d碬⡰塭쑽㲉馊ꩭ麒䂖覴䖣褋׷祋ԕ애징黗⇺亣⡨┬⢐볬⣘╈쥜า三в觎⻔昝ꪔ䀽雼燙嘮ٸ訰☳‥뚒聽鰼⣨◴╘▜⡝䥯ㅖࣕࡇ䗢맰蕮ԣ㇧䗺F蠶傷⁢큳ᘢ䗡ﲱ‚儂汥¦눗貊㘢뺓⤟䕈┥㆐㪈衜샖嫒⣟顪╡ယ▦◫역禁ג֖䔡ֿ䕿䕟김ế꺠ṹ蘎┆┦╿ں┻◒Ž稘繑昦▋亥b㊚़㋦좉뻽앏칸첂꒻䫱\ud821﹧죆瀀鳦ꢖꠘꃴ砯浪ॢ쥜礇\ud900ﻲ楼礪ᐆ奪槆妯蹅▦꣜舖ꡖꠕ▙ꆧԷՇᄫᨑ昰앎씭ᛙノ䃏袤䁢ᢦ溲૶ڙ짫㉻ꑯ袾夃餚令륨隣奦כ⛭┥╝◥┶ꠅ㪃ﺦꅦⰈ䨴仞觧ᥒ㥸䃀籣 ꢚ샒꣠ꢐꡐ庙ж·┠ꢋ䀏▣ᠥ秡ﳛ늦◂뻭䕅얧䖐\ud9ecڅ硙襽䤞◇馲\ud979蔪씈馴库니駏ᚨ餷◀ꣷ▘ꠉ礝㈦椅㛼廩|࣫㊟듙냬姅\udce5\"術़尅梅若쇞䉈ᣯꢏ큨᠘᠑堮顖જᄽ─ꗫ▖▉奥에ꔕ악맳뇐ᢥ륟릠꺴ꔨ᠌ꖘᣌꖶ饴꠵凝뺕滧줊♜꙲覾肂⒝⦯劄黩䂟騥À簋㋼樀阬쨺褐沈ᡳ䁴ꖨᢅ邌ꕘᡄ얩글”삶챪馺벮⚪椹倞栓⣞梾桀Ҩ䗬ڷ䣖㊆ּꔰ\ud992쥫ꆳㅵ녛ꅓ焚큛ꗹ摞ꗾ棲焝녥楊㫪䲘ᘆՆן憮֓Ֆ░蕦훮桑ꕞ栱ꕾ栁栈煝\udef2ꂯ悱頝䃎ꣶ࣏栬䡬᩶ꢕꖎ꠵ꖮꣵꕝ뚖Ṋ蔗蔜ᦁ觪偺᪢蠆᪪ヱ倠⹪倕ꔎ꣕ꕵ蒵ꕮꢋ奖⸀憰9ᩒ頪ùᨒ盍Ҳ瘜䦱ꀖ聁肨쇟☈蠾駳傻䪵࣎䃑狤䁯庥Hꦖ⺙ᨌ懙ᩜ䂹ᩋꔮ阫ꔛㆾ᪅앜ꗅ애㇐\uda97ㄹ狝褲ꠂꃲꢊ꣊ꢪꡍִ屟褄饤얡蔜ꕯ䖯ꕀꗛꖤ╼襃\ud845裳襔ၕꂐ젫襐㉫ꂃꂿꕟ郿ꔪꢴ悽░ﱻ覞庇襘घᛖ胟肏뀶셪硺ꥨ蚌ゎꒌ䂅碎ꓜ袐嫣麎秽鈿ꕲ꡸旜쐀斄攥煍⡚䖭⠅壪レ솓쥕ᄝ熡탍⠌쁭⣢斝⠭秦䖊씤╆뇁ꖙ榡ꔲ줋㇛鑲斢旭⠒攘᪮䗋焑훲鋭úԨ⪘䖀ꖈ▉姁䖎냋⡨遫⠛⠶蒂ኒ馭斫⣫⢛⣠ዒ립ᥛ얟旸蔺⤃祐ᘞ敎旞斐ᛩ䀡稞٫鱖⥗晡薟븑薒ᙘ맔ᚔ蕓૝ゅ砱뇆ᦜꡦ꓾恟䆀쫲ﻉ䐲改敜꣹於ꡎ萪⤛씲맥ৰ퇓ㅒ짣焨텊է頜ꢕ攼ꢅ敫䫑攫燈榷䢳礯䕓\ud99cꗇ㦷릧㥗䣧꠽肗ꠔ␕ꢫ듈㥑ꥰ旛씈攚ࡇ삔㠦䂐졉艼\ud8bf瓪煉旓旗ꡳ旷꣰⺽袑ﲟ᧫姻貚滇ᅪ鐄⹢혓裸 ۢ懑狨覙禙╇豾뇋寧尗敺愼웗攋᱇ڹ燕堌敗ꢳ新ჳ旨袓줉꘥ð╼奮秶良넍栦ᥣ桏\u0013棓䳓梤肳桳ᙈ\uda8fኔ䗫º怗賬釹Ʊ╩¶퓲藩䲆Ԕ앨棣梓核嘄ṧ漏\ud988◢㦝㪪旊藵罹䥿䔀Ẁ앁▁쥘怣栘栳棛䦀\udc64㹍쪢䗄䱃踣Ɨ騎ƃ㋔薟鄉䘉慨肆૚蠯怆白퀭灭Ñႍ샍瀻ⱕ息ႅꂂ郏णꩣ⦁胏䖣﹤줓֡躤ऩ夗︔不噌츯㉋㱮낄┽᧼釾斗蔍卵ㅷ\ud8f4ᓪ\u0007çࠪꥨ㋹㒬蹽┍쩌㥶餚隡裡麯໘岋咀雿詨总먷뉢㠬②胳僆ㅩ蠎끙녓였⡀⣩뢠⣤⠐⡏灅敮敦₀⣀⡽⡤䢃֐ꗏ릌䔕앬Å䃕ꃯ샐炷냺ࣟ袗웝ỽ⣤⧌賚ᄆ麹㛌充蚩聜ࡐ⛨쇁먺頋縈䠤\ud825ᇒ肺쓸䃜⦞礈╊█薽㺊꩚ᆰ⦸䘈⦄羅릩䚯ᩂฌ悀ᡖᦥ猪䦼℘䦗맇蔽ᆾ斑攪蕗藤䤯祈Đᗆ䁐ᖟ倰ᔀᣢᛑ醰Ոᕷꔐ阸耀ℂ㸁᱂혠䄞耑焦ᄉぇꓙポž顄ᔿᗿᔯꖣ效혩敔ꗆ凢⣦䁒⠲⠬烲⢖갗䅂\\\ude85᧒ᖒ⣞\ud872ᕲ⡋좖갈䧜概姨䖳쥼ꗘᖁ襡Եল膑ԥ턾訒⢲ᔃ똺ᔊ⡮幰ᆪᕧ稡牦ꥢ庩聬夎丂ꆛ㉶耋僭엱詿㸠ꕢ㊕鋥ゖぶドࣽႪ䧾ז嫑ᕡᖷ䃱ᖎ邁媊㳼Ֆ旐收旀ꕥ爬⃇뱄앎ꖏá\ud97e敘ᔂ腂얁━짢媩ᔶᔎᕁ論牺戻ᗒ䂓좩⠠♤죣틝駪뉜㹖脀釸챳탘櫣渚ꡚꠕ뢺꠭ꡆ꠫깤\ud92f爕ㆅซᕠꁋᕺꢫᖀ╚㊼눻©ꉠ●앖㥴䕸㤌䗰斕ॠ逕⣤䃾䣴쁸ᡃ耵Ê쀙盲庱颋ᔺꣻᔨ砩”躥鰏씣汎⺶仐婒ਝ︕\ud9c3얝蛐囓呿席蕎䂭蔢ᖪⅣ敪躇ህ偙ꡪ⒖¹ꢲ>\ud885ꡓⅫ㤓婃♛ᗱ᳨閡䢘闘闹꡸闓妳ᗝ웬၇쁾炗〸\u000f왏옍উ좙ꡤ锹ꠞ萸锅ꡅꡅ癊䂌竑짾焄䁟諞씷脫憂䠘ᇡ좞䆓뤅줣旈镢ᖪ暥靖☈㳑짓꺤⠅⠜ꃔ⢴䀪ꂤ쑕◻⥵㧁Կ䖿껂ᗀ앹虺闤⣏领锴⠦間仃▕溞焊꧇넅䁙䕚䧂裢镱䁠ᑇ᫢໭섯怡悏짴䂨硌널氰Ѥ⠆镔⢮镴⢊薾ꖘ뫫껊镮榮禆ᔂ姠㇟ㆂ⁢먙熔䕇ɒ夁闩䱳⪣쐝끞⣇⡙⣮ㅅ㲵閞⣞⢍闾⢤뱄煦ᖏ㧝ꗦ䧰藸ᗵ㉭闵锾⢰ࡍ闝閐Ԍ儰ֈ恨㧶>平繙긮뀐㤶릢衇傄諸ꗨֆ઺쓆鄶腵瑭`䨅㩌՞䳖ⱨ㤖沋问ꤰ㄂⃠旯覮渁ꄙꔪ\ude26ՙꔾຶꄯ桢р뢜쁦샀衕遑鹟镯梿閟栀啪裋斚妫旤╹襐즯栿锟棿闟桌╡栖ꇾ煚곓䖅㺦嫦噯׷觹┶肬탖顈闟ᇜꔔ꥗ᕀ餧쀣ꇤ誊﹈ᤏ‒\ud8e1⢵倊둴䂑ꠒ饉妇♥狑╔䔟\u0012䕓ਜ㉻웏閞Ō᧪闶뚹ꕴᱫꃁꡬ啡ꢜ嗭꣔间䕊앐喕ळ览敤¨敋褘斫䩘攬唡꣬嗡ꡜ嗂䔈◢䔺滳倧誵泆臸覶솚皯Є⻧꘵踾ج桬桯璜棜梻3蕈븖╯ꖔ啩熗컄류楋ễ 뤘薩륞▍䗎邏噴﫚ꢑ倊ꡃ耬𤋮懲⨞唧씜桜格棹\u0000맮\udee5ẑ唯\ud9f5਄⺴䀾ᣖ\uda40楢焯悒쓻H榷䡖ࣅ晏長嗬棞嗹啼桶旟棱梉栯ᔩ棏혹僽啨怉桉棃嗲▯镔԰攬ᦐ喿캁攜囈㚊Ժ敧顣嗛邃嗉械衃\uda94뺥槚ץ椟ꊫေ혥䫒肵犥犯 臘ᔱ鉒偳\uda8bィ᠜ꁫ姷㤵ᕵ豈ঁ視Ꙕ耙炶ꚑ硕㣊ᗧ恷嗳嗋唍踭⦗ս颷\u000b闕䰚꙾䤍턩䤌愳閹늍馏냹\ud936솨੎ꠥ㘘ᙆ倎쇝胦ꂔꗀᔱ䇯楜喾閗칣䳏慗锈햾ꙵ﫹샷Ü\ud927諰酪ﲠ픏唛唫๧ﱫ稕⡕⠶쁵⡣논ᛧ䲝ꕽ镓ㅲ֖竁敶䔏\uda34뒕⢝䃕⡒핏䀻놈蠥椯饚虫㩛鰁胫熍\ud972ᚳ\uda4fꗉ楻樬\ud8e2햚햒햵⠺핤嗠\ud905闈馔\udcef쉂鐙胮\ud9c5除躡좒‑鐁ꐱ₄ìᢜ᢬큲¼᣼ᢂ᠑˕걞픈ȱ핮聱피ᣙ硉햾낊ђ⁗䢜頥颸ᣑ狏恭\ud81d쓕顦镘蕱嗟䖯륨㈰㊅藁秅藈㈑禅헅颥颥픕頕햓䁦蕹豽핍릹᤻䣦ꅲ觝ᄀ邏쫑챜㈘誇糙䣙晡肫좉᫉ᗦ祅픝헥飥핕颓䃣֟ꖉ夏멬覢嗤ㄭ׼汁驃햑᧴嗓㛛\ud899衮キ\ud847\ud8ab㹅놢ᔮ헢ᔿ㋩斍ۋ逷햻\ud8f7햇\ud835斏㚱䔧ၧ焲戥ֈ惲핑敊헮홟쩐ᩯ㥒騟㦻쨵邿핷헻\ud800㗨肔薉ꖕط㘈⫹䉪㨆虒볼\ud8f1蕂\ud86c瀘⠬l\udcfa䕼\ud88b뒂\ud8c2\ud894㕢\ud899闹ᖯ픴픬᥀\ud9d1啐馞┓槱啃妴既㒄蠄⹴耉栗죌儿઴㔂\ud87f而㖢\ud88fꂡ裡黧愢臭㻍灭虄퇁녻꓁넸膹冩⡔鰧肪攢堒쁻끧ヿ壭典䁹줴膜ᕬ㕆ᗋ禩뇋⃳㗢壦㔾》喰㗖䗾㨊֭敫唹僆㕢塦㖒塴懛楚ר뫉ꕮ肼ࣚ짩ꕥ犴퇊窡\ud855飿堍㓐䢒ှ踘ᖵ龍䤅⹋唏麶䗽웏롡\ud8c9㖑\ud869㗩騡횸㗮䕠좻䙞䔺쥆㗡\ud829㕑\ud88d㢧麊ꨦ혜ꦔ픯뫞醅锒㦧唒应虦顰鑓‗뀶飺䕭ゃ㔖頣㗖食\udc90攊▲앟ե牯衭禘薱唼㖵픹㗵먄뻹㖎낓㗃㕖願耫㔓禺긴蕕뛝똧啒諚눟䊽唘飍\ud8ad\ud8ed\ud895䀾\ud821藋\ud9d0㖵ᗙ㕍旚⤟險핐ᘏ㔛ࡏ㖝\ud818ᨸ㗻喕㖉遺깕椠m7ꆎ냿㕭\ud80a㕖ㅳ㔳喊╻헀ꖁ媯ꇊѵ颍ࠍ額頚쁼֑훺ᖁ啳唎㕆䥵攟啙㕕녟㖙椄藗馎냘땛⡇꡸떠蚉郑敓礏髖ࢦ햅理﹚㊬땒땊때떉壸떔虻壜ぇ塀吢঎ׇ՝㕶璘햤몊ꫢ쩂캎냢딇塒딧壯㖟啔땰㗟㔻㖀웪딼砒떇壻䃒떗爠딆픿鹨᛿鹇楗暷긹ᕲ닊窚壻îꂺ壊၅刱앱聟픜섆㇓啌饯闝㕤防뇄ᛳ傮뗚堞뗺墸ۀ㗄⪠㔌驽ؐ㔙㕦熔딒짔땁政㖻㗪堑뗮뗠邞뗘㕬딿\uda72竻䪽뇵꠺颠⸰븆飔F顥䁤湙ƽ쥚绗竉䪬窱겆油໒犿╖⇎禁떳喅ᖰ施锰㔖ᗦ䥋쥟ۊ륅쪪륿ٌ飥땺顕딵딮ゝ窒뤺䄿ᛇ줭뗌홭딾䄽⸎耥慞옽偏髙끚ㆱ쀴꛶肖臚Ô晍倔ᥥ떺颕떍フ딧ࢵ딧곾Ắᣮᢷ⁞᢭⢵ア呐ﱄ䂳憷慥憉憫愯愛懀\ud9ecꦜ㔙駜㔧駥얫旝憽懽慿僋鑓蓔삧故ⲯ떬\u001e᠟딾ᣟ딯⦯渀疋意慬慫懷캯憥嗮\uda4f斀ꅱ匿丝ꁺ\ud844ろ唠Ԥ唲협닫胇胨ฬ㕪镯픚镻걦ᡘ痯딖肟떾᠚\u0018∘\ud871擘\ud83a⁜悒\ud86f唵朗뗳줟遼떮邶耈郹⢜棄債ᐣꔲ灒畘\ud8da䲲痸\ud8feꁑ儙ᇦ䫩䪁续©Օ똿嫞聋᪎ګ혩謹婷䣚傜甘䃚몆甲疸\ud872甄\ud8fdﺌ醀縻ﱎ뇖ࢋ텢喿冨뗯閤뗓י敵ᡌ퀺ᣢ䠭ᡏ헋⅄斋㔹ꔜ깵楉甍ᢩ痍ᠭ꺊ꨪ㙪嚐痧᥾ꖎ禞㖊헞㖚ᘭ旳ㄍ녧項甩畍ᣂჲ㖠딻㇒耩◹¥땨選塱烤㨀\ud805ᒒ敫㤊惧喈\uda64㺷婩Å牲蕀ᖅ盧뛈딽딱痁떱婟墮䪿堣甀䁣甪啗ᕪ嗑▶闾짶閁噛畃畿墣痐傗娳畏熦ᑄ瀋畘ड选狸虧Ꙃ혊뀐ٹL疘䃝ヾ胐ᡇ훳츆ᡆᢦ䃿ᡖカ⦥滛槅\udee4畡Ꚁ榝ꨱ늩얧䳞츨䘕畎헵䥼畒啹疌걇캶쁠ᢐ᠇痄◼嗂ꥇ񚚧\ud9e2ꧫ토ᠼ䡐喀뇰谒聈씜䤒㡑닝ਢ໰乜쁶榚닂ꄙ븮ფ뒐㣭퀦좰㡌舙痂텇㦼痶㗮神\udabe䦒‹䅭⧫⺉륈䛉☐ꔴ闗ᔫ斕৅⺑悛郂怚혽硧閖吲㠜Ќ큂遵ᙾꙚ嗝⹘ফ㈞哕唅\rꆃ툭ꨤ\ud88b窷䢿くԽ阭ᑗ땶䐎\ude2eꁃᢚ쁝恣᠒ꪓᢖꢂ걻곱ᡉᡓᣬ甅답㙰應땯爐槜秲쇚烮䩐⠕憩쀨颭價ご툙㕛憥t듳㉍겵㣭\u0010♋쩇ꖵ氻⨳橵᧌㔫畠\ud958땛먐塽샡Ð塒⑰堈塈堭즳堰墯僰墈壇敓ﻉ敛湙⸵畵ᕙ痎냷ꁂࠒꃭ遱顥쩫ꖦ鉋뗇녲ꕝ빎饄꘺湨䂸꩚ㆴ䃘託曪瘍ဘ舍ს鋊饈䅊芗竚볏ﲎꔫ뺼ꛩ麖ỵ뀘⋤뒵蠞塟递逕墪䱕헫㖰畼ꖫ斦⸖⻖⻹♅壨ඥ塘ണႪ䰉秜窰窸Æ瀹䗶₎ﺂວ梧襛以\u0007慽⺨檧根曊ᓸ듈ŲꢄԖ♨ഥ墘ඃ碕堻헔핁啳\ud922앯ᩞ\udab6芏穚뢬඲ìഺ楗䂆塷吁值탽萖堏Ҹ൒ԛ㕰疕ॽ秖窿㔻ꢿ䅆堦塆෦墖墭ᖥ£ᗥc쨹っ쫨섶肺쐣⚧梳Č넚늘ꦒ售盨驺എආ൦堦ඟ㠜㗧᧒詥뱎℘쩶頎额䐮题㋮颯㕍\ud977ඎ风颮飋킹怣⅐퇖㦇番旪嗏㤰郉喌響唙嗵぀⨅඙ළ෮颮൏媶ꫦ㡯婠賖\udac0䫖颊뉐♛ꕔ斶╼梻⇩㦽㕒諀첍걣᚛胉ᢩᣡ쀍㐆麹഼䨫᠟끮儃딟㔋즖ᗔ幊鹈駓늈ꗹ톋ඇ壋෩ᡫඕ⧙᥽穊険ⅉ懤녃캙曙暸褟Ѥ䀑꣞胫肄ᨁ肉牋鍊ᙉᢗශ堫ങᣫ෥ֺ懚및ඏ़痤唊ട镴끛ꁄ퀖낃◸㣻哑ෲ﹯椂貿囵㣈趸㠕䀡趡\udeb6㗄땽딼훤떘ᖺ떪甇膿૯邀諎咊쒠ゎᓠ詈贸㢨贤趄㢝ഐ椅zǃ烻ꚁ෈櫡Ꙓ횅㛐ᆳ툵塵堗졇肉傤절져⇕壦惲贍塊跍壮蛾න걷ഞ셂䅱部핁ᄴ趙㔪疙ﺣ쒵ႇ肛攤能쀆⇻旪跤렊趍壊贻넹昛䥚膎磕褛൫竔䃱쑳☙类륄퇃戬⧙䢎\ud9b9闦┒嗘ዙ敢À샂烐䠊ၖ兇㗺떚斾㖍畨퇩趗顙贷飊껔㗪줺֎츐熐땕赵煳祜ꦬ礅ᔹ疶斩旼쫟邥趙跗頹贋橣퇇皜큒\ud832\ud8b7僐聳ၽボ啹赺땵甁墪惀삥急皢ꃬ쀂\ud8d2\ud8b2\ud8e3贊\ud8c0臚껡㗼\ud9ef瘲㘟駞䕡仇Ք⫭㕂퇎׊贤땪檿监Ⱋ赣跲\ud893跿嘯\ud8aa烡䠟\ud8b9㢈墠₆煁쫯赯\ud85f赟\ud8bf跜쨛ᖫꫤ跉赓딍\ud94b痉奚㋷쉷䅀줕඗ᕤᗇ﹜ꃷꫤ胈ꁛѾ쓚䃟鑑愹쪃路\ud89f\ud83f赥퉷ꤏ拌횇즢˓䅥癨蛔䂇ꗌვ꺃ᩲ襇ꓛ绡耴ᣓꥤ㚴\ud801袆哉墱ꃱ욊趭趬㗰贜祻൴赀ᛩ딶䔶൙딘頂䷴\ud8c2䵌\ud8d8聨趯餳黎邐딟뀨㙐煡뗒္킂䴌\ud822䴉⤠\ud9c4䆪ᣪᢩ袀吸킺ᡦര畐ꕳ攢鄫ᆧ腱ᆘ繚ࢶ䶚᠎䴺ᡁ僒ꔀ鉕㧬䥀ᤀ줺ꕏ廩曲㱚ᤢ袸䀘Ṹ腎ꢃ⥽鳇䵺Ỿ䷚ᡎ䴕ㆈ䅠髭삡䶨ᖎ癄떐䵒䴽㔁⫓탽顿\u001e搭擧袓聬ᨔ飕䷀䵴頍䷯䣓跴跲섞墟肻悗ご⣺邨〓\ud812邞突䵔颭䶴飵䴌飊渭ꀉ◧諙ăĸ曅\ude1c\udeeeᖂ໨䂂⑀兢남悙嘳님Ḵ曺삧棶肎胦섫▉跿═斒䶷跓湳䵒ȚꅶⱭ䉫䵚駈뤂૥㫰렧\ud8a8砾ᓯ耗\ud839탾嗊锷趔趬饝贁偟䵧\ud8bf䴰ӿ䶍뙲ᘫۙ좾胧㫃\uda64皖跊痯沈䴅趽祚斫啍甹倐촿䵿䶕⤨ﺪ짖딑㖶ꫝ땅䣆Ổဣ肋ᣋ᠈衫ᠸ⇔쵳ᢴ췴쵐享ᠨ඿懲앛湝䴶跂配㥨ꄪ솼㥘ꄴ촋ᡉ舌출췒ꖩ긐蘎養ꕭ☈觗㸙囐ന♆\ud99f㺺㖉빥ࠃ隟⁶胯盩䂂ꃇ肳⃒᪙꘰ꤙ씫햹䷖Ⱳ초㳰ഷ⛮섯췴줠롤堷킔塨쀴塴堐無ﳗ燖ⰰ谏熻聏焔祔⚋樺떩딂촡뛨㸶熿燘㻚䙸㹮촔墅춴墵悎녤㸔㹸暷熢賰춈Ỡ灁狳釙끒卑Ṻ鱶鳨䃇胳臔嗬續갾惉촞췔壩췴堥䴳뤨锸⛊҃飛¡搄Ⴌꁳᛍ0떭췃飃쵣颤蔊픚⹛㗸빹㕆떓쵔肃촣頣촉釐胣쵚䶆핓櫮ﺱ鉜뗗嗌븹¤ꨜ䴰↥䷗䷐䶇ሏ塗쁠\ud867炘࠵䢏쵉距췡മ湫㦅砊磪兯ⳤ뚩䨵暆쇒違ᗯ喴赑촹駔↮昿爛替蓮袀վ暏墏촯堯췯壀致冶욌兑曱愚釱暍饿໬㉻캆婚ꕁ聢﫻㐱≡耶ᇢ൴ज췏壏쵯塯췙旣\ud893\ud864\ud873\ud823嗟遬ⵓ\ud89cⷋ貆ְ跎핐䴚闼춬嚘췋嗈퇅贑ꖼⴜ⴩\ud843\uda09ꕝ疧ꆽ惉䑗㖩䁥볅褂쥥ꔓꪤ킬颤〤\ud8e2停頔䠐홸香蹀稝奛غ꫗闒狙뉫镡춳൒胒糮╫㗦෸൮䴦ꪣ夑ꫤ혓奺엵꡺ⴑ倆ⴜ飆ⷫ嚐혲☃蹲☙ᇾ赥ꇔ⤊㄁㉛닶ⶒ䗿﨨怭»ꧫ㊅뉣쩖\u0013寧媂⒀⣮䀻ꕲ൶㕥䴷䶖꫌飺ⷬ顆ⵠ䐦ⷙ敥ᡥმү⢶탓\ud898货ᦣ뺑췖跢ⶳ赣焫啾㖸췟郵ⴕᡍⷕᣘ聻喤췝甅㻇耱㔨⩠춄遙稍ⶕᣍ⶟㡂ⶓⴛ痬ڃ纟ᣱ뀦䁿᠀題䙑疟넨딋㕨뗽떨쵅◿츕칒\udad5캲\uda7d绁㇢\uda1f᠟灻ⴿᢇⴎ頲驕縺\udafe\udafa\uda2f䱕ꅺ蘤逃⸣⧿誨쇣욷\udecdNꄓ⻷覛蕚㉕ㅾ\udab5繁\uda1b奈籯ⵟ᣻⶿᣿ᣟ⵶囹䉈키\ud857됟烊頴몲땊륧ⷙ甗⴬ᦐ媙ঈ袝ⷨ쵐ⶠ줡ʷ䁔碟ႅ⥫ࢁ袚헳\ud844귤\ud8a4굔\ud80b凕䰤좶䪥尳첉懚რ䚡锓툙╄ꕑ檔䀮\udab5壚µ沦턢│괓⣄괔\ud864귏颧闞ꛢ궒Ƚ峒귷長纻ꁿ\ud8bd䐤ꃼ뻀㢆ဣ딢橲횰媝贵볖관㡶굲 㢎굥෮⦗췆֫痧ⶱ畷赢ⴥﺷ₷キ惀Ҥწ蠪⨞궶굀㣞괎굫郼赋ꩨ覸訋㥃퉷䢀䪎肀ꅼ屆ഡⲝ邂抱堾뢉墛栩壯췗릦Ԣⶽ쵅\udad1壸_ဵ괉塉堍괏Ꙥ쁢º兂闎췧횰䶇⛿\ude05髌귅ⴡ똛媻怍逵\ud814䠏{婏偲娝귕귱塵귉堼噢é숻闯臨肟骭\uded5뙯衚ŀ阗慐☭炗┇乌ᢪ遰g᠗ᣐ烗ᠴ䅘偔롏괯귊ၯ궠ࡡ괳굴皺䇰뇭䅈녝䇽冏궧ᡲࢯ굗ᠮA語䁠駭샚൲栮द☫䔝餭炇᪭⫏騭灡廛偒肓隆땖춊ꩁ챈洴ლ洊趯䗳㖴괡굥ⴋ\udab5渌\ud899耤逰젊\u0019炎\ud8ce䴳ඤ䤍ᔁ◧痁▁嘬淺\ud8bc浆\ud826\ud8f7疞熷娉륐Ǳ跩=邎ہ절嘢袝蘲邡䥘覞栔얺\ud8dc洆\ud87c淆\ud815㨄媨\uda2a洎ⷥ겓똂ᘓ뤌淃斗䴪⵳륍냷颅ꠓꂠ\ud8cf飶撹贲䶐ⴸ빸蔊䵽춿栾涏飾洯飊긤邅떭⨊碂跱攺줭㗿㛴﹝췹锭궻ꨫڦ\uda29륡딺⠏顾浠\ud871淳馅\ud8c5\ud8e4ࢾ蒮ౣ춚䵐疕൨䴋췹贽ⷖ഑派〕浤졕浥\ud8ecົ䪉洇춁෇唌뻜쵒뇁嗱甘⦕傝津\ud8d5洱夔黔泗뺃聶␠䐪ᒿႀ뀦゜큋堫껁馂䚥隷\udeb5攆嗕෇甌趵遌贀諏Ⴌ跏ꛛ襦裋洳填淳墛淤踛囡㺟醬킩耶\udaee耠縋倎畫鱲遏ר䃒ਂ둙淍궞涭궡뗨禎堫涳士洋塋墑\uda6e壢\u001e塉悄䀾墜\ud85c츞赤짗跂ⴐ슑෈堘墙镥犾딀淰㛷麳槔棓噭\uda73噋楧຅⪤壨堕䠅땻춰옓\uda9c鉙㤖敎⨲䦱\ud8f1\ud8d0䢉\ud80f偈䡢ワ纉䦊焁궙ꖽ뗭赣淔趇浕෤෦䥱쑲태쀠袿킘島䦸驢䰒쁒\ud81c帩䧦䫧訚ꥈ⹾䀣쨕㙓⸎컖飍Ḏ聆僰냪洳빠젅㩞䦩䧙닩䥭⦹熲䥱\ud8a6鋦\ud832䱧壖8੗堄₷塻싹丫ᣎⴧⷊ焊땪熓\ude6a涃딘䴓嚑귀ꁾꀘ샼肭⣰液길냧墉䃬໗憯溟⥖⃙\u0010I慮聾Ⴔ㩊〽똢੄洓羅뇘鸣ෟ炉遉ᚱ땴骏諊䃎ⱴ싱墎㇗堩ꗄí聲₇䛰\ud815䀓悸\ud84f〉〔괳줗赎׸䴞洷촚闿\udee3媓淳偻\ud887\ud859᣽\ud975洨䵄◳촅淴춊䶑洬\ud88f\ud8c7髯㔱攊磧ꆥ땧頁ᡁᢙ暡ᠾꖴ禿ⵒⴹ椑ꕰᴣဈ᷌搂ㆻ赮䖓⵷悄觪ⴉ♭楛䕎㕘᷁ᡚ梸ᵣ镁귌淫甚闧跈↿梢\u0016\ud877“ᐈ哖泥\ud949攗ᶁᷖ\ud8b6\ud872웘뚉廛\uda63榅ष⵴駡淞蔬\ud842ᵀ뀢ᷜᶸ퇽洴젛䆈裶땩浖䶡☙壾䣙墹塲⒧Ღⷹ䔀稰훧⛍♗♪녋艝妪ශ膫ⵡഩ跕嘫픛♆ᵙ壞傦᷹塳춛엻ෝ䶘䴅♜⚄竄竼♤竩壸ᓆᴾᵘ瓹墌홐훌획☃禮ᶭ⚸姾브ഽ♪虨䃇凨옝饓꧵喎临ҋ砲憰㹥밊碧戊ꃙ큉㡻ᢛ\ud88a疯零ᶵ┅륚⸡ᴄ稼⛡ᶤ穥♵᷋\ud88dᵫ\ud82dᶬ軡ⴍ♑ⷫ失ⷺ鹣쥣㧭\udef3偪ㇼ환⠉㸬晽陜ࡘ襡ໝで䶮涳藲෗䕠졕똄檋\ud8f5ᴫ\ud84dᷫ\ud8e3⑇♦ⵧ⛎ẇڪඕ禙왠\ud843堣墠\ud8e3塖ਮᴣ餹津\uda57ⴝᴾ禸薫ꆙ椈㗙٭웈㖎뻒냏ᶃ塏⁯ᵣ堙烦⻆敨먂賩Ŧ鄀釸⦲滊ⱥ䕗唬ṯ㕻橐鶯᷏铯ᷰ鴽糤듙顺頴ꀇ씠ꕮ䘹閻ᴁ嗗촠췥䶋隊ꪪൌൊ뀹쀨洞贬귡괓噄෦⹖⺶鶹ゔ鷑퓔鷆탴ൣ즜鴹䔼鵾熹\ud91a닣꤁耣⛶䆝ꩶ榫⢯悅︡쫙䢴ⷸ鴹顔鴅顅颕炝飾怢ࣦ꣍ꀗ斾퐇ヘ䛵䂋㳎ᴐ䶟쵮ᵗ念ㅹ᷑쵴皯˩䀹䢉艽聶瓔䁴慗䠶鴝顯䣶鴽飍ꃺ槬炮鵍뤞鶍䁪낭烉﫯ꛐᡯ״놪괄pၫꕢහ镑蔉鵶鷝颎鵽類컡价奍낄飗耙蒆꣗傪삂涆畞㖨ᶭ浊ᵄ뺿桭鷄额鵤飏發땘仂⫷듭鴤顝鷨衟ᶶ魯ꪲ৛﻽\ud9b8鷐㸷嗪墈㠰ဪꂨ㣨㢭ⷍ姿㘴浝ⶡ浀鴙떆뗭淉큇鷈㢧鶵磩驖땻跧㖀籧䲃攝㕮浌浭赴궬駓ⅹï楾穌탆壇鴨㣇鷾Ỗᢅ衯䢐蒼퀰ᢡ搾ꔂ痰嶶ᡈ崎ᡎᠥꔔ﹅ṳấỪꨬ狦¬㺭啞乓굲ᵍ䖓ꘉṥIḫᨄú⓳삫Ṗ᠟금嵶ᣈ嶨巆裊渄崥ḋḊ阤嶬㹉憀⢁⹨覯悼ࣩ昵ꨵ솱ꀖ턢糠囕ࣅⴔ跊棩\ud899\ud8d9\ud857⡦ꓹ\ud862䴗╗䴬鵥ⷍ䦚崶哭\ud8ba嵧탖ꖭ奠競随㉢ê胪₝꺯簩礎淬⻸䂒鈲ᴵ─鵼㗯ٞⶺ⺾ⵓ䥱ꩦ嵙\ud816崺嵹\ud899ꆶ嶙ꪶ⹫姎뇆닎崐蛰껜ꁴᖇ糘䁭蚍샥뙲\ud920⚨親㧦聁엙᠗䁾။ꢼ큾ꂨ냅ᣜ唽ᡥ崅ᢕ崥ᡨ嘱눭嶔嶝ᷔ巘稰啼覐짔┹ᢥ巹᠕嵅ᠡ唖仸▮ǈḔ爸ᄎ甸觫䙺⚸䁁肟\ud960冋躡ෟᵄ䙳℣▼๮Ĳ曪川\ud8fd逞䃽\ud807⠆㣧鵶嘛䇤᷸䀽\ud847嵨嵃\ud867崁딓ᴿᵕ㺊ꨓ᷐혖ⶶ벖찞☊蕭嶾崾◃夽ᵅ⛽᷀섡꫖嵽\ud8f7嶃\ud8c3\ud809ᴑ⴬혹ꪮ♰솹ꨴ聉愧車閸䃄즇慬䢸쥂踢຤諘䃯턕굼ช삀吊塊堪墫ࠛ൘䄂蔔\udd72壔\udd75ࢴ\udd7c棇픠旈飗ॶ奁䂝뗮ꆊ疊떨門\udd6c量巁ꩪ蕹퀚藼ñ僱샙죳좇婌\udd54\udd9d䂊墬\udd9dࢽ핒藥튲蕛닣᱈씟ꋚ☱ᩑฟ뀣앴敏츱ꃱ詹愍뛝䤱㩜샙斘煨堘塜裿시ⴁ倎\uddfe呎\udd58塏둬ꦍ\ud967땞픬涷촉稝ⷞ崰饢\uddeeᚅ贍甘ᶾ훮\udde8壇胎\udda6⫣⵻贚증ꩺᵜ쩳⩭᠝ᠡᒖ좀颽᣽ᡳᚗ闌溼옩ꈈ皋甦ᗋ畴ᷢ唾鵯崊纡ꥬ⪢\udd96镵픊\ud9b8ᖠॼ똄ᔹ\uddf9湹\uddddᢅ\uddc6闲⚺惦䩨क\udd58थ!軕避琪늨왒稿엄䂻⑉諑䧆淆ǝ\udd9d᣹\udd3dᣠ硅\udd8b皜킰逡塠倽胡墑壺崟᷆崡\uddf7趁壻\udd99삇\uddc7\udd84傳\udaab㔱啮ⶮ䶤煋췇盳赧癋货ᐫ贞㧃郗\uddc1墷\udd61墯瀂၃\uda6c땯癅銴餲嘘鴑뉯饌궧ᵗ䂕\ud8d5\ud8b5\ud8c8ӆ䀎䃼칿囯懑㩳ԁ鴁ᶲ䶬괡뚃鶄藃鵈㵪␨㴸쁨㴍\ud899귵૏幂棂⇄\ud960烓躮\uda00൳퀗蠾颟ᇞ鷙淫嵾鶷囼쓤㴹䂨㷵\ud818㷁ﻊ竡颊頶怗족颍굗쵵\uddbc㴍\udd0b\uda78챇륫삗啲᚟ꗯ\ude66\ud812㶑飁壒㶱顄ᶀ鴞딪핊䴬\ud83a㵒㴱頷胪㷦ᘐᷧ㗋꫸䀰ᴹ僷ᢥ䱏ᣅﹴ쵁킮\udd0b怏᠞㴯ᣞ㵠뗂\udd87᷍\uddde◃煷鶒ⷙ槡ꖾ홮㶏ᣢ⤁㴂ㆉ穓鴻ㆱ䃟䊩涱㖭㕯愈㶕疄찟䷇皊领㢪颻聏\u001a顚飺䔒\ud885㴪顪颥㶚飖阭姈ꥰ膛蠀聏Ÿ㷵攄㵂鵄㷔碁竴望䩰ꃾ聅㴵㵥㵺릍㴛㶔痿練噿ຳ咽胻ꙺ嘑牀槑檍쀬␣黅֙\udd4cᷥ抓쥥㩭챷㔹偻頇颥⦾'頾㷧㷷肗㷇飀䃾ᴝ㴡淩椃鷘췽⵨톷㶇顗㷀䁠㴩㶧ꆫ㆐떙涻㵙疀巁\udd22\udd39㴈ᥫ룠ᖓ飓飗ࡳ頢肘ჾ\udd2d趆嵗\udd1a镗딍逭郰붳顮鈋飾㶼㗀\udd95穟葉暿咽昀־昂뙰봳飾ࠄ뷈뵃㷖왑釘ⷩ긹ᇝ꺠ⶍ駑犘䃖䚣ꤺ㊩⡡幾胺쵀簲籏庍ᇬ옚冀ⷰ盚벜붦\udeebẐ燧飥탠颾怛\ud8bb␰颋斶ᥰ䅾䫏嵼ᵻ㷢\uddf5㋗蕸ᖝ\udd10प뵠頉僪뵐顏皎쓺ᆔ㸃㥨औ痜Ⅿ襘ङ袸腬奼库츣튉檭Ứ꺃蚔ꚟ詖Ǝ뷺愩ꈔﳮ뵬▨굃蕖뵪붐颚뷂킧扞\ud83e\ud87e\ud8e0䠰䐖聁\ud8c7Ŷ᫷稣짥䧷ᵖ⷟項᧧᧲煖Ä붵햏禦恖Ä蓜킫哟ถ␶み샞\ud8be\ud8ff聙북\ud8c5ᠳꔇ刱嶫姫䧝穙ꨚꤢ閟醒8磑犥\ud922蹥뱭蘫㤶\ud9b5Ả㊡過꠻ᵃ敻ᴥⴇᴑ෗巩붝뷾\ud8d9봺⣅ᠸㄎ\ud8a9葢뀮\ud8c2⓮\ud83eꔜᇺ쩿觋㵊嶬鴴ዀ攁뺴ㄗᖟ㴯㵝ᴡ鶱ㄉ㇉ㅹ뵎\ud867뵮\ud81a ㆾ贖ꡯ뵘থó\udaa8湾肴縳쫢㠝ꁭ꫇죏蠥M綧붮\ud817뷨㱰須飘髈風飿쑭ᷕ┑\udd2d\udd8f禷₋堡ᒆ蠬샬끔⢰呺⩄紗橈頨颹ヂ㴬㈨恈槟냆田맗椋巑တ䨍탹囊巌鶪崬ᤦ\udcec綈顬葜絨飺盝饹煉멻鶦蚗㪼飶撱낂頶꘢顄頗䆥㧁竌ꅷՙꦼᷙ鍊鵌虞丧㴫헆붤봨ꇻ酟े醿ধ酭喙紂顱撆綢颒裦疍뤐湌ꄑᥖ緉⵷髲蒲M滆춈礍\ude35ꇻ嘦ᇪ洢䀜暩䵾緼順緂飁絨释҉颟\u0004颌郮ቢ쩥ꕷ뵂\udd1b鴲ﻷ⠨葅紩顕邥緂唧薮괓淡\udd16闡㴠ⶹ㗿鵂ゅ緉頥絿䢗牊ⴓⵟ鵧唙㷟犔虘颻b샛䢼葃햕傳紸頋緸類\udad2聚絛솕緁괇㷲칿ᴾ嶑\udd11㴦㷷鴫췽綘順ﹳ綸颋緲鴄ᴴ蔍퀌㇨鷇败䩼槊穬\ud89e졛聀䁳⁍萫깛鰲᫗鶂鶯㴊ᶽ絭淊᷉킟紜\ud83f緜\ud8e9驡㔏絰옖酩ꔨ⫩涜⫒ᵆ﷟絜\ud84d蓺붶紛渔\udc91\uda6d堝烤⣘ᒨ붌洴균뷻緼ɰ䅍适ᙐﴝ堤﷝壤ﵭ怉൏㴔딷鶀涓ꛃ遳椳园\udaf3噬꣌ﶝ墤ﴽ墂䒼紀⚺ʎ츈䣘将䃳傡锴᠌ﵫ룎仹Ⴝ唧\ud870좯䠤砽\ude9a\ud826᤽鵇洚ᴓ嚃闦봌ℂ똚뀪\ud8fa﷪\ud838뀫쐦ᤌ㦢Ƒ曃\udd5f薽竗ᆇ䪨ࢩ晜㸨滪뉱໘䂖聻ꓷᇚÜ裖ꔥ\udd48⋻蕚밍縒豅㺌鵹闠붏䙅㲶ﵺﵪ\ud886﵎﵃ÿ駥࠯ᴐ\ud8fe⃐\ud801q⚠봮׷봐뵐ੀ﷓귟붓꘩頏퀾쒫ၹ餸奸妲〠\ud879﵌蠅ﶇ塅﷒ꕶꕰ햟ꔞᕮ올⑛꤈☯攃맍炧䦥r窧棂懒▘鴃餹ꛖ췕凶ꔈ൫뻱붭ﶹ﷠\ud81dﵐ\ud85dﶰ\ud846᤟ꢢ㫶堢ࡩ灢ꠦ﷪䴔脤킄킮ᥡ褞ᦑ觞᥋騶塇ﵪ됧﵎墳ꢽ픎왡ᦞ襐է╉憅@䅧䥙璚᧠谯恴놡裀粥㪎聼뷰ᤒ蕄禆赿ﶣ廡畩暷⸫픣浌襔趸沶覶壛ﶎ塧ﴭㅍ낒飒顟ᥲ飰ᖎ땋ꪎၼ࡞\uda15緋絥쇈ꓤβ願쁢紧緑\udd67絽紐﵌͒频栔ͬ̇昩㴴藫㪀粿鵸\udd1b붘붇᷾ḑᡑᠱᢥ瓨䠢蠉᠔緦闘蔤뵖閕穾モ냎탰袩㔓梩⡩앐㈺Αᣀͱᠪ̑礼檟髂ેש壓ꃀ锗鉆쇣烡铎엑給胰ꪼ䵒摒髝ꕉ諏髹ç뗒훖\uddd6ꖶ΀椼岂樓삺\udea5킵著ﰞς얊ਅ궸⦗쵲綠췞ﻲ̖Ι聊ϱᠵᠶ堙瀮頛塘畑⣻咂곏뵁헹᥊阖궛ඒ᪫؂㉊㊥ͫ堕͛壕͜ﴐⴼ﷕﷘窮낫׫搹搝怚飿฻ը㈝ϥ̐삕ϛ壧膾践άꄚẼ慆\ud92a⢽뤣뺎꓆腻二꘳쨜曒੫ϑ犫巫鵶紲ﹺ髯颓⢟颱顀肅훶腐㔥ﵸﵭ襳ꇠ볺騟飆ﰷο預喕ﵔ巆㵜Ή騎肍ご납萐瀡ᓥ꣨悀茟쐟͟颷͠ꢼ蛋燭y驖㗰⫇촓뫓۱떽ڗ\udae9斔蘀堮顺⃸ᢚ恠墔﷿鷔﵆巙ͷ趙엊҄荀堤莠堩䡱㗙㵩䛍礝級Λ㗲䵠﵃鶂㛴菄茠塿Ã櫸ᷮ竧㕮滀簰ᵭれ壝퀉ꀬ壂ᒛ膨ﵾ嫯̂鵕ﴨᶠ﷛㗧綼λL墲草ࣲ菃櫠ᵝ畢菸騂㇊Ӓ菌壺荬堲紊㷉﷖ꊲ뻙攷\ud8b9%夏\ud8d1停⴮荮莫䀞茧̗笠ﴵ紜茵픨姯\udd59楡ꖓ熾훞菷\ud8be莛꣘聇ꇊⴺ׎\udef5뛨菻鵭⶚\b蠨䰴챍뀤㣭ä㠮㣐槖㗎↜줜ϝ紭涴딡敦\ud879荤㠔㢇耍蹦ᘽ뫆荅딺醧棦荵莤㠅莍荔㠲ᙂ줥ﴄⷶ茄﵍낫顝킍꠱Ӫ蓋㖃菮\uda58乆䵪㛉퀓菫飓荛颶茼㶣荑\udee5荖햕荡茵莶෪墫荓莛顀胇㗺햟鵰왡爩⒥뗿‛᠄ᣛᢻᣣꠈ\ud9e9㕒⧸챥ׁ茖ഄඕ৿⁕∏偕烥ဦ葙䰲F﹠∏荛ᡋ჏菻ᡋ⃒ﶰꩺ늋磸脤헩昢䁆꥓릻㇫胁ㆸ趣ﷻ㴡㷄仩悚⢏荐䍻᢯荄槧䗞颾飾颅끁頿䃥硪ϕ헟茞ⵞ즧疍ᔒ浢䍾頁頌䌡顦唅촱◪ĉ▢谉曈ࢯ퇳㈑䫱쐸ᆁ옒੃쨽雁⛾莼薿ᇷ륣괗煚㋼嗑붆◆░䃩黴鳝ヶ┼䍴䎁风䎋셬ꢸ壸壃壄塲㵙칛茲ϖ驀㖝ٱ䗘菠㔤蠫۾땟菮ⵯ\udddc菵畽ⷒⶾ혶䏐ၶ䌊탄堈荔藢嘺ס隿쵝菟䌄墑䍁々㫸菓ꁜ壒ﲟ壇ꃍࢎ䏾눀嵔茏뵥ⴜ\udd2f뷍嚴ᖕ\udd78鴊ⅻ개壙䌼塹䍸᠅䍉隿ϭ崉唡똎瞧ႂ䀬⒇\u0010䂭뵤蒜壜墹䍼堭䎂壟ﴞ纐觱噡䶮饪ⱞ聥㩞趂␱牘覕䁕꫋붘葩ũ⵾判軑℡툡햪㡑핚㢱픜㣕蓬悼㡠쀀誩ꃏ븪钳ⱅ⳷뢏뢢젯롕ꁾ願᧾橶̓蠂櫖Ⱚ꠆儛ﶔ肟䍳䏈ꂿ䏯뢛草ﴮ䏮ᶍ췙릮⴮䶴闆π②ꂁ냑ࣁ灣播햐쏦䁟䏏뢰썯롾顾橯聀쎶ㄡ橘ख固쁷恵ꅯ衒嵚ꔗ჌ꚶ┛꡸\ude86쫹㷵偰⣍癭깒쓭í\udd52̪嵥䎗\uddf7⻻哂썍쁢쏣ꀝ⷏\udde8쏂洧淲섂ꔟ륋뇥릢ꔍ썪쎭쌅ẻ넗㻹봔␗립㉲ 磀䄃컲蓼ꆯ怛䂢Ⅻ隺쓴䃖䚺쒭盨椟崪首Ⱓ짶쌲屪녎쏔샟黣⃬렛ꂙ悀磒䍸ද\udd98쎤䤆쌥릟맋놠깟뢉썿렩쎋ₛ䂡綐滩꺽ﶪ鴜䤽僘\udd79䂓㣦耠ُ㻳Yㇳ헋䇻㆒ᢠ⋱쏟뢠졉쏿뢩쌤衫鴁茯̰䵕\udd70䴕凵渫ﷱ党馻䛹\u001e溚碕䁟葁擏衟速汪恅䏢॥ﶴﵼ㵾䎙쌢涁觙餝﹣ꡋ쏚碫썺砛썺䫳᩻놖薉▙²禳䚵蚰綃⦞聑뫟騰囿ℍ솀䘜췻탔䀟끶嘎鹋ﴡ쏑맘䚣솄婑ᘃ쌫쎺磫쌆碝袔р룶颸肴ӴѾ烷͛鵜䰌酚㉦紊娈㲠络픥䄨⏔Ө⍁⎌Ӹ䏧\uddd4荥ⶇ䍀\udd5ąꅂ췊쇍Ƣ쵑긼냼⌴Ҕ⍈⏥쏹竄⌭ᚉ邺쒖鄽蛘虌纁욞൥ࣣ쫁좟腁胳馲뢀뀊렢ဂ梛脧㨴좺竻쌘쌁斁䍿ﷃ鵭〪⏲렳냪⎕㖈鷔뻚虇㉃뫃淜㶈썴⎗\uddb4莎낦⍪⍊룯䣋㔃\ud964㚧磳타ꑦ냋탗磩쌯\udd7a⎋唆⎗餼φ⎕偾⏧碁⍗磛觗ꄢͰ옿എ耒ϩͨ뵀춄荎쪊菢鐠봘떌ﴫ禱⌁⎗磗硼ﺡ룡뢠⺑롪킝Ⴥﶜﴴ⏒ώ⎢ⶌ⏇維\uddc6︨죁〤ð䢽䑐ხ橑죮聕⌚逴ࢵ⌓䎚胳섔犒끠炦娬뱊〠ꇘ엂䅍遉過ꢩ纮⎔聃⍡렜胕⍣⏑룣頜旲嗪僐ҰҘꑘ\ud841耿꣈үㄥ髑䂴ऐ汧⌰ҁ撗⌈з⌨Ј쏁㷕組幨썂浽鵃딇自僌ӕ뀣䀶肜쁀걽意꤮㹻搯⍰ї⎈ҷ⎓⍁肚ꗃ륞④쪂ਢ冟幂ꐤ遲귳僁쎧᧥ൔ䏀〇끹\ud842胅㢯ლ鐽袂빮旹㣤ꍅ㢥䳔ꍥ㠅킕莏礊䨫諊䫫諁懃䌌ꎅ㢔ꏌꎥ㢴ꎥ溽#窎餐Ĺ鶫걞ڵࢇ䷛䘌ꚫ贤\ud82c痻킌䀷奛ඡ꘢䚼ꚺ뱵귣쌔햒Ι⏮浙̊썞淎萣肾쐝끓ぬ⹍遧䱂긼唥悔䂩ꏣꍽ懶ꎍ⏲쏥﵋뚇絔絝綏礝䢷ҎWࡘზშꡜ䣱ꆖꍣꎓꎀ禿簦궒궔尒′괜䧯ထ꠴ᡂ店뺟앱牘ս킞聪硭૨产框굢궯渦ꅦ굙ꍏᴢ렄뢜꣧瀕ꁵ딍⍐붻綌ᶄ䌩ﶣሄᢢ롣┒룭ꏒ롨噳മ黬ꌪ앉唌睊嗌爵႙喟쩍ꍥꍭꍒ뢧旸\ud91c䦊㳏ໃ᫣툉函貳㧸ë穓혡ゑ㣑㣫遭胱㠙ꁉ㠗ﷹ鶄㵴皱촿煘㻶熉쵖熪顗ꎱ㢷ꎉ㢧敁ﲐ閑昺ᇥ튀捾춡쵞Ͳ샰ꪳ聾귭虎䛤䀺☭瀅굦凿࡜暗ꌪთꍱ㣂恷ꌰ牀簤ꤶ約䌿⌚ↅ屙췏ዖⰺᅟﲔ掅쵻崉畤㚁碜样䀁⌺쌀ꎋ촑⏄㵴떭揁捡檝痣綶⍉贈볩⎲썔핍⍦ꎡ㷝ꎾꖬ뺵綂掬採\uda5cࣞꤘ飽碃砷퀣砞ꁬဏꎁ鶝㴠ﵡ洼茤㶂㚺揭ú掣硬႗犩\udd08﵉淍鷈﵎⨽ꌴﵽꍻ쎮滤㵹⏒䱡\udd3c蛖捃砆捣碿ⲕ㰦샎큔ꃺ偀䃆㠔룚뵞禭⏔細ꔅ퇖ᗅ턊臗ᚶ㒄롑挤뢱揤렣퇝瀫ϼ↠锊눬␤\ud85d陓캁옣뺶⌟詐額僅ᕼ륎Ố趗맃썪䌸햃嵴᳡揙揄렱捤렔렟摘這롙뢱摯ꃋ졺䕨䖵䍂榰๣揩롂ん掹룓挅룂헂ઠ⍚㊢ʳ懷聣m쀄퓠聜ꪄ䇖紵\uddd1畻綞挍\udd53ꍤ┗袯幂〚쐙蒒還䁙蓼굩렓揙롫揹뢵蕙큩䅻掾ß漢掬င§揹삧ǫ䶈蠢䂩墳틈컙ⷯ຀⠙Ɲ巷ゔ䁘磷聰ၜ䀓 ヂ鲜揿⏇淽锇臇썖馝砝砸磸砋聸꙰蘿〵肯湺ꏝ袺咊늂稇凁넲邧嘧囸첚춱廖ꗎꔩ䪬î쫚벡滴浫봪锦ꏙ⍈쌎荵ᦇ锃碸砄Ö䶓硲ꂺ硐\ud874꣹䈥㥭껉嵗ঠ繍Ϟ깁ꎝ続ϭ⎇腑ᄊ䅞䷊䄗膆砦磹䊂⌸ⷊ雩ᄶ\ud9c2㉾ဢ뵟ട໻ᩎ䁕㶁ංꄙ談쩼࡝諸䀷う硳硦碪䏡蕒८\ud98e냣㣨呓㡶냺ꢆ暩莡莼掇菦㶕倅㡻㓅聢捗草浏廯ၺ䶄榵絵㠼\ud88f锽ⶎ⏟⍧ϭ褥庰傹⃎䃬怹砤賆掟뷽̝巳床逼僢ꂓ닓렧⢮ဖ븓磓硳斴檋㰴㊋镳㵐樤䂋핿諻䧣튳‐͠烑᰻᪴䂯Ҏ乜㵗控ⴌᴞ捤挩䇉樦㋧딆ࡻ碳쓳Ԣ檎ჩ山샚ሰ쁁㣁탿á㠸ⅾ㠈ᎁ㢡\ud8c8Ꭱ㣡㡝뚟瘹䵤뙡ᘺ꩑呁할ⵊ痗ⴝ䌦봱똙ೞ괬マぼ냈ࢿ᠒㔐ጁ㡈ጡ㢨፿؅偾뻁㦤ፃ껷ձ犞疛䏯帄:测㈡䒩噈滙ᵋ秈┡⺾㷘ꡡꀬࡧ灀롛쎵\uddce䏍⌊捗봩͊붖ണ䧥ࡦ⺖⸶⻟㢪፿㠚ᎀ렚榪ඬ෶‪鷉嘉ꄍ쩩慣툡䦁职疂ꐰ嫷캵솒뫤됿㡪᏿㢚ጉ軬鵙ᷣ竪nፕ짙装蓓遖ࡡ끶怠쌴썑͒胕㇓ꂉγ쏮崯骥Æጿ荘썪둺ࡺ梃䣥壣䲉郋ꑺ蕉Ꮉጅᎊ惔쌁樋쫴쎸㻮΅፞ϲ다춍쐀\ude42홇ꓘ襧䲀䙭ᚒrע檈룉፹ᎅጇ㤟掣ҽ롾搃룪Â㋂顑鹛ᏽ룣セᏃ렇Ꮾ接䌁ꌛ嶊ꨓÔÜ\udd27릶굎黹▥፬䎤䧗梉ꄌ퀩ꄠꃩꇛ惱ꅇጻፃ룻ጅ⪷Ꮪ\udd76奈ဧ噎胏犦媹ꏼ㊽ᙇꑒ鐊냂䤉蔽㠖쀟쓨ᒙᑉ葂傼ꀶペᏗ掽ꍤ揽섮쫄ꇨ㤓ﲕ⑱감驶沫賸ⴌ挨쏑ᚽ㢘錃㠸鏃㣸鎰㻚⎯፴閤䦯ꎘ㹶燿燲䩌鏽㣘鍃㡸鎲䶋:\uda6d⻥튱梧틝㘭ᛒ۱쓙䠼㋉෺촱檠皞聇豰ۑီ蹋䡧롸䃄僗레邞ᆘ̞榏봇ᶇ縆鎢鎗뢦鎷뢕ㄾ\udae6沔躵沏䅍겇駭㷜ﷀﴃΝ纕츁ㅏⷲ\udad6⶧䃶錗렦鍪ၦ錁㦾頚ꧧ諮鏢̝盪⚞陂혺虡庘깻ꓦ㢷䣦저ᙰ磯쁃䡈碪隨砛냴\udd4f᎐㨎腇豜鍙쎇ඣ늈饴座ඌ廑㳰碥鍝裥鍨碉ԑ쀦榿藨黇⃎䀺ᥧ꛿詽鹓츎甉ੈ揄঄苭錥鎈硝錨硨磾腾黛뉞鴫ፉ熗Ꮋ쌒뻳뤇뱜碱砂碱瀛뤇鏑ⱇ鍭푔撧鏋ጉ﷔굟鎷捝驠⎮셯粒⒒䀳쏜䄉Ä肖챧┪荨쵪莝䏞兿⺹썆썁儥㊈ᢜ砗鎼硗鎂磒ꗉ崔㈨겱凶ꔳ䛟鏊阀Ο醅Û竻Ä脧磊ᪧ᪫⠇愤䁩嘴藭\u0017䨊硇賭楠ࣶ\ud8ca_烪\ud8fd⣐땿硴厪厚뺊૸髭焘䙁খच넪ᔞᏭᵇ緉挕앝乭为ऀᄼ䕿₴厚ヴ卪၌卯fৎ뇲苐ᄃ紐䴢厶二昩ⓘ䀂ꆺỿ訛约춢窠؆鴑䷜奷錗䴥䌘뵺ጐ뚭ᐽ惃蓏㠉ꀏЋ恹蠄크᩽钮匯㠞可㣞北ጎ史掹液楈䦎뙴捙熐釼喙䨆麴掞焔㺏጖贾鍽;鏋䛟煼鍿焎煸㺏㡫蓾卯㡞匑秠掲Ù췺솷嗖疠授恥卩䢐捉愯幹暒໇聪늅硿誰嘂൮⸕ᶱ䧧ꌪᠵ뢑頫ꀢ顰좹怶㙳提㻨䛋﷈䄝իl䂝֊¢厔紎봪씞䶮ᇮ䢃卵렣厍룣叏ԏ訰헳卖䪶₩՚ԗ괺鍶캚鶨緓吟ၴ듉蕼혃贓衲ꆢ瓌끃叵뢣卍롋頖鏕ᥱ痛볏♲砊砟⁇ࠟ′倛︮ꍌ险厪荿ϔ፦饕블쏨Ꚉ`퍊碐펪磓䥯藁㦜횠ƪ尅㘣쨪ů๨䃘詵\udef9杖䀻퀦췆槺쫇䊪㶚Û薥ﻐ骹燑ꂠ펊砐팪磐퍟⌻썏錨꩖㠶㠾젉ꁉ邎㣮ㄎ⚖ᷦⷔز᧺ꅯ鳬횦\ude1d挹楁쪢팦棢폶㡒퍓ખ阸똌⏥荥ᎋ줁嵣奁崆⻪릚펶㠒팎㣥욟嵉ᵓ᤻᷒Â扲ᦧ녈벃﷡檵汾聇ꛕ邆\udea1蘶ع秖胞ႂ⒚ꕨ祔ꢑ僗ᣭ裖난掫旣愇理麯䠻ၻ倔밻騱폚쁱퍱팒탆ڷ爡䁆䩂ˬ╖陎ꢡ衔Ꚃ㋿\ud931᫞Ⱇ졘䁳⛖䘭\r췦贴喔٥팣짛悕퍚餛䅧禌곣₱펱팉掴⎡只煬ꡔ렢㔄₎ꐁ倓卂ԑ壔롋퍴뢫폿鎔ፌ⍕药㵅赱\uddf0렋팴룋폴료봕\udeff㴺ջ䛢튩菚紗䪙旱ﶊ췊莪幑⏢颜顈Ћ㵋升溧⦧渗⤗滗⧇Ԡ膿판샿팈㎦씭ů⥭\udce8ꤿ溷Ɩⁿ⥌꧸ꥇꆟ釤넨噭虥↱绀儆᥆僯ㅱᨊ磫躩攀펳뤊捹䆬脈㎰䗈㏃裀㍬맫㌗Ƙ㍈脘ꤨ腮း꧿⦠﹅鎭磫₱₝磝碽磫ᖫၯ槁厦ꍗ፻쎆폰팀厈펮綒腇෍鏰ꖭ鍎諐倈恲㌝硗킊㌗㙝ঃ窿ᙕẨḎ셄ヺᦵ㢡聎㎘䃮胨ᡯ裔촟纇ᕫ쀁膷⠫ᘐ쌭硦㏭砊㍠낽碀㸶䁩ᑴ悐룐뢢⡖灕鍫ẉ웇胬ꕛ鏟줳팚㎽挡ꌪ얼鎶熹原ꌠ롑㏠뢱㌐惱㍈멠蚑邧♣ღ䩮壕ꅭ쁞펼ૈ菓캵㠌녣쫈࠱᪜㊺쓾貀荢㻅㌱㏾⡱㎰롈꥕㏦⋖ⲵ㏸䘹䀞쇽ꅍ㎬鹦璿냩ブ頳렍퀟蠴吏ﻣ렫㍓룫㍳렬慄㎎祦肰ꠂ桦쁖ࠓ쒺ꂣ懋㎓롫㎮萛㏳룊渡㢮䲺䱎챸曾삚ቲ觵냄䀍탧䧖ࣘ誔ꂚ鶩耂䘨惨ᡶ굎䱯㍮䳨벶泤錎㲿㍚饥ㄛ㥃莙̪即폞䉡ꢤ磤碹悤⣔硑류䙡쏧릑쎍샿쀱쎦\ude29펕ह썂ꕹ쏆쏁凸댤砟깄뎔磔磁䶵턫夑쌦䇔돎쎱쎠閩쁓ꥸꗮ岲䎛㇑㥫롧䥓鐓衏䨩ඝ퍍쵆ꕬ뎄뎴惄더磢㌆뵓ෟ탺㢆㢼㡦㢅혈紷畐ᷕ褤䀆㢯遦댫ᨖ뎻폿ᵭ⌇茂﷌楝\uda3d\uda8e뎦돆㢮덥ࢀ秭녭茂̾税⍺돃莯嶊㵝婬ꢘ룜샇Შ퀨磸렗䅹\u0013쵧顉돘뢩델룜厒ᩉ凞겪팊Ꮫ駻莼揯㴡䏰령댩뎸렉恃\uda2dᵝ넱쳞ჷ퍛쇷纇䐔벂ꡜ돝ꤧ\ud962ꤦ躸肝댧蠽댗ﻰ\udec8ﻭ놟醔铦ꂩ㇍ệ儈ı牭¡袪촡θỸ䠶㕺돏ͼ藤楕丏돝돧돓Ữ懨⹏츆쨅녦\ude3a鎃趶쀱硱磆±ꁺࡪ悿Ը⇯데ゟ댉砿돉磳﶐㨽찌鴯팟춺Ꮃ퍻쌃독꧷ⷝ纁㇏ⶡ鏯᠟댝䡟뎉碿돀膿ⷲ☧耭⥮䁰ﹾ᠗胣⸢૖䘊绩\u001d¬탵㴈궮鍈궋㲄珮備ꦗ㨘⠅ꂥ꒮뀌憔賆⡦禀媪뢼猚렂猺룡䍺趐距׃핑緲ᎆ붊Ꮳ洪뎨쏚쏄ﷁ鶓ꚷﴡ襮᧡覞ᥑ褾᤼珪룼獚뢂玢惓䎡ᦁ贑緲珬䂂ฬ쩕ꪥꎟ㻛䚸詎䃥쵟ꂜ畎哃᚞嵖ࡼﺷ硽桉悏硱퀄Ⴏ砉揸鴂疱÷蒁猏磤萡猯砞㕇㍫匕씊\u0017ꀗ䠅汍裌バ袃⌁珷磁珏研ꂓ⏨ﹶؑ䦻ꕊ鉁ᕡ뫩æ释ᓇ닒폄鍞楄ꍙ菊㫹㴠磷훠碡ꑐ砰磣㖕傠砽怐碽獎톩日댽続荑⎂㚃珝玐砚풡돰ﶢ茿\udabcࢱ찟낐땔揲叝딯嵫崹⌛Ꮆ쀎롎룭À쑌售浐獍괣菭覇츐샶䀧献룧猞룝䤩⑒쓵鎇쏂ꦈ獁鎽縡鎊\udac7玄킧玮룮렸玱ㅸ珿ⴻ䦥늂໖肥䀣ঁ퍫⌻퇑ၫٿ빲늁痌玝컕縳绮ꤶ犁麤䀊䓞\ud8ac䒋梜絚㍿⎽鴤ꏲ셡ꍏ妑ꍷ~상秉쁠ﻃ偤怒㕩ꎵꌚ꧵ꏶ⁣뵛ꏨᣏข㻏蠒ચⶉ뺋㦯惎\udaa1郋軂䦊猆뎼쵭궺襄ꏒ逦교穒괒›镴鄂豈ꑕ硳⡛碆揤㩬ᨖ큖砻蒶䣰獇쎠\udd61ᵼ☃ᴼ隕碎砶Й皎펲⚬홗旀\udc49鍉愘䂭癪碝ੇ䈵盾ç䦯໶耐ᤙ晀Ⅸ榄ፇᖷᷖ᷆┑\udd62ऺፎ⎰獻錰⣍㡦硭㠖졢ӆ쑏ꃅ\udd11봰皳匵䲑遯ﲎ䃐l\ude29匀뺲狶댐氢⣥㣻聕㢵ꎲ紥鹆펬䏜鎁襸\udebb뚄\ude07똤\udee4㦢쓽㠵붃\udd16疂늢䱏脰햑郖疭肟Ⲵ姙죃뻾팀ऍꅇꙀ雉ඩ肂ꀗ᫷귊Ӊꁩ큀탉遳ᘊ恏\udd5c㔚獗ﴳ贃鷕ᶕ倯᠙郇㔉菢掿鸶\uda16䙭댶돠蕂゠୯ୈဥ덊珛饯㇈莃赧颔꠷ô⎺쏽鴚莶졇팱㷰룸଼還୴く馽斦旈庅騰㶩臾ꔻ駾괻玁굻玧ͷ獬﹎㖴଴ଌ㶡Ⴥ萑\u001f퓢碒磃謹䷖㨆᎙㤂㊩㌼௅䎔茡厙㏏鏘f㤖㤶Ë只φ퍯ᎁ襇섓⁎㥧솮㦗섞㧂硒ୢ砿傲௒磅㈇ɦ㦞㧣\udd2c攊惞얪帢໨ꨀ皛ᖥ襂젇繸஢砲ଓꁲଲ磾ấ⣴惃蠹邅홌㌽쵛뵴ᱪ끱கଵ붗칼巳ẋẹd嵉藓ﵟ獺썝慂䁒ა磨⍴ሡ呼\ud8fa疙୥ꃱ୕ଋ妅Ḝ઄崂崾爥଼庹ㄧ褯恨渪覞ඖ鸟ע⌢﹈⏰뢻硤样䢷ႃ郧嵨囑챴Τ௜挿୨᷑㶑菳ேҋଇ砫௛觺䷗팶ᛞါ﹦茌븀쫊菥攋௻磋େ砪춹畽쵽녋룓呪⑚秫룕ꃅﵔ猴珏ꎓꚌ뎋녥맠原ଡ଼஫렎肟ÿ௒ꕊ釞閼駥좶䫙䡟疗\ude3e釡胑늧ꘞ尮쇖ⱊ釼沛䳣쁨譅Ꮁ犐獿鷫뷾ꎻ鍁荊썟ଫ뢿ଈ讛룄䄦琌碒剪좁桬硬퀗䇞ꂫﵱ䛋墨ꌸ䚤씵䍓匠ᔥ䫧ﳨ໮䤉䃁摱ꠇ렪ဖ耝頜閴砼讌磼謬硂议몲ꔞ縵툽븏蛒记絎䂀닒粈ƚꖨ湵鋺䁃黖耞䠘挜络说砆诌碂诬硪㏘돣຀ӀѶ瑫ࢣ蒉ঀ访诿﷙⇠즔┅棐䣡讠ё謐Ҭ軦仺Ɇ\ud9f3젟Нꁁ郑療镕啋⍒铚Ñ犄規䦙講\ud9d9诠б诃褅诮巯䧄挱던돯팸댛岳૦ꡍ䠒栀䀾⠃郤茌譣௷獛ழ㵧淿ਬ跀諬贷涘㡝讽询၀悓⌋┞䣧䳢廓┸涟ഀ盭Ö䙰ჭ駞稑嫴끃謽诽讖䷭絝ꎕ視釙旣၈로䁃倓䂰燔ͣ媹놁譽证讯͵楟诈뢿譨료莥甠뷣猭涕돇폟䬿讨룿诲୩\udd2c଺ⴢ꣯碷〈_磂䀘恫୏ͫጂ஬㙉玕玔ற\uddd4௟䮟砣䮡鍛紗஄㚆쩨悉䍧飌䯄䮬䬿砗䨟ᆬ맊㘙䎇悚⡅\ud850頬좻졑烅┄Ӓ䯄Ѳ䭤и죖ꖇ╙䪺튆㈝ࣁ⁭掆䌴폑㔠䭱댇珔䮓䌍鏦䤍╺奍│秪椦姊䭄Ҳ䮤Њ䭩鴹꫚䯕䰔㉺䭜䀆䯷׹è줍籹׺ƣ틞씟끨츰娡背ქꗞ롡퀁렰적倧淔ﶉ譚珘竪倦栟沐萫ဤ僿聐♤肜皿耾렉䯾뢁䣉䭋좓⎄᫺ᦿ↛竘訢竰鏩囤䂨磹ⶠ兾굀፞룥䭾롉䭁룷먈쳛珗珲㴰猳诤雙断렔逬စ惣‾㷓䯭롳䭝뢙閜ᄟ䈈䮇파䬇௟䮳䮝룣⃍௥榨恬쫒捔굶只௪㍌譎쨀쪄榴ᨏ;룶萝삪삇롆탅逄鏀ㅄ鏫ጤ鎮\ude77덭㘴졑啚㷬᪏䮻렯䬇렪냯䬭む䭒訳뻞鏩䮗﵍涚ꎠ棘ꡅ蠨硳ö過⣺痪傠쯏䯻롯䯇뢳뎷컽ଥ啠륝难네䃤腩ㄕ췳盺腘츤膳⃁⹌飆碂裳탦碏䯣ႂ䮫ጙ㌷䮚\ude2b픳⻸빶\udcec뤰෽줷窖ⶶ챝姃\uddee阸㧚㍻퍭⌵붃ၕ엟ۣ떵엿؜쮦磜쮖碂뗃뷠ņ맦द맓ᵉק衈黿٪䫥¶槲蓻Ꚁ⢨溌䂧䦗᧠杻࡜ࢧں쭜쯚逼쭖磳馎耝傋硈吿♴Շ僺쮏ꎦ揲ᷦ掓獆⎂㛁쯎쭮臇聚ᵯ裈륖¼䭭ォ쮡쮮쮴ᶪ௛썕紿䬭獗ꇷ䮈킶磶砅桎砻蒃壜㎾鎀午퍍\uda8c楂ﶬ쬀젍쭫⡍쮮碓⍩嘘蚾쏭饛隔匼㋂裻킚効ㆇ뎩斮馷国쬎碍쬮砭쬦䯻猟퍁莜ﶒ痌ӽ裥삑悜пꐰ퍊譤甗痗痜聇쮬ҧ쬜ѧ栗쭌溏뛒붞聍邏낡꙯槑฾饇⺇籙瀡௸Ч쯬ӧ쯜ў\uda92ؿ쮲멺ꍠ猁䁐ᴘ댘பㄝ榪偃恻걮斮堤⭛⮻\ude3d诨뷗䭂팯Ḗ䬇쏡⍴䮓噝쮂ﴬ댫榴⭤⬻⮓鶈菔薒胻槓⷏爈வ稨\uda9f⃙旨⡘蒸ছ䮻௡菚攃ⴁ倪⮘룪⬜혢嚋珸㘫煉ൄ㔺즩ୟ쵻썳ⴆ⭪⬸貊揽\ud9d2ᴏ뫾豰Ꮊ걸傞낅ꊿ䶫㣊샼쭻㶂쭬⮭쬦损붙叚운ᎅ磷킳硇恁ﴬᏛ뙞⮋㢾⬫㡫㠔쀮ﴏ뚶肏脗Ֆ䨒䣺丹뷁肻䩴롲쏖\udaca귅譼檲⇖㉥鵇ᤌ鎨㧵찅⭵ࢹ煸\ude0b㠾⯋㣾⯫㡏뗡⦾⤞磖䛞砬⢂㢉㍝퍐곉⤸ᦩꦧ鈄ᤠ煄ᥥ뵖꧱뀱꓃⭺⭾砓⬕த셜᥅⧥ꦥ⥼ᤕ⤵ꥃ⭞砛⮾磣⮷齃᤹ꨮ팙拮폊폑᧣\uddce䁰ꨣ퉡㥶칠⛶肮۸ÿ驄듚娕褶憝諰䬡⯍獹푛㢇킻㣻㢇㡴Ҭᘃֶ砉偐꯰怰ꭇ㢾逄⭯଼ꔴ䬦팍懶핰㉍햡礭핥薐ꬻ㠨ꮣ쒰ꮐヮ䬰섃햵턗嵞ύ냨ᡩ懨䃳㋔鰱爆餅[窉逽퀕ㄫ쯻䪑卫삇◜䄋뺖눇刧ج詅룾ꁕ裼怰ᗂ珮ḟ哛Ӆ뢲ꭥ렊꯮돢匹㌕앖ᔲ臩挜閕ꬥ롲ꯥ뢕렘ꗀ挀觰꩟൧詁Ც秨쇆ꦻ儋쨞哫胖䙀↰嚨藎쨺ꩉ鎫뷴譊厬⬿መ頼렠룆ﲂ롯䤤ả荻쮿⍀謙䭈쭩뗜⭼掵莭ꭼ롁萑ꭣ撘䭚ᵵ贴㪲⭯\ude48௮퀐ꡡꭙꭘ䡣搃ے㏷ႂ⭠붏鍠꬙㥰賠豭絾\udde9荱肰댋던⹡\udd57쮇\ud940ﻃ덩\udeb4돧䁵ꮋ繂쭰\udeb4ﺃ꬗툮\uda30樃隡庳뵓쨹ビ\uddeb胡肷䢺쒭渫\ud9b5ꯒ⓵ꭋᢍ꯫㈮蹺ࣁჃ䁘\ud813⢦䈅部烇ⶐ嫰貑甘ꮣ淛\ude02博匡৥繊쯡⮋叠㌦녚ल叿뇺ॳꮋꬫ驎넖िꭎ뷀İƉ먲逄浗튿뙺鶋櫂૙䠧觷ᄦ鴌糗꯳ꭋꮫ窞಍Ⓘ붔굦┷獍玕쯶ℑ뉖Òᨂ짖덲⮌̫㢕ࡴ款衄뵳謠讷鶧綊ᶖ捪햴毞烂毌뵘䭎掚ᴦ鸰ᶫ쩱려耛⃁棉렱䗮䌠㖤⨸菽۴͙돪毿殉렶퐻쯼ଯϩॖꄟ䦢殙䯝ⴃ鴠鶭욒髰᫹ص通欉룚毩惂Ϣ⭟\uda1a騕槗ﰵ㕙\udd9cࣨѽ풟ѵ裶順㠏㫃ꮘ䴷쯧畗畵븑殘Әұ殪䢟쭢ꌩ꺚駄駍ꆈ裳㉘評瘢붵\ude32窉昿尭喨⭸ꚷ稅毺ꏳ揸뚍猕쭔䮍酒誱찭釅歑歙殸Ѩ錀Ұ\ud9a2⡱㲥砶萤ଉ殠줹褐쥔╙ꇃ殅碣欥碩ꀓ欣崯퉖譞ϝザژ핢냤䀣঒໢트蚳⃺샄껖࡞畉鸣殰ꁛ欢●栅硅硣殫毥碷鎣䭎䏅䭶殸⬄뒈裣節삅硇㙠悬ᛯꭘπ巢牭8訉竂晴肶聬謒繰펀殠㏀欝쯀ጦ쁡풤炅뀝ꡜ悜增悻ダ鵧諨湈ढ⅓钳聈ꨍ쁃틃쨱᨟퇾駑煉牙ॽ鱦ᘮ㣨壦ᐞ㡖蚨\ud84e쀺䀙#䭾ꮯ팁ꭁ謓䮿䈓㎯ȿ鳙䘜판쎧ꂮ㡢㣒⭴ﻂ湀삒꒥ꁠ᠋䀧㒵컋㢆㡒渆䩜꨹ꪵ㏽ᔾ帺৪鵾䨳\u0006ꦊて脛䚻⑑ꘀ╛㴝펚䌶醤ꎕ㣕㡭胴砲퀓ꃍ꯺뎘ꬪ̔湅倢㖉㠩㢚ꯁꏇ㎹㏙叹㌉춸㹨㺹㠮吅㠓ꀐﳥ툕厑暾焭ᛉ쳈ࡑ๡폩昢㋺慪똎耈ѯ騥畑匙燾쵖찝맴鎪珱煾猢䡁郯棷쓟鱿䄋⣅匦Ꭴ䦴䂿ၨ裬삳ၕ퀿ဵ။撬⡾궃굠錧맯歳ი峪隟ඨ셖隡裛稏峹ꏻ᥶\uda02퍭殣쏔쥦総÷Ꮕꔝ誜ᄛḝ獭〄窐졐룚䬐鍥ⵚ⮉쮆⎼茊蛨᭄ᮤ뒗狖⎓秋獉兮耤ᴯ狁娼虤ᮘᬤᯧ㫟퍯쐫硫磺袣聣擴砎֎歉꬘촭洑髀菑驠荱骐莙ૺ骫砢ぼᮛ碂ᭋ㨁欧ꇈ莓踕钭돇構쬢엁馅웾\udd17䮻猙꯲緶騼ᬊᬛ砂ᯛ磧䗦렏倕탙ほ࡟뀘ᢞᅓ次뙢浾쥀얒涗⢶ᮖ렎ᬶ룎᭣⃞멞锍쪢䕭릕閐ꪁ閜燸\u0007䱽ꥲ背妡庴빠덭溻䫐檙锔씾᯶ᯖ롎᭶룂쥓৖欣쎧덾㈴丶浼맏ሕ镋㳃헴樊蕳⩁␗ᐿ䡙塬려쁊驜렗䇛蕛뫍ᇀ쭉ᬬ뢭ᬜ롕怸졸ᮀ팴茢쬈↋碦譴皖ﴝ\uddd6﷯祌룍ᮬ룬룭᭖썸폌䥊㊆\ud958৔䃔뇻㐒胚涣빫稻䏳▬쨬밻ꕀ踞滗惼ꃝꁯ绛淯晠嶄∥᭭郏᭏繙没썪놇ᆶ챐⎯썼鷕ᗩ叭쭺㎕뻦모폯﹵븏᭷ᮏᬶ뤏썺䇏쎉䘢崊⏯㹋躂慙褐ٳ킆脭팈ꫵꩯ裠ᬷ捁ꯝ覷죁砀䀤䀴ࢬ\ud837塑碓譌鶱꯽謍\uddfd鈌鬻ᡌ魡碬鮑磙ᕊൺ넱쬉ꮈ쯟쯲쇱皉癄〡〙⢇삫襼鬡磌鯡硬鬌໿蹂젨삟詁郞耬ꙣᗾ肻̓븇姘똁፳칀鬱#発魜\ud879껠큡检쀠⭕釲鍼௅᯵\ud964酿磎鮀鮠魞\udaaa뇁ऱ匋久Ꮎ耴퍳ᯗﶇ솦뇠欖녺৖뇿砮魀魠堚午殮뇲☱鯛歲꣦老펁욓㧐᠟ഊ뀾帞ဵᆢ焌胝룃胧恍퀾㷺뢉艙­鬦뢯ଦᭀ퍈薄揲혀쫒ᶄᮑ㴾㗛䭭改傝鬭鯆롍퀈ᛇ䬆ꖷ㒵皅ꭌ븥ᨩ㠑偡㱈렧烔Y㡰⡧䱣뇫꤉≒⃻ꦛ穯꧞䀔狔줹䃗㊬狋Ặ瘳즵榰‛魩㣛鮙㢬棻鮹㡽鮐鍹丙ঠꕕ봡\ud97a狡\ud984軡ℰ肁\ud9de涉鍫눜ᒫ悒మ낂䂦ꐟ汨㣦ৠ⡞犬૶엷鮅↟鄬䷑ၢ\ude42愬ⓩㆶ聥ࡢ帢腻䪩⡹$욧㣧㢗㡧逷㠄ၷ‡ꥰ峴嬗㡗㣌孷㠗鵫삑ﴭ⮙夗匊鮗䬏錚ୂ쬒턫ﻸᮟ䄱⯴Ᏹ⭌ጚ늈샛뚧ᰌ孜孂怬孄࡙⭒去⯏썂宰緂窎ဌ꛴䂹嘸誨温ⓓ\uddda\f㇓橩빳ାꤺ撆倦ᤳ⮸᧳⬦躋⮞폣샒曀쬢聎它耮嬭큮寜ࡻꯂꧻ⭥ꤥ⦕ꤧ⮦ၞ⣎嬆密࣢᦭ꥒᤏ訊팏⬊᤿ꘉ晸䃹Í૮薿ゟ턌甡耯恖ࡶ䄬쨚눨⮰폞魆ꎝ㖔䮶欝欹0錁耬諢R袲咬冀딲宓ꚺꭅ텵ॶᖙ挽宒寲斉秊肇줄駎녽᯾煽퉷恺꤮䙖퇝઼࣢Ҋࣿ騞䃟鯸ᮗ\uddb7䈪ඥ祋孈㰄馠魽ᬤ欟䣓孽嬲碃嬊肷䍜㠏䍘졏䌂㣲䡩핝䀇ೞ헹‐対픖犁픆∵⁘谞递葸谾郗䏕⁼Ӹ咂ҙ꡴࠙⁢Въ꒪铅灶ꀌ葠䲰葶퀈葬᫠葄\udbd0蒂䃛\udbbe\ud807╄礴㇚뱌\udb05䯟歔唳鯒鬀ﻋ驱쓥ë髺ꠙꁠ䎔\udb90蓔\udba4\udbf0蒾\ud854ꮑ昕溰큲ꔰ結揑煃脲竓ﶙ듳㋹逸觢益灡胪똴죘亚曥б⑑ꂕ怾⠕ꁵЎꎎ紧㋙梉ユ\udb55і\udbb5б炑孆௓锰ⷮ晿丹昈ⴴ뵗⨎\udb15Ж\udbd5Ӗ\udb31烓镘ⶳ閷ԍ쩬Րǲ닅㛞聒↦娞蔞聺ꥇ\udd18䀲㛡活插뷌֔뚬Է䆬\udbcf헁⭲揊镇聑ꡯѾ쒟Ѯ삤탘⎊ਗ죛돝譥쭽ᆠ꯫᎟嬒䬯е\udbe3쩟Ѝ\udb5d䤣它μ禶䬪榆夎䭭┽\udbb2邵\udb3a돵\udb1a⁲\udbe7諛崲觅掚酳줉嗃칣쫫胱ᮮ륺ḅ\ud908衐뎄ꏂꭄ祋\udb6e䫌胅붚釓깾Ҩ悁Ё泬䀊뒀렧냤䯻긷\udb01сЏ\udba1ӏ\udb31ꯣ䬒寔줯\udeff\udedd⦻ജ⭡⎻⬀﹔롷죐䢘쁄ホ䡡맾ⴿ顁碷\udb1f\udb21я\udbb2ꎜ熚涙樿꘢ਧ\udee2践啬쩛ꚱꚴ嬅䀍ҎÓ倭Єᣭҁ僕냂譥쬞돥耙陘ડ\ud9d9阠嬗ꤑ⅗ꦐ孤躱℔૲〨炧್ᣌ傔逡㏀ꑙ耥\ude5cᄄ듯ᩳ惟㇋뎹鵚쥉\udb1f끱訴宺滟畳ᢦ跈䛋䉳䊣䲹쳋䉫䋛錚இ䪲◎䀳勪Ɒ玝↉⋂㠗魩앺໻ꦟ雳\ud9d0陝ꮅ罹햊꫒㭫²㬗䈂\n㮫졊㮴薃茁䳤㭍є㭭Фࢴ㭝Ӡ䦸蓑葤胮訤蒯楷怠\udbd4ᖋꗕ䏓嬙⍔ﵢ宁ꮝ\udb64酒㯸蒇牄蓙㬼\udb49謋᭦뵋᭯禒㯵㭙㮆꠸츬㤑頄揤攮恗䧯騉䅫䎨檪㲞ڶ캙㳠䂽ӽӵ恽Ттᬶ⮾鴼魫\udd3dЈ墫㮃Л㮣њ쏱讉ꭒ鯍㮓ꚋᮈ봶ﷻ㭽ә㭃қ㬑\udbd0ָ醵턒ĥꇋᩨ৫刺쯀Ɠ㯪盥嬀䇑红ⅵ挚뉒肿Ⴕ뒧闹\udbe7镎쳘䘇蕯鰩ꉿ㮕疻ꤍ퀍ᮑю⣜é䇱У嫝䦇㋞칍㭙䭤붭㬷㯋᮪\ud998믑и뭱Ҵꁴ懛ᮽ㊸令픆\ud904淋铆좎٤죄腉遧담⧤팺늳₾ꯍ宼姥\udb42쮿䯏ⰼ\udd38什㈯㋀惡焑Ҿ⑘묱Ҹ뭴믤\udd40吆聊胬蒜蓶\ud8ce鶻览頇は鲈뮖Ⱎ䨀\uddc2ᬗ㬤묺᪒\uddc9颚薲\udd3a蔊\udd50㈿䠚묬蓚묜묌ຟ覆뭭륟㭭륦묰溟酔獿帿號訓쪨覚똌Ꙑ⚛稔铡ﴺ᮰㶎↠⋎믌葚뭬蓮뭤聺묿\udb9f歿\udba7拋ҫӥ䃹킛ӫ秃뺽⪍寥儒쮶陶嵅봼慖ⶤ縕秂客뭓譜魠䯦䮌㭚ꮥ엕㱼陗悾ꑂ陇\udd7c롤穹묢ꀅ묛Ҕ뵲隱巍⤛妛䥖᫾ꮀϻ킏냦耱訴晬⫬䶞貑䧙ブ啵沧ᶣ뭫҅뮓묻Ѕ䃧м浗зѷӆ悏Ӗ㩹涅ø찝⅄牝ℤ狲⁹沂賊਽⇥걺긔雗뮗҈遷뮜瀏뮅뀔灋雯늡㮈ꨑ㭀系\ud805荟䕀孡\ud978જ㯠寜㮐\udba4૱\ud971℻쵄⡖삚惘쀛总っ梺꣍雐篷칲㯡㯾ꇰ等첸㛄㌧ꎻ嚄䃺\udbb4经蠎\uda42봺曙〡᨟∫䉙챦㭋䰅챖㯅찂쯥\udb76㭺긁ॗ숈衄书픊踦쥿С㱐萞끱栶쬰鮺㏌⎩蛼娾噂婛郙虢婹蛊笀蒭㡳箠蓠滈깱嘨ᕈḽꤿ嫤뇳ꪇ慒缾ꃡꙒ⻙냚앯뮜鮿\udb6c⮒뮇⃘䙕䎄ﺹ煙ヿҪ箖笠蒚篼ꯗ뷝ゼࠍᯚ逤䠨砧⡇ЧЬ푚笈퍔፰鬂뙤믊\ud904ᕁ⑻ө箇ҳ恙笗㘌뭎䪖任ᮬ뭞Ψ碻ᤰ恿똉ᬐΣ᫲䷢蹘츱ꍉ㏲讖釨ᗛ㯵\uddfb쭛藒믢星鎽ᮦ\ude22\ud9a9篻Й笕笽箔蚪бњнЬꔗ븾\udd74礫篪Қу胚҆㷘ꭁꕕ㷀ୂほ筫箇笛算犍덋珎挿㙸䭳鶘댬⭊\udbe7㨵쯱⠶耉ꢛ怅ӗ킷Йऽ쥪ﲚ⁺耀‚₭噄폯뷼鴺㍹箺箦뷭\udde4믭㭭根ѿ篹҅р﯒陘暞㏙釐ﯪ″챁贽ꥮ䙁웧\ude26\udd9f텎㏞乡᪀돝餹ぉ遽鳙ҿ筹Ѐ﭅Ӏﭯ欢季䯙뭁笳⦙䌔葵둬萻栌葄謢ᮠ謖꘳뀽䏎﫽䍮暑䎞﫤萡더葢ﬤ倒ﬁ囐驡緋᫸婐ԛ鎩ԏ\ude70⚪๛䆪皨渧궞畗䤢兝ꪭ殴鮜\udb76㙪ﱪﮔ蓔蒗㡚ﯴ蒎鹔⛒횒ᵫ삺﯁ꨚ兆﯈⹒ᕎТ䁿偱သ䠜蒞ѫ䀪뀫앏緅돓펒箅鋒粤阭e鋴娮㬧魟묁遯槱䁿뭝챆碌箰‑אַӑﯮѱﯞе奚棛偂먿畿븨篬㭨篹陜㭾햤踱ℸ篼㯥娀ᢉ钚ꂭ㣖⣓䲮鲑ᡲ浾槵ﮱꀯ砫ꮔ氬痡ꙸĻ\udbf3僑ꘕ鶢䧉硦촅䃣ќ䡓Ѭ뢳ҥ䡥횁ﵿ氂笋䈖㮢箳䳢筥\udbfeꏇ춠⍀ꊗﵝ㧢魧㮒鮏陭ﯸ躡↝﬘篝﯇䎷ꧠ⣷ꦔ੝逦葎飑瓁ၮꀆ㣙と㢬蹘젼窻聻쥅䖙聶惯똔쯚酉郊ƌ䀆滞ⲍḈ嘟끃⥑㻃戶肓躧镑≆䰨ߢ䃬摪l騹ﭏﯨ\\࠹ꙅﬂ谶㊴莻ﮓҶ퐇﬋假﬋Ҡ蛉ѭ郷Ґ㘋\uda2e⸅淋荂ヂީѢޙє甌ͣ鬒欖揼捉Ҭဢݩсᖙӱꗙ쯮︡姧䯌歆ᬧ댁鬓ꨎᢨ蓇瀕뢉㓩뎻쯜鯢᪐媠巌팠騹巺贈㳊팆ବ䎖䯟獤팾ⶓ䦖폿ږܨ葨蒶ޘ蒔㐈\udd93ᵡ\udb87년ᤝ鬊砄諌ꬮ猫䄛ᵎ藷컸꫶衁쪑ߖߨ葶ݘ葈⍺Ѩ偍兆ѽ桥\\䂚⭉猿ﭧꤑ\ud944踀݅阽ﯘ笠܉\ud9d0聫蒉⇃㓽②㲪퀕僱ビ怿⪔߈ݵ쪨޴ܘޘ膮駥櫄䃨膎ꓣ툺酲Ⲅ햌嵐肒崌馥ﮚ܆й჆ѵݦҍܔ݈ݰ黬릳ߨߜ୩눦㮂箋䋗ﯫ劒篖ꆿ춉幗슳ա卵᧯ﭯ묛ꤟ믂ᣮ㬙黛ﻻ꤬އኖз₎衩ࠊ椿筲氌㭨쬺筎媰쎂媙虆篾噠ẟ訰蜶Ӱ蟶ѐ怋\udb59ꪵ톃烶篆셉噑ᮋ޻⒵壴䂕긇䪙됆웞聤컟䶥ø\u0016聞츽⩃퍉閼ࡖҰ螶Ј蜎ҥ쯯歪କ㯯管⯔즇╍嚐驳䍵梅嫵ᬔ隨\udb02Ӿ䠘\udb22Ә\udb4cヵ剻ఠ\udb3f劷豮䏁⃐\udb55⁧䎬ꑐ툑헿豑햲葯騊蓨鳊萿偨擪萁䱶蟲葠ႎ蜯჎蝪蒅\udb0c⑈쀠⒐惻퀿묑ﷵ酲悒ɣ\uddc0쬢⢁蜸쎠⒡蜐⒧嬓ᮮ헖▢틦旀㮝묥玫斳㦋뚧똉蟁蝠②蟚嬨欸ⴭ큯똭ᛴ㌬Ꙣਾ펯Վ캬ꚾﵱ絾胸쳍왆쐦쒡㲣ꀖ쑖쑻믒\uded8蝦쑃蜭恄丟癲箉ﶷ獭宥ᮅ屩뛤댍䰋℈﯐鮹篻펏礅蜤㤋뛣蟷蟦쑚쓃蝐섰핺﮵蟯ⅈ셳蒐⭽탔䃏教ꙮ仹ç\ude3b᩻ꐖ耛Ṡꅄ倡耕懛惧ᣮゆF䑒ﯧ㭏ꍝ㵴皲鬼샲鬩癊鯩皪鯿蜺䑀䟺䒠䜁嘺鮣盷㻍瀢፩釰言疠䅢냁좻亞욲Ř乺๥犔乘䟅㭽篣鄓쉚䐀䞺䓀䜆䑆䑅ᮝ掹끤Ⓗ袔ⓔ⒴퀻ᣃ쁞鬕믿놀纰°셒쭘바ﱰ⧔錊뵝廙蜨蟚篈פֿइ釟ে酿१醬䜔①T⑘㲴Ⓝ샒ꖒ䜈׬줔ﰧ⧍㍆ᅬ쩓횡袱㨋⎫ᴭꆾ⸇̉ᬚ눍珌⭙⎠䬕\udb72ꇺ䜂䟆䟂䝲廪塉ⓜォⓊ䂹琋߻鬜疱銖췭綪܀菪ݩꮿ棡䜩⑩ⓑ䟆⻉⌃뫲⮙㷛\uda20뵆䞑䟩␱䞧㲾⓽ⳓ䲊僁⓲ü䉡丆쪡妯䪵䟾␍䝁⑰!␨ꍃ\udb3d篭涝䟵䞁⑍䞵惈ꍸ䫑閶嚦滁郔펚劶▊﹐⚩蟌㎮䎩න僂쓢낺Ⴆ〺ꡟ냮䅁洠㭤୦囡ꀐꡨ䀏롌쓠梭ꡯ逸郉툻䞢쓻䜒쑇䜐覸骖喋丈Ɣ文凮亚\udb0e痴䁊觑㹬쎋ᵬ\ud9ea髒\u0002唴䔐쎯ꓑⲻ䝢쐇䞒쐤逢뭥㭢뮌讂ﯬ欅몄찗̟쒖샔ꀢ耾ꂜ჋퀥첳︥጗啙돺騄쟟쓄읿쐡駇뎭嬥᭜\udba7몘菛熌驉떩䝚⦙槢᭑骠莱騐茕맋磸읟쑄잿쒤읿㶪ᬄ퇪᮶⫘똯絘ᚔ虨쑖⃺頕恎⣵ꌈ賄믎毚⭀ଗ絊윘쒪쟘쑆敹ꮝ儫ᢐ떫ြ毌᡺歱딆歞䏅꯺윪의쓪잜䝪팑餕䷊р䑟꒠䓠䒀\udc23蟃篱뎳譜윳槄᭒歐᚞유䐂琾잾領ᩡ댰ଭ᪋碫鬲熮⧏댼蛡쟞윐䐳蝃鬲⤓ꃡ僓萙䑒s蒴웡猊⇾읦䭥넧䟛஼\udbd3欩謔◹覹잓萅잳蓌ၣꀣ嶗⻺匴䀥襎能엩暪ꖛݽ麌䁬쏳쬊끢䧲册啗殒覝쟪ᔙ譹읕㐳葅읭윤Τ袧ꢫ⃀꒺쑹㋠ꓽ댧箞\udb07臚栲だ胵뺂ࡐ〲첓뗪桫잀꒛잠ꐨ瀺䂡錂␆ﭾ椭텢閚ꕲ꬈衏骵Ẕ䁉笤\ud85a癉郮愢橧星䈽윛유ꓛ잏잰뎣샆궯溯쟠鏍믨읓륒蝾䜹뭓웯␜邤ꀰ쀫₻胓\ud84f묓甍탘鵗딈᠓⠟Ⓒ⟟␄❿⑞\uda87╙鷜䄚\udb99疥ﴐᮬ﹡⬒魱쮑⬠毙ﺙ꣔삍좰裩ႊ샆탨疉죘➟⑸✿⒄➤蝾๪䙌❍︵謿㻫㉑㣰事훓쨄調ぜࠅ酢ᡑ폎厲쓯࢜쓺聛㬎ﯟ䯭毘쟻ﱔ压\ud90c䞹ग़㈼聍㛖Ⱝ㚺볭㙦皩㙪廝㚥ଖ뮐䞼﷠曪傊䪫訪䫙梼ꎈ暆⟲쐦➽聦➷쎒ဲ핮❉㚞✭냞➺틂嶟醘櫺\udb0c妈裈滩¸蘺➵࢖溩耢䥑㢞词쵀쓆➊쐱✪쒙쉹쑘쀆ᣳၙm샊颱䝌쟪䌶➄沎섀酚읐䝱盔⠸삧烓倛乾療墍➅쐭✥쓊飳ꯦ䩋Ủ젙❛ꌍ큪䗝੟蟱쑲광犚젹ヴ鱞胾聚ﴶ錓숍✅쓍⟅쑭✩槿䯋⟋Ắꗟ邛䒔䀛⁇\udd97铻䓠䝟ﯱ쯪荄᭻଑荓魏❗렯✻䓯➡鍣緘䬶ᘳ檳Ƽ䬛䑀ꟛ䑯❻䒅棥읱ꭳꄀ쨨⭜歐붎ᘼ䑼䑠₈쁂䐬쀏恦礮螩䩱厊ㅐ鯠ⴻ螪쭥景ꏼ鍹卖燒⢸꜂䐄Ꜣ䑕蝱愯蛕厞ﶔﯟ流燍î算虋홳ᣄ껰狕鴬䘸ꟼ䓸꜊꟮耙敇孙뭋蟬➇ስ⑵␽硯惟蠭⓷겙䘴꜍␺ꟍ⓬ꡱ⡥犗栽׬䃦泤⁸䘨⢵䦖✜\udbd6✬윎❪玟ﭜ❠㎘滖湶滲䪆꟥쁚ꞍⒺꝦ꟱↷Ց᧲⛤⃮폶ꜭᘋ傿ဖᕯױ諊ﵱ䤎\udaabႎꮻ閆\udb5f䈧䊃贉샀瀤탿6␹擶⒞ᅗ딅꜖⑅ꟖⓀꟜ릌윝\udbceꜳ෻ﲧ棯ჽ✁⟚̈́ᡴ嶟「嶩Ọ崙Ữ櫦⒖Ⓟꞵꝶ⓵Ꞽ崽௼嵥Ỷ씜犩ւꓡ耳⃌꘡꛶䘡䤨橢뀛䀬춷䣓ẅୄ嵭㙳ꝕ즕蓕营梢哵蓿슥࢓死읖䬇膠톣억郰ꂕ뢽〗駇ꜵ葧꜈騗ꞃ聽š튃ƭ⦪ꩌከ깝蘢닡贪눢(ᅌ旄䃡຅ߐ無呕蓯ꝵ蒟Ɥ萼\ud8eaꄹŶⱚꅶ汧ᬖ쨾䝯펦䬨꜒퇥䕓줹茡䔍킨Ⓒ䂼ಘ⑯尹筈ﯻ폯\udd2d䔚⨫曚⫫昵⓶䠴朘⒥䱯峑䌐ᴧ暶⫦죛꘤ᴑ难\uddac쟖이骞䌜읃쌩ﮘ읁ꯞ剜杨⒴杼杽\ud98aꫢ䮎뀔쐜낆惌ီ颤喟✞ꜘ\udddc쟜ω쬊蛚杔쑺枴쐋煹ꯐ㫍찤᷉藘鴵煙덭ゖ枺朴쒤啃枊✲蝆ᦺ␢ꀆ␸倰ꂦ␜鬊䯒螊枥繁ᦲ珰඲薡偺Ⓛ杆②柪ꌔ륌榑畱词﯒ﮖ뮲ﮕ稺珷﷮ᤑ襞᧑觉杁枥ꐡ柆⑦샆襖獽稊촻枋亅嵔泾퍂ↇ愣븤ﻺ⛖࠱閍繾胲㠹䒋僥\u0005䐘ꣅ䑐¥䑞뗌찌ݮ㮔뚟⅌ݨÉ笉䥥뭗獼ײַ殪ꝝ➎㗭䁎뀣柹䒿냣朿႓染䡧꺊ꩺ૭ቚ郾ܙ쏸㤭ܜ㯿﯆螱\ud9d0宠ޤ㸎~飆삧큉苌惽⃞낡搬ો᩽퍗枝릖肄৮肌䃓䗙愃륽੢낂ꑸ䃇뉜삨磲㠕䒞⡷끁⒵䒡\ud884袕恇陫⧈䑨ꀘ䒖環촕莳朠蟳杍\u001f䊧鮆踠ꕊ鋉מּ村松朱柈第㮸蹬㮿ﯧꤏ朐\udb5d߀ܰ嬋冂ꑐꀃ탎ࢂ梅碞犷鯈鸅⅞α㫥꺲嵬㶪秳홳ᢶ榰捿ᓚ\u001b闿ࡥ爷鯌牭㘬黫雘Ꜽ⒫ø思좹衂␢␌未쬒厫敹㏱촟ꍕ煆⒦⒉堢⑍厢䗧諸晀ꪎ뵆鸫ᶠꗖ\uda4d썺뛍螶椮耇胚ꖹ雅欘䨷࢒⑦ඎꞭꭎ﬎똔捉協损ﲳ苺㻸朤웯ú⃨샞ꀆ桤肵㌙뻛捫쁚℻C㭞䰉腽致唝ꟾ鎸\udeaf亻蘟万蛕ꀿ丱뙅꒥ꐕ﯐肔ᗴ㻵↸텪婉腲觍뀆魚㥲닿뚢\udefb᧑㻨ᢻꋫ䝩௽ꍈ盽ꓥꐯ嚌揫ရ쒆灚렻쐷の䀮久눲詒꜌틧쑗쒷魖➐᭼㍿떯⥤譫慑⊷䁳愇劀痒括×枡⎧䟳ᮓꙢ䐴梚⠄ࡔ⠀샗䃭䧉툯탗쒬蹨㎤ᜈ腮㰠ង畀疐៷ֻꦺ쐝饭灃툲詈ċ耑넣鹬쭬Üいヌꂔ豤|샐ҝ쐑某猂ﭭꬭꞄ泧ﲧ蔹蟻嬇臞Ꝗ溶渎ᝍ쑜ឭ쓭쐐ꃊ滥秌훧諯Õ氎魶蕫ﯭ\ude0c甿똋㈛䚖텨緮䇇耀椚뉱뮍⬰៲팺᜾꬘䪊វᜭ쐼᜝쒲ူ\ude37쐚큮렏쑏쐯쒢䟮\udb53ꟲ쇻蟳뙞᝷쒾ᜊ䀯쑕蝽햕쎖乘㧕쎜煰ၫ갠̨悛ꬄ䂃싺ㅢ낚국烶囻ܠꕔ䜪Ɡ欂ଢ଼\udb7d뙑᜾ᝮ~ᝎ萤ꝲ玶챹䫉ឬ鸢⣃쒵ᑣ쐨쐱ࡡ렁ឭ⯉⭳㤥螔㧭ឣ쑘ꡝថွ᝖욥퉽竧訟茨謳䚹⬧卖䪑郬╣契멶楬ꮔꙒ窿↢㈸砷궟꟟ڵꠣ쒝ᜓ쓓៓쐅㩳៦氟茔诱æ늻䆎쳫ᝳ썾ꕌ啊⒊䒿끄킧ꐞ惪䐏蠸ℿោꁿᜪ䒀霹䃪杣挱厁촂䲉매촑ꤥ㬄杭\udb84鎧៌읤뗢ᝑ密௦䦶ꌂ鍖焊䑠韊䐀靪䑐霞叀揞초韷֑悹囉탱쐫䕢郞엻딂軳僯ၵ氵闇쐭ဗ蠌遇聐炇ỗꝁ߲쇗㭅笣镼鞧쒂霗쐢韽㮛ᕅ㭞̯獢廑櫈캤⹱鯬蜁晘䃚ᴅ㪈ᔍᖄ장돓്䧆Į2霂韧쓂靗쓟㘆鬹윉ꠇ졭蒣᠝蓹쀮죅ﴐ✭蒞鞘ꉽ栾韝蓭瘝㶌Ԉ⟍⑵ꍆ᝜揳讉鬀ﻼú灻ꃓ䂚砼괧郾ⴄ괞霯䁞韁靝蓛촀ꏑ靂韪¢៽੹昈嚠䨵瘦陛㋙嚻䪓ᎃ⸞䀽唘ͩ存으䝙吣ᚩ䒰ꐙ䓬怚࡬ᩉ䐂ਃ韩䒙䐣鞥ᝬ✁鯽᜼➸\udec4㥡ᜣ᜔㧚ڽ萩䐕좃靓韕삎봹꫑蝪憦Ỗ刽僌姑᪲↳壟졤䞎胘岝ꅼ宑蜇鞯䵡ꛈ鞮ꟳ馃Ⓒ쒤£␰ᶍ꟢묽霟ꕣ獢靜⯕菃䟚華韃⑟韟뀿霘᪎挏筓樱첚ⶎ枱찬⤭礁挫礐垟韟鞛\ud8e9尼聶邒⓴쀲⑲⒩耡䁕牂⹤鍁鎱棲䜼㙭㘶剐¾⟶㛢␄埒Ⓟ蓄圊␧៩៾鴪䟔Ꟗ঵腁㚑뚍膹퉬坒⑄埲ⓥ펩ꪔ坒鎕␲錾帺凲鎺툾牌垫➜燨誗훳倸줻\udbcd瀙兞肂䆣蜰\ude9c쒊ꡲ⠕⡑젂쐸霌⟄朮޷䬐皑蜬ԕ簹뚉말㩋茌튆褶垼쓶坤聒ꋀ坠㯧䝋韃ៅ螫靽뛖埜쒶坼쐎圜Ꞓ똱\udbb9ᄾ執Ԟ䠢\udee3淪肨얠儵揎ﹰ任介훫θꐇ끶郌傑烖츤꒪赾젟肕圄ꐵ埄ꓹႃ䜺ᩃΖ̛ףϛԕ㍗䠍坸ꑕ垄꒵坬趄⏏썃햐퀣헷Դ渕㘑ꢙ曲嚓㤉ꄵ躘雞ﮙ㧮ﻛﻈꝮ垨Ꞻ跤덀熐驓垗픅槈ꐯ ⁘졍偘ꐤவΰ䨒昧┥长鏳鞘䭊楶䯣\udbad▚榗垨ꐷ團ꓷ垲✗訃└蜞锘叄凿᚝૝쳖\uda7a鴨襠䍷悆湎⬍\udd8aௌޒ秿埗埨ꑷ埘ꐅ䀌⑷悀\udcd8岬⒩ꀪꀼჩ㒫ત흌␔휛⡔휜⒴힀蟇鮌ݤ狌ޢ䭬ޒ⮭燝e晓ߗޒݴݭ㴂垌枭뉷朝ﮑ\ud95dﮝ݀ݱ\ud93d޸笴크\f胆큧졚뒛怶ꀄ᠂ㆈݔܴܳݷޘދ䘱는匴쬎葂홾ᗝ蛨Ų鉑㤹\udbed緣ᬛ䞸덬፸쓿⃾킢䀤쑤쒥잏륕잉霵융腲孱⮌ᎉ⯊嬱뚋쐴젞힄쓞ퟻ\u001c킩圖痊陭⭐ֆ孞ϑძ绸ꗀڭᙶ槪襻䛔췤䃻ß냹㸀楍⭲鎖착힋双⟂텱䟜䟎רּ癑ퟸ쒞흄쐾휒畵梖葍瘶萀ࢎ蒔᭛ඞ竝썝흖蒼ࢶ蓽휾顎葻埭뮕쟘霞\udbc1ᜀﻠ诂ꗹ쎬댖蓣ힽ흶萃힢ꏸꛧ帩ឮ饎ꠖ籐㩲蠪담֚뚇ꕥᴹぼࢻ除젅㫁滔掼鶇䘭䐼탏㓬ᵙ౎顳ᚙ덏鬲ޖꡟ靯ퟭ䒟흟걃䮚줤헎휻흖紇荠埑⏳傯흭䐟힝䐍뎗荊歐楑䟓綡謟ꠏ蓟ꡪ萖튯葾傖㯚ꯐ唂烨ᢖ큋ﲓ೗Ѱ㏙蒏葄㜯蓟ᑾ僚\ud9cb᪺\ud94c믺\ud9bb᭞ͮ뗳䄳뤣ऺ⚲ℙ禅փ캎ꑨ晒㤒枯霳鞎ﭼ坞\udadb薀笠羅実䧸㞬㟏葀逜㜫입핌䐔벬䒓胉⣶+씷뷒㦫핆㜬䒹l䑦㞜䒁ខޕଓ嘅藸ꬭ拉藄쎌䐆Æ㟶㞦㜜䓶 ퟐ純Ɜ믾ꅾ聃빺㇑ธ쥘䀗귐亘湧欄難윲揥㭾魜䜣榏坃ﻊ\udb21﹜≶쓭蠖쁍킡ꑼ黭埁꨹︬쀿悡ᡔ쀥ﺗ욹㜢㞎쑅㜮쐠흘\ud87dﷴ䂸⦩֨仜煚⚈衃튇難利뤟訬␯锌不㟶쐅㝎쓅㜼埝霱枙㟶汲₶찷⛝㞡ﮤㅇ更䁬쩨ᇝ媵쥰쓤㩨䂐傯磩㖵͒蕆뮖Ⱖ믯ﲵퟢ䵯筌㭉묇㜰聇㞈쒧㜨쒧㮹朐䟟✋霒\uddcf顒\udd14怲\uddda藲\udd7a蔿䢰쒯㜈쐧㟈쐚楞믯聗㜞﷟㮨ॕꄱ눽⨀ᬢ䃘訂ઞ餤쇦솻뎪ꈮ靫룗빮쒔삑頱吻례뢾쓾쑤㝝뭹蟂埑坅蝇蜱뛭랞쐔뜾쑾쑭ꢯ㭣ⴙ‛삀 兮由ꃑ闛ย횠儵ࠑ纺㗠嚖阰묀⴨䧡퉼랾ဂ뜨✩㜘쟓謒믭嬆踷嚣蟢儬뜞쓤럞쑔띭꡷䤮큒ꁘ〶ဴႢg䑻悎޽议坠䬜⟮꜑⮞ꟹ筙ꅵ잰唽崋殇䐖뜧䓖락㱻惫毷㋋锼庴᡺꺡꙯骈橮丱閕䃗妷굔䂏嬙謾럇䑖뜶뜞킮溿欧홫샦丷次럁業「쑢ೌ쒕⒞䣮ㆳ흟歧돘욠灻情뜬쑥럎㞜⯤ி➩ꭇ菴쒵띌쓵띬쒗犱잭䙆޷ପ뗏돮⯤캽啣䓎偁谎颙耚悳䓉녃휅늡䧒獒薁﮲藙蔁흢殝Ꟗ묀랶므띲\uddba薊\uddac望랓䐳뜳䓖䀗㚒蔖薶썖蔧뤃鏧㈌蟆媜鄡幋⌝藄䃟誵ṿ襌⭨韬\udbbc埋蜻杴ᰓ뜓䓓럓䑳럓꺹㣒債,⡎頒⒇⡩늊ꨕ᭏ឺ뱊ꛚꇑ뵔⛦묕랚럆ᖵ䏢힜✮럆木ﮦ笶閜䎞ᮁ즐矷␰睏⓰瞀낊淈\uda28该퉨瞑䀪册䀢䎻묜䥰ဴᢡ耩晷恗늘渵ࠬ벫첺㦾뇩㻷矐瞏⑰眯␠㝣婩ⷔ卟焠쐮袁烪Ҵ\ud850쑎괗빯駯坮띟煴ꜹ厕諜ࣽლ矠쑺矖悧攼뜬䤪韦韷㻻탹鎣쪆쪩櫡붋헥,ﮞ胉㦖鞘௖韻캧⟒Ꝛ睠쒺瞐쓶矆韹㮦鞅㬮眮쵬Ù肪⓪⑥밷ó섾厩眪␤퀙瞚ⓙ矆睤睖煦眕矊ⓩ矏䢙睚␼囵厭鞰䍕ṇ唃㝆傌蜵皃᎟課量쫝饱燁瞄⯯ꖙ쳑匷燍眍\u0016鞾ꗤ촚睃贒࣫䁞䠪㓽ӯ縸枿뜒笊杏㝗\udd9c큗䑋瞷䒫睬ꌑ垵疀ଧ瘋跧瘿\udd57癫跻瞋眷䐫矷䐂柆茐㵚৏箄漢枪ꑮ堿䑳胡쓏䢉२Ꝁጴ⬟࡞ꣿ矿䒧䁀땧暛眒蟴ᵩ㞮읒륁잼㙦₼⬾돂﷾돠䐀郾欱䎴ᬑ대ﴟ瞒璉䐪㐕栆ࢴ䑎腹붗ꔯ鱽踨뙅홂푒偔䐘ᡴ箄睍贈柱䝎럟㝟⟜✟垤䣷累狀遯䐴䑽뷤﮶옐㤦ퟵ૏캵뙑멌䷧힋砻ꚵ堼붣앑熬ែ磎⒱耻䠞␺␗䇎஁ソ髾\uda7fꬲ狱霭ﯹ會⟥躇塦஧섮㤗쇮㧗쇂飈惖⑶␶㤏腐ⷮǚ蠱䂇凁ꚝ㏣캮맺婕畁耸ᅖꥎ⒡Ⓐ⓿꒛ⷕࣞ亼﬋蜂ែퟮ쟍磏ꢳ끑ヅЙ탫萸倪〴랹蜇錴廊鹆㌌幎詋萍蓍蒥虸馤斧Ჶন꺟ₚ㕩鄋倀皵셮乒좷䣔䁂℅㫸²퍷孄駀쮋蓵葍䉝鞕㯍Ꜫ猨韺盬馔蚋䓻䂜䠕梖ꐥ믠✫礷䓷䒍랠㭧眺윈㞂㚯䒖ꐘ᫠Ꞙ㜳빯㝮接﫝ゖ읫鬋㞧᮶ꄟ⁮萜炞蓢蠟葶뜏㜎럾䝾➿㞘㞓㜳㟱ꅈྲྀ琨༂聨༾萂㇕筴ꢵ第뭫実醁育º鮇冹鴍鞗㤘솥鮘뫹酉뜀Ӥ࿮蒨࿞萘ྪ㟣筹䨚㜊䞊થ)⒙횾⒘퐉킛ꢌJ쁽ី༒瞉젭홷軭횏蹝혯躽혊࿃塊཰⒪ྈ⒂镠휑曤祪韂克縝쀢વ堉樬䵢낌䀟茎鸿㻝⨸耝卞\uda94乤禖䩷㞁\udd4d꜀瞍흡夦༰Ⓤ࿰⑪࿏芀灙␞၅쟴ᒨ끶⑌ࣹ湱臄ᎉ栚聋ࣇ㧅睎⫊ۗᣎ䠄萚۰჉툉༹Ⓣ࿹⑩༁嚼ᏹ솶삱.찳쳈ḉ빛ꚲ憐끕盨溼ࢨ엨䃔쵳헊ᑘ똪㩃瞙헡༌튕ཉཹ⒩྅⒱㕼\ud8b5逷〢烾琟껎샟휨㻴眶㯰྘霶霙욶䑋༎䒫࿎䑓杘莶잲枟᜻ଭ랮歈㔞欇㚋࿶䐫ཎ䓎삒을ᙁ殅Ûꛓ\uda0c藍砯硩쐞蠟꒟颅i穳ᘁ腷ഛ뜋흁២需﹣嬑ײ脆ꭀ辋砠辙쓠辥킽鎭⦐跷랃脵嬴ᡩ▓㡃툎섫埾ጱᮤ麐雥✐氩쓀輙쑠这쐁梐㜘힮ܙগⳳྮ䑷䠐偫郅硥Ⴀ쁭ី韇⦧䂖๴눶ຌ닶ຎ๮䓜辞䓞䓼輻韇ᗌ혞庎⻜\udcde床ᦞ泑爵깚鷁耱犻␞㎮妙៧ﳫ䕵ᥑ療媉躥鳩ໂ泟觩庹ฤ᥏衜輞䒼輾䐂辣࿽鮿鯯ᦑ蓑葽山蓭聾쓏ド萸ⅾ輱蒁載萡迋픩䞧瞰៱Ḻ날䢇䃔뀝삀颸炙虧쏡輁輻辉蓮䃻讳Ǚ䣚Ƥḙ鍑뫆ꦭ﹖ࢰ⚘䁯袾䏄ꍊ㝟ꟗ槺뉼﹁쐵ꃥᡡ쐋࣒퍷㴠꯿靂ូ띎毞̤胩玩퓢䁙猡ళ碶樰僭辡쓢そ轷좓⎱᫖㉬䠼䷎཈樻Ꙑۡ㥉邟諨䁔鲁쐋輡쐁Ӌ輑쑈ူ쭤채ᵔ매뒦䐃æ䒇\udb56䐝➡࿻ྪ㟤㟝뮄൦Ꮔൢ鵖Ꮴ෬♅墏迏辖䒑吥퉵쩽㉕쳬瀴涼鵉懇땍癦鬫颦婚뻸諛䚎瀙噡肻䨂ྖ咠俻퀯辑哂䮱찞ݩ粒伯䲰佷뎭ខ䢜쁻⑴ꢯ遤磟ꁋᣤᅀ耉䩚퉩⟕䱸䘆퉍툭랾ꕰ쯹ཻ蝄冢圍膡㘱뙴侻⒪颌侇␬伌๳៥湜俦譈뜍턤ꆳ镝蜪⣌㵜ࠣऌ奇ퟆ嫴텳䀷ᯜ衸眀圇྽伌伇Ⓦ俇⓬亽葍ꀃ葃葍逭둣萗䇦丸쥍殲试錁䁙अ㟱ꄞ럝巳歷ⅽ蓎依傮侣萹溞俸Þ伢嵰窢稬⧿詜㹅䠑煫䌖\udde0嘬ⓑ냦侃迒嗙᠑俺逮伣董蒔蚨䓣댘䑘䑈ꃤ䬀쨠뷹伙侎낕俨䓾蠵伽闃輲ﯢ歩䝉쬤᭐ᚭ俕伾졈ꃱ茦윞칟盬ட㕸湑䐛끛䑉㡗롤傂輸韻쟲쇒ᝢ渶滶溳伱䑇ꡱ䑋俅㋪渞䭀맚ឿ튑묙噞쮉뺉郀䙏㺫⠢혢䀄듶丌㇓Ṷᝏ흮솯蘡ﳡ痧晎这郜パ䓳伇例伉䑰࿑杕㮸埉墚ꠜ⑕⋋졶靘莄떯箾䟘༟箼ڀ낸⑰쾄⒈켤Ⓜ伪씢圑뛢俑뛍脰콸␄\ud878쿄⒡鏎✓9ꩉ⟶씝㙞⟩㛒邙㛶씚坿㍤ߌ≥颟骐脳䂗议⹌獫쁴콁❭㛌쾩➬켽㚌坩뚾⟪嶍⡟蒨ᢘ䁚て祒旼՛〉쿟蓪콿葚켃ےᶍ佧迄着殰鮜Φ村㷿⟾㕭ㆪ켿萚쿿蒷福玜䮒囱\ud8f5끔촺蒤僺蒆蒗栖蒦萖䊊螞쇡眣꺾콺葠쀁쿆蓁쾨ๅ눬버켕얳惄ႁေ瀖ᠦレ肶ᒨ猅偑쿾콆葁콾ᓦ畡켺滾胍펞ഓᏣ臉뺬曫㈂旍૰ͨ콄柎ގ랇ቪ쓢袚쓚쒓᎝郴萫例ퟰ迧䝊ٿჅཪڄ肝탥༴Ꮺ쓝켰ҽ쿺쑗蜃㬲ㆌ稂⁤띏胖疇줸魀櫨䆇ᯉ藙ン홡聋垘䀀ᮿ턒肯욿ま聖࣮慘휊ﺳđ魫蝠醱겫쾱ꁏ肍떺밐釅䀻쾖༭ꮋ㝍俙့衝콯瀽쾺쑽켟悖\ude78䐄䐺烄䑹욻惬섑蹐⿯倰⾸p⽤䐷࿕잗㯥蹔ꧣꮣ뎙\ude48⾄䒰⾤䒺셶䤗턚퇰㆓ᵴᔢ㣭㌕掿ྗ褧ꛢુ꛵쏶☟嶠㧐ㅮꤵㅷ퇐훓睼ᙒ㤗촿쾬⟊㜈ཤ㙧⒆裯뀮끿뺕僒⼗⑲⿗ⓨ휻㭁莨햙딗箭葸ల⾗⓲⼓䘇뢽래㜹쬄ạ欨⨈댷輙黰嗝䓳ၽ䒥퀰遃䐣䐃콰辮㜡뚈輶ᗈ農ḽ䓎⼃䑮⾃5퇦릆말蚍털曍톍饋䏹񡇾ഖ溽읓橗᮫䦻䨍⯜\udbfc鹨偎⾇堮⾃䓳⣮⼊㘯묭鶴쾾朘켲螊绉턻و㱩텍튬麧葒㐖②》ꃵ킼郒䃏ꬎ⇈پﮩ幦뉷嬹๹พ柾❭ꫦ幒\ud896庚샖幼ꉶ幔닐墍⼗萭⿗蓭⾮ᔾเ閪迣닥䗯臍炾豏髅힢趋횟ԣ雩⾮꯻½⹮닳⿧蓍⽗葭⾷葞輿鯩蝡県鏄䅹蒸ꢇ၅营萆郥蓫蒟⼬퓟⽥蓅࣪⼣箳譥狯鎨결Ê펥퀯䱭⸪鶄넠놯䵠䄺⌹服洤矖쿪䟨怎ø⠑⣄಼㠣䠝飗⾅蒀꾦¥蓥蓸㊚ː꽄ᦰ꽁쳰꽰何꾇ᮅ\r퀌蝞訅귗Ŋ뉐㫧딿פ逢ꣿᢰ䒃ꠟ⾈䐀ꀥ莉웛凉켶❜ꎁ慡➛諛諐䓢꿰䒊R꾼ꂺ麗攁赌㻪肊䀺溎肃ᨣ뺋蹂홁帎\uda9c㉣藥\u001e칡聥볓Ẳ猼웚脴ᄥề༙͘཭켸བྷ딹郪꿢쒚꿚꽼繃ꇝ쐬쒉ქꞩ敥狐딆ᬦ޼ெ᭏⼛ⴺ콅⎩넖璽쓺á꾃쓹ཡ荈䮌䮍⠡꼙꿽쐑꿀떋鮒嘟骈袥뗥쒕쒘ࡅ䡘\ud8b5쓠셇덢⿵퟊玴Ԝ歬⪹㮚ྮ뜥睪僊퇗㢓苪턹ჳ惆⽽꼕쑴悵꼵쓐墍꾓⏨檫\udab2左肪ᤫ᷊ﶫ䃖䘷\ud8f9஦ꨓ췕꼓꿕쓵꿓꿵쑯⽁梻葧瀾繇葦秌輚⽻긜绛葧꿻蒗꽶䁒獁畇垱갚﷋뺢먂汕쏓睁俰縅Õ4ꁜ肼蒱꠬ࠊƴ䂧꿙탧꼇蓇꽾埲᥈픐ǎ饲ꔹᅿ꼋纨亻锠䔻\udb6a碙侮䅈ƻꈧ蕜샤䂙ꚅ硹&짚䁚킡ᒐ桋쓧䂫쓓杨꾨䴘꽨螏秮ᬢᔎ镳쑴澋쐴킌潅䢲镽ᕎ䨲녖阺ㄎ胕啞엘מ軚᤾箧ꕊ锭꾝✢醳쒴漋쐌漫쑂漄씥闥ᕚ毟㚊皨恍᧢䐹擣胛遭«썲䒆杬潪䜢供ს뛵脡㙤콓ᤖ澒䓖漲䑩醋쿭븃㥖畀亸鸽ꥧ毣雐⚑詙ⶉ뺵泂믆Ạ陾ႊ돋鬀쾀灠悖潒䐶澲䒯꾎똏쾁ﬡ电䰷☡濮꿆ꍥ⽞꾘➅태逹裁萍ࢬ࠿つ栞⼮㞑坚⹲䢆傰새ጲ烕澁葵澡蒍濿挄饖⻗ᇀ籥췾폦媇愫縈門䅒钃蘣ഖ籗݀鄶ᝦ콡ྖ余얃澵漘탵潡葍潞\udae3漇劭ᜄ衩킝Ⴡ䑎ꡣ䫡䑵흤诞ꛗ৉₝֫銘䧱᳾䒗潁䐞့潡䓂䂠꼁읳ꄬ漟뷨꽻蜡휌ጉ⯌጑퟼䑗漿澡䒪Â䂉힊釞ꛚ\uddc9ₐ湯澈֠量უ婱噈䌞჻ꛨ᠆鮽퉂㧇쫺뉈嗅ⓦ¥⒤ꀕ⑕␺◦唰읂喨๑㗾㮊㟽輻矦케⿌䖢稌ⓦ广쀘⾁흘⾕窚啳觚喋觨新ࣺ喼䖂␎㢌╟䞂唉昢蠽雙ⶳ肚鶄ॎ㎀⣢矵ꬖ柺✯乏聾⓪퀠⢺ၼՐ榏⽧宐붂昜伓箶쳱릅\udb78糍⯭␶䁶⒎㟨꽖쿬潄켝任號丽嶸⑁␎㛱䫳ᜄ昌ྪ俑\udbe1搤縻ꦄﺍỨ츺辉삢\ude85曁燦埀粧\ude25힎ᙋ⒃蓒၌耯聦`ꀳ䓍潍띧䜡똍郹運桽퐿铆냂ꢋ訍Ⓧ⑭ꄼ럃\udd63ﰰ햯虍ཽ헵嘼帰不㤏줴쯶仐⛜꯸ôש䂣猶ᜏ먙衴謕孈霸䔘䩣⒭⑱睰뮳聁➚쑩蓎肙蓙蒗獑꾊ꩺ하跣왊㙳ⶩ蒢ࣟꂿ뜉쯣魁䏨᷹꼹偠Ῡ萿À膀ὒ융贶ᚘ⹖⾐༷꽠꼛፨〽ꀔꑔꓺꁑꁛ%㧌츆ﮙ姊螴뜖俭꼔릇䪽指遤꒤῟䃤ᾴꑔἁꕱ轉霓嘘蟩蚆笢娹蛢媜Ὄࡤἴ꒔Ἑ盈濍灡昔蟴Ἐ\uddcb뎨Ṏ䂚鷊漮猈囈荩皏솜㧆僐콏䓰랱磠恃恮〾堩戄ᾀ\u0012쿍㙰엒켩❝㛩✊켠캾✘떨쿶㙛ᣏ䒦Ὧ䐖ᾟ䑡漑潄쾢伤콮濨\ud98f䒾ᾯ䓦἟䑑愒켌콰엉⟢瘮Ἑ㛪垊콪ŀ䕽뤊窀䚇᪣ᔷ닳à烜脢䣡⒗裐ӑ⒱⓪邩蠝辕穇澧漗澬ᾑⓕώ㲵ἲ驕쏵ﺊ\udb9e먃귺୆\ud90d샚债錤䜎譐項ῧ\ude57霂豳킄ẩ䵝ὕἎ䀵῱⓸僧눲쎆ᯱ꾭꿛饥牕쏼몰탬釻귧圓⑙\ud8b2〄\ud82a탚蠔꿃﨤ଈꮓ⒗ἳ␷ῳⒺ뎪濯进柂᜴퍠좑阂伐꼚ᝃ⼿㝚྽꿐㈁礞㟍항泌㉖‗ΐⓗέ⑷Ὸ㈀龎箂꒲#뺗褼㋤䀐ڒ囱ᯈ׻탹ⶓ曑쒈堋컱쒉쐡肸ᬧ콼渋菮峺넂ἀ஻ବ朊껭䔜未껺⨋齱쓎聤齱➊毮穂杧暪㩤㩥䟛䕄龱쒤鼊ä齾⊩헺螽䂆蜾햏材学蟡㢌鑵烈\udba0胢꒖쁒ꐷワ낮烲ꒊꑂ቟勲鼴걚Ⰰダ遺鿃䐆龲꓆鿳\ud859쐊摖‵䐦⣯nꂘꓸ묀濼\ude07蟡ឣ៚ڌࢷ낮鿊搞齪摴慛奄晭ᇵ蝇觺ᧈ椭筀槂홃附ꔞ䡥ࠅ⴨齷鞚﵀⵭ᄱﶯ䵵捎紶ᝰ峁龊摮鼪撞齹ᒌὭ뮕럠ꮣ擄ᐓqᣤᑺ\u0014﷈螖쾠엄쾮澤儦웚瓦쐤ᓍ鿟ᒭ鿫嚘ⵯ㭋쿞垙ᆠ绖痛걻䦼쩲홦膽ᚅ砇憴饺嫑爊砾潾ԥ鼟潄ᒃ齍齤ᐣ龔ᐮ蟧寷⍭Ù뜌ꫲ띰뭓齮쇜酻祭ほᐬꂇᑾᑠ鬌鿉ꮠ场⼗綯鼇ᒤ퀟鼧ᑣ⴦쟏㪥ù쮕倀忯鿇ᐭギ䟴͡\uddcd꾂眸䔰\ude41ᓬ炡ᒈ耑ᓮ諳湫㤂賾圌忠莸徯弐쾏㜪㟝꾤眅༌랇蜑ប㦤弸忡ᐔ徵サ쫘是썺\uda44绊雑蝱鼘洬敓甘럛䘮컈䏍Ḹნ┌㌶៮뱬渧⺖쳑蜅鿉矮ᓤ㪓냞ᒾᓾᒆ澀렚彞ᐨ影ၤ浲弌칩뙧헌츶S발䄨뭎媜畢᝟辴뜝䦸桯乻蚟仟三從ᐏ끆徯逺律켴ꮲㇺ鸻쨆䆾៥켄긁㈠덺췳:ꔹ囐ᣤ촗჎鍛漟迒ꚭᒔ㓾摻ࡁ搡摡擺踟뉸⏢쿵歃︺ꎀ鿢꽎ꌁ憡❪䩼ꎹ弦ù忁摟ꑅ快囆䛲♍枙触ꀾ飩ë㊺\udaa3앥顖膡䤟ၓ阍輘靳鞙䘭弁搅弝徿怴爜辸쁀룞ꓺ끡퐳逮ᯟ齖믚웑忝虛蘛弻擛弇摻彾漩ᶲ䂌窢漊⚈액漱ꀀꌓ횯ׅ\udc61逫㊚ㅵ魜삄\ud902࿫忛摛彻搻徇摚张캃짷徱겆漤얾坅鈧⟾ꮌ⽴魞É擡࢚Ғ灂邙擓⃒傹擫ᕹ髊댁㮜짚孷鬲彨\udfbb睇鮏뮜힔犠螛竼圝龨蟘躬⇭ﬄ軨篊龼㭽﯐ꌉ⃠還つ碌¯狥Ḳ藀᭛묍꫒㩶胙끅襚Ɲ꫃컰鲘\udfa9搸\udf19搤烸\udf39撿蟤共栥uぇ킿琈ᢃ␿\ud817䅧闭䡚冐酁换⽎ܶ歍辴彠῎濄兢園俚ئカᑖ\udf1bᒶ\udfdbᓜ띜왋쿩꺮\udf0d笳◫ܘ詠炳혙齟淆쵻ꮜﹷ䣍뛁\udf96\udfebᐶ\udf5bᐿ\ud809箷ꘜ묲⧤肔큢ࢁ裷澆\udeb0䩬㥰윫㣥\udf4a肕\udfb4\udf2dブἇ獣쏍歾伹\u001e컎弅枋靾鿋鞱埋\udf15\udf6e裭\udff4캙埵ⶄ첢ິ榝蕏ᆓ㤜㧘主歈캿ⱓꃫ䀱瀪怞蒋䠚ྌՂ휨ު뜻ᾂ\udd12⽙忛黱ᱻ\udf33\udff3\udf0c폲謎쮄暑\udfa3輺ᨿḋ졼룻큜悾棐ý窠鸞჻\udfb3\udf0b灎䢓ݗޗ\udf58भꨒ謹촙鍏㸌⤈䣒੷綶캆ὓ오ᓖ胦존鱀鑋紾鿲は⡳褾낔ꐢꁲꃚ쀾惄썟ᐄ㽿ᓄ㾀钡䠒㖇교Ǚ﨓蠛댳橣쫽튚괸黏袿酎聘䳃괿覯䴓蹿璠≌㼨蒄㿿ᐤ㿬㿉㟗\udfe5쮷\udf9fἵ衜ရ\ud841఩铘휌\udd2c䙯朻㽼㾂휕彰갍﹎ᾩῊ伆㹚駄虷䠳忿띞\udfe4㿛裾愡✼ꎪ꽸㸺㿪桺㿼㿅㋝徑曫῁븲콩Ὤ켉昁솶耖肚뷅\udc84蚒끹偽蘚늒캎ᚆ샡⁰ꁲ죽ࠖᖛ崧뤮⚖乯佝\udf24朞禽\udffd筒該胼蜔湹㿆㽦㿐ἣ进럁ꫵ徾㽁懾㽨㺭㼅㾦㽃풐ᘺ\uddf2♹䩕㽾ࡇ힋횫Ⴂ瞒崎\uda4c曶肬쬆\ude6c퀶ࢩჶ娲ࣩ뀛D灍և坙㜔꜀잋蕑蔻㿙㽹㾅\udf6f暳⚳ᯞ\udf5d龫斓⃣ၱㆉㄩㄷ㽻㾹㼅㍐緃ﺋ亂ꁰ朑焿훘訟Ⴘ蘞尹祆䍖À⚖炲ꂌꣴᛰ摹\ud8de뢜胮ኮ湂໒܌툘뾰搢怎⠸뽈損⋲杌Ὃ㞐\udf64峫蟒郼뜖䉾꜔Ꮯ轴럝弻蘱忱蘰摘뿤뾈摸뾷引᪌뿊뜑\u0014﯄馪ꍳᡸ즤洨ƹ嘳⁍쌗䆘㈞䃔膧둅壣ꑅ莻聠頂၃瀚༱⸺뼮\u0013ꓺ뿓ꑆ뿮㽿켴彞㼢鴖Ꭴഒ鴶፣ꑦ뽺뽓ꒆ뽫는淶\udcc8浌꽥癶摁幤놃듸黍ẩ⡤좟₴昶鬢妈淞뿔洴伮㼊硷悀㻊ᒪᑓ䁱퀚ᒻ⡯較迿쿖錶᝞㿸霌ꞅ㏛袩뽮ၪᐙ뿪Ⴛ⢔鞍睠掴靰軦喩הⶈᤚ᤮ॿ訊낡ᫍ\u0017憇粍㟻클嘑鯣省쵵뾑䃁춳疳윥뼱ꁩ뿪ᒕ뼘ᓮ㠖ᒄᒘ࿨켕漕⾣概լ菁婚⿮횺쟚茋뿦ᑩ탋뽋퓃樴᭧㖶⌓袲詉잍禵綇뽋뽖ᑋ퓸䩧ᓬ삗ᑡꊷᓖ䚋옅뿥靟熔肯뽗ᐟ뿭폍ᣕ뽞㦚Ƶ口烑叚阺쵦ꄸכ䛇꛴㍟洈꫘黽賑뿿ᄁ胄开翧ᑯ뿗ᒟ뿷ᓥ\udf8b蝥៛潬鴰霐捪㺱厬叔ᄍ瞐挡﹬䀧醶袴鴵㿻垢龡ῳ➿〭둎ჾ袨큪탗웖䢣逜翮恜缠휅储濄玍馠♮痧\udefa살ម꺟֑俀읁遨ᄌ\udb27헊罵着罅ጓ婽ꥲ㾬缶缸࢜翎辢냔ᓵ〛〛퀌ᑤ퀚낫뾭쾞\udf73彞㼽䣊棴䢵炻␦䓅韙逜栴ᑮ翴ᑸ䂌ᐚ낊靃\uddbb㑳卂ꫯ痡Ἑ秎䀘龵껛冕䁫뮄ﺍ੡耂࿎翑罴ᐞ罌ᐏ晈∩羝Փ㒯숦솯䷕ࢢ穌좾哒\uda1c댌̳⸱㨙䚻뼆땚莈㞆棝羬缌๼ࡠ忚༯筆缬\ud8b3㗎坨心矀ꖽ啢撪䣹䠱ꑯ僳ꂚ접壺ꜿ뽥睿뾌ꝟ燢搇罒擇羲摚ۡ㽰꺧ᰫ锆鋢⃨헣\udd9f⁇㉏厳쬾奎م⟠烔ꛏ蠉며❁溶㿘睰⤪翟켨彿뜶뾔翼眷羒摇缲撧缻䅫⏙敲꣊쁗胟蠩塤㽟\udf66捰ῴ䯁䏈䭧頸ｿﾀᐒ㔩씞켴㨍큜쀷뽠藧㫙㶙徚㿍俟ｸ＀ᒄ［䄄됟냙\udd36摸헶搶腎搩ఌ\udcd6ⲋ慉䃆ʬ釚벯胕彆朾\udf15씧უꠕ롭þ烂쀞惗탵㊫ꃀ邢．撓\ud87aࠩహ섖씾뻲♲ﾵ\nￖ痊ｆ\ud90b耂㹰绞ණ㋊ﴵᆖ\udd0a怎ᇖ뽻ཱི復ﴢｶ撦２＾伨ᭋ꩏緟៷钞撕ꃀﯼᝧ꾮㚊ꪏ휫븪．澻螹㎊꼍彾㼡懕铂점钉￐鑝忌徐Į얓얳ⁱ㸓蠟媰嘔⻳㉘謍솱샻繆ĕ➥￠鐉ｐ鐼ﬔ麿쵫忮鈀䓻栝偠ᾷཁ힟䇡᾽鿢圱뚣￲郣￀ﾀꂢ뽺ﮌ竝᭶䟣회ꬦﭮ맒锵捏蝞胀⛺腱ၢ웿撫｀ﾠꁓਥ¯竾ｔ齧៚\udef9澄⎋厍ῲ扎摈㐷㼂㴃뎁頀䍒帿⁠⑀ࡈ෈✂䁑₵瀲챱蠤璙겊홆\u0004疐쀁皉鶀\udd25ܭज़ﳻꂞ瀾봰롓༁㈆ྀ꺭繠邹禀ẽ飰̅拶〧絔製ᘆ吀鄤骔ؚƤ瀁䡍弒⒉๰䓁℠ۓ맮ป望揓鿨㦰ﰜ㛞\uddab恥言⠀Ỗ䔀յ逈걗䁸쐏ঘ쀅ⶁᓁഡ籘毓๿몛\udf87꒠ള⊨Ȭ젚µꖉ暌鬮ⲷ쿉ᇝ鵮℟㳿蕱営푐ҙ達Ǧ摵s䤒摩⣡綈공菎擯㙋볹軑ह㓈䯵䰊⢠堍ﰱꈌ뼌ﮀ踃둠⇀選岆鰳䄞즬郸聆泎谐„츈䍃繁ⱀ삠ㆠ沰ᮆ้േ̂ǚ䈵齀북叁墥퓰उ獽佒奫蝁쨤≨瑖맳鶡[恃䈈阊脆㿂䰐ᖀ侐෡脠ၻ݁腧탌ꁸ聢숎庅猇귰囡᭐繤ᶈ㹀➑쇄鋔空EႤ䂴ؐ㷅卒䟳蚥扮쯱㤻갈 ᑑ䘈ڔ僂ĕᑈ聃⺃岁☃瘁錉痈룥㾒Ж䆵褗噟槠ᨈᬈ憺뤌忥깇㠅桎ɏ㭟醦儓歛퇽^ŧ爻쀸ꙅ覱붹ꆼⴖ﷽痾ꇆ쳩藈瀲퍖ꦝ隦湠ྡ㕉郗ၐ\ud94c⿕ѿ鷷죖涙σ₝ĝ恅☉ᤀ吀丫쪽⨒᭏当鲅읩ꏄБ鄉Ǆ搂저ꠓ该쪣끀㌊闒ᦣ㼴ǂ텏䠉ﰹ흔㒆纖䮨ﬄ交ꔨퟏ✫믇윷颱ᣩĄ肢㈉̉逛뛣좝쳘솠ࢮ郄䷈ࢺ窲碭횱ᐈ갹숚鐅얂뢀쐠粦ㄔؼᆠ™詨่ꆃﱀ3Ṣ輑䋝ꬓ읻鈃믢쨴䦆ᄬẌ̬׳Ͱ䄗衂礶%ꀮ⊌栌䢡騂㓒躀\ude85ꀸ๑▕ᔤヨ时ñ쐙䠃鵅죌왧쯈ኹᄦ밐ⴀ畽\ud81a惏ȷϣꇂဋဧ਎Ȉ䘆㬖ݺ⏭恮㾏穛ꣷ옪爌罹Ϭ⢅肪餱怵슇㷱ꯚ䤁\ud839㕋ꢨ僙䃜ㄡ㩦큰胴녛䀿䏕騅셓뵨免兮ꞟᝫ黰\udea2扈㳯㸝⭛ਾ怡슄堉炢蹉廄ᦤ༡ۇɓˈ郅\udec6㽒炩䀤无ㅳ쇰륆̿拿被퍰᝶䇜ؽ釷Ʋ劋Ẋ쥇覵Ԏ⥽㉳ᬪ접冢]散肈䍔⬷剝嗲⮂\ud8fc霄襆梋ෙ୰ὶ䗜Խ郅\ude6fｪ⾤诚'蒢\udd80橠㳰ᮨመ̍ッ䧮鰄몭№⮃ኆ茇䈅≐낁ꢔ筄ត\udb41ܓբ생⃂±ဣ搅ࠚ䐌䒢愂儨㡀짓곇驴퍩ࣶꖖ稱눀㬦콅儮喲\ud993挔㟌˸⿛髼ˑ쏦㔣寧\udcd0乛缱螂⍙⽏윪๰䦘⛒᭧췧殫⶗銚쭟茻䠗婀툆㚐倀勽嬍⒲숐쁼隄㌚ᑫ땥\uda9c붆뀁䟦胂풄賜큧៝놖鬹ڂ䌺拎\u001a㋈뤄운ꀷ鷨迳췺撼㘌讵䰕껁頏䄒һ턠팭耭椝䠐\uda42ↀ夃䊄ힽ絙ԙ\ude17ɚ䌭⃚儫䢌恰ᒻ柂쀐⟲挸囌ꠖ㭋㏌⹐␈ྔफ䈕Ȝ왥꼱ᤸ厕챢뜼ꀦ躃㈧ꪻଶ掕ڪޖ逊臕ꐕ堆ﲄ⬁뜁氎侤柫㗩Ѩ᝺䜚ؾ酥ᳰb㷍㿦秱뽩蔸黺䒹忔롕姈Ќ닩ﭵ㱺绍옝鬎䆝৒\udc03ഃ潈捀蟒⥂ଅࢲ眨碵䙆賘퍠㽐䟈﷔샎䭯䜧┟腖྄ꂣ↎膨졯뀠⨾㠂洂䂰廓⤕钎唣門⛜惪㈔堈숁鄾ꌼ銏䙇꜂̂⃀죯鑶퐿䔕쭙햒諍쀅耲ޟ퍵∁迤螤묤㤷鸲䘝捁臮邡账溭ᐔ恀〶貌ఈ挡줂푾䋷ਿ똠㛃練≯ﰂ恿䁕鏏蘅ꩁ눠娰䥨Äኔ辋떹㥭̎㣷❟᎗迕\udf2c㉰貝뷲錧ⰲ鞒ᣣ踬ࠛ⅋Ά좷䂜ⶊ짏︱趐짨똮石ॳቚ達諨딏燤듹佗冼䜔堓갏䬂蛈㋀횪ꠉ鬓ꛔࢮ\uda1b鰭遂【간ࠅ쨇퍁튌璁타詀濯삒뫱鄃脂搐餔Ⴤ쟶꒺훽⛮⽵女阼尰ຆ檓붢㓉晨ጮ擌䇌\udaa7碃बዢᡆ⇟깹쌸ᦹ㘊Ӓﵳ繲肊㜍숀㠟왆ฅঐ쎁๛徴᭩ੰΉܹ䎘鵒ȗ䅛ꐦ\udcdf洪⋰쐅\udfed㑟㒥ꐰお猻\ud9fe絸ۣ퀵透瀳뒏\udc0a༈耽蝊ᒒ$刋ۮѶ郻臝ꐰ놌䈆ꈏ钐멂僬೿팅協⓵嘓嬌놣䉊Ⲋ簍謠弃ወ錣数뒟ฮ䵄ڜ爿趝ﱯ帒⎟ʎ埡뽰뗵\udf06隖㫇肀㓽늯릶벑ﺑ搓夜隄븇댠̔↊㏪Ḧࡤ瞴职倴ṙ胸၍⟜⩦㮐쉒悃ꠠ\ud820톊Ḉ㉁螴૷렝Ϥ钦瑡제項瀁ই➡᜔จⱢ脱䖮凖⇟ㅽ殴쇝霠掑괖䚛噄뫌鹿⹓恋叫\ud98e곍瀨䬕#誓걁䉅㵒瀿㫥㴀ႈ᫑牣₱郌ꃚ蠎㈗ᤘ铧䯶⫡読Ἦ滟㇠濳쀿ࢎӒ鶻㻇弮篌᭣턅Ԡు儰ㆈ⭿ケв귒度\ud927朏뮓㚈パྫ箤᧺讯梯ᘭ跾쳓䌝Ǵ䅬搣ၰ騆\ude2a\udda2햀⃀⟐㤒⫆ᆪঘ蕗⍹﷊\udebe缜炄⯗风䩶鮹旈ᤠ蕲㙈㥜螒໹낙泙㼌ᒴ葒弃芗邋䩤ᔠ沈ᙈ⥜讒ࠠ셼壪曜ꝫ├ꉂꪪ᠂秱鴰囼墺ǜ鍤ቤꫯ胸‐Ĉ麸湖許ఞ쀆넥ꬠ\uda50᫈覂㣀訒䧽셿窊궄첏♳貖ᦩ鑦备喐말⌈疐疎፤Ứஇ䭄넂﻽뾐ﯜ⿪㻲ꬢ것⹁殐伕虽偗ഗ\ude19罈︲喏楌\ude87繄䊼ι᳽๞䈎⫻ჲ䆁셔繱꼡lퟝ䷮闇䂢恐ퟀ尊ⵉ臵酱玉䓑䇼偎Ԟ攍訍ᭃᩝ蠦컶ⷃ锩퉚瓥㱔థཱུ̤䃁เ┅恑ㅁ⒠ﰊ⣚ᣀ쟁㜼剒茙蛚衰쀲톑ڢⳫ\ud819ὠ컾᝿뵬ᔥ׶喒賓뵽膕漗Ꜷ沍捇䑁빀᭤粐樷\udd77犽ꥯ儖죋搵做\ud913吟糵颃앖爠炲ᶩ츻怆뚞Ӓ舨滂圹е崘䴇㻁羠춐霒ⷃ㊨ピ᪶䃕ӆ酓汦ꃫ쎈겗퓇黵쀕讶禎ȏɺᅖ䵩蕊覩R穆⊒賏⤠곤운᥀䚌鼔ჴ豺䂆ƞ逩庉怵듍ꂋ騍㴠̀ୁ鞤䊀悅솸᭡駋䵥雖ⵜ⌭譁ꠂ㠇撋颵～쓿冗餞蝅칭㌈㩍旾హꂺ萞格됑穆旨蟍≚複ἇ⚠嘥ꏥ鈤뒨庨潀㴳讁㪃谗䙰튢摛槧᢬ęꐪࠂ஡ǉᑫ걳禸椞☁\uda00욑崸∻㵭勴ꈢ쩟汜몶쭍鮶垓빢咠枸佶ᆤ叐瑩ᘴ襺ඡҞ˾湤穰萮؟띨⥠໭́Ꙡ㹈২⨴蹺஍⃞঍틑崋엃㇖䫩ȴ䆐㸄㻆劈Ь菕䧻릍쫰椖ﰽလ磈垓쩺剼邁\udcc0귝ⷜ远踢Џ₍聃죙뼐ꁥᠨ⏢໰䜂䚒ℇত뺋龴ᓉ藷≡䅨셮\ud87aほ踞⃡ࡦ䣫䒵趖쵰䗊ꛭ䕲ꋚ๝ך硄肟帨鮢之臫◔秲嫩ប湥ᩙ輏菣߻邡炂惠踎矅ᅲᰘ\udb6a滷㬖鷥䂶䋏ʋ⇰へ롃䞻豙௤됌칝汁㲆䷒㶘❴蓦௽נ㱌컁읈醹駊˅\udd22㦂囆Ⱄᣓ\udc3c┷풀窹렣瓴̮ක\ud947䊏ﰄꓠ倠埰ᢥ㶛틀ὢࣹﮭ鐝᪲逧䚎\ud955톦茥䥁퓁勁﨔ರ内ዎ湸ꅻ쏬䐑少昱\u0000ꀒ绣䲁굑㤜돋擽ೌ贏ꛂꉲĝ䀈℁➫鮊쁔啑먤廰弃ꐦ覬ṳӓ籨븃Բ끮蔍Ⱄ讂ꬄ씩ᰬ\udc44偨㥷좙૎䞳聋¼蜖┦\ud834岃똈霣ꗈⱠ笯엋瑡ݺɘ䅾胼萻࠾䥌瘎\udb07讐勤ʕ֗塚d顚Ⱞْꮆう⦠颡醺鵘즐現ᆕ쫬⭉¶銥潔鮊퀪瀟柒鑑먁ᰠ⛉䇲ල䑼蘁蜟Ⅺ胦ⳤऱ傇썝濍袧䂲그鼎䨺⣙ἂᡬ䦰µ䇶瀠삯ꑬ灸ሔ粇踊ૢ皃企腖漫ᘡ쿊측ㅣ莇죌灠ᤋ各ᢦ諲료횂绵㉰掶芜᝖㗐ᠪ0\u0012塑냄蟒䭐௡Φ푀❧ײᎡ䰨莙㑴胙쥈ᴳ䀙殨\udb64圇卼畁像怘☹䦥࿸Ӕ삂↎㢎衣ꀉ猟쿯爋׽ߞ慿ᇷ벒髜᩶䎷ѝ鄝섷⤚栶୘箩숔獡\ud889謰孫㨔鼗谰ű럃碓慐\udc2a⡃⮀ᩖꏋ⺺丂ꁮ묻曦辸㛜Ṷ䁷՝酪ﻎ\udf10⚌㰟꘠輅ࢽ᷂骥⑶蹐ᵔ见܏¸쁵䢙訊麛阆밙ꩇ꼆ﳁ삟ϩ躱\udbd6悶鋇먈곭ꠈ끚꤁박ᘗ믘䢬ךᜥ䓣둬\udddb炷ӑ綣帬瀒珋ᓧ蛧쬣᭠諈氈ჴㇼżĀǵ⠯楬哬샄偺还䀛戈ⷺᾠṈ⡘ސྴۨ⋯⨃㳗솅摢눖겋븍氅啌蒆㱞ᕋᐉ蓕⤼땏֯씞쪩⡈딻忁嘊뷖湫켠ૈᯠ銲㛸㲬踛큻磌찿셕줐ᠷ긏몊इ\udd03ﬁ\ude28ሐ㏯荏䡌쐟ꆻ讉駘艸ⁿⶡ郜躡蒤㼃⁃鸨栐랊⣆ጂ᜶ட֜巎︘㹲뮿焈䂄뱑퀡퐐묓쾯䮆暇袘෨ḃ╢㌊⭠蓰읱ḱ엘㡏碟ᆪ䄘셭შǡ\u0018\ud965㴾懶Ề謁呃㨠뵀訯䖎軆Ղᑾ䝐蟮䀕䄛뼿㆗磙묬숧虙\uda82⬁岃ᓕ뻯\udc6fి↨䉏젘ᨼ햀⑂䜊孑졢鷁㩠＀穘᯹ᚐ৾䚾ы뵯臲䩼頥뫓槧邸즹ῈḐ韲㞄⏼豙燥믴锧칖䨘䏆휮闖胁튘鲀諽ఠ᫞逼兽\ud861Õ塀Ꜿ䘪❧ல㤨⑂嶾줐﨣뵏컞⟹牣҈ϯ빠ႈ衳喇숐뇡ࠝ既辰筠ⰸኬࠁͥ쉈ꇼშ恑䮱\udccd⵵玝ヶ㳧㪀䯙\uda10Щ֌莃”ꂤ쑮〚혋ↈ팃嶐ṉ곪䆢睩ϐ㙖侨钲抅砱ԓ랒⸤葡ཐ鞽ൊ熀⑲ᝄ㔜译ࣇ‌䎱죏\ude7b昛３戟䁷線룭짎ῲ㐀㍤公䃭ꠌ↺ꃸ\udda6懊ണ挡紡뺑㛀龤濒⿩ɏ̫厱ܰlⶌ뗝ꃯ췵⭝ﯶ櫀揔ㆠγ೐Ͷ샋䀾꠶ふ萎ݠ됴C纴ᔫㄙࡒ䯰鋗荺愜‛丘␭栁ऋ뒁䉃䣀ゐ쳊鴷퍵⾺靀熰ᶨꙮݓf齖㗧脅猃㢀餸ᖩำഁꁓ솮腝ࡘЧ制場ꠛ阉㞩▬듪韵崺趏仿䴩঵⇊䏭䢊郱躽န鄉ᜉ흄泪䞉禀⼞쾺Ğꔲ튊Ↄ扉뼜벝봚瀧萁ࡨᆩ甡느뭒ʤ⭠掴፡化緂脯錱喡寃⥍ꯇ쏽峁ꡟ摰䙸ℶ溱Ա艍郪⠯栯ࠏꄙꊀ䈎ꗺ홽㆞敲笏鳠㋉솋쑶挸ѓ䑍➄ꊏᤎ讒♃ᨨ⦐\udb90䳼퇄ᬞ葉ᡪ⠉邆訲搷礀ᕤ䣹䳽돞룩糈朠㐏⿘ደᥝ䱬ಚ뉓쮜抌㈊⟒\uda32적쐔䯝ⱏٙ씞䑐ϧ釡იꄦ퐀茀䗱쿊윱ᰠ喐꩜쉱㈔䃎㵲͡꤁爘\ude40貣⹂隒愾㎌늸❒ࠪગ㋒餎쉱๩㴒谇☋끴鿩\ud904쁁鈀꺥骭孤漹࡯⋇䃏ℭ趚搨ꀙ済澃烠쾨㬒݄ຜء䒖ᮻ铴ᰔ앰⡠蔊਒⅃䜂耡콜輢䚿Ꝡ⎼᭕硱හ\uda54眐抒ᐲਜ⅁芄涵趄䐽䗽቎≢◜賝᷁៧彲ᾃ䔡묟㔷茠䫜䈁䞔荧㳛탷뀧砶邏였胩\ud984ι뱐뗲㍼谥෢\udab6腶嵀䘛စ㑃❧㗛儃ㄖ२Ӣ㍟῾׊ē₷䂒僾⡆龜䨙各䄽겁ꭉἇ㻣᥊ὄ햤㪃䲉見鬮ߔ쭀缦韐賓Ⲧ倠맓᱐྇莳Ǚ彼堯氙㒃楄넁ꚑ䢇䙟ᬱ왌囲ᡤ┞ڄ₷掕῍砋뽓Ճተꅐ닸㟴Ȫᎅ஢閭ఞệ䃰亐ઝ⨒驃ઇ敂뿰콷剦눧彋䳂✻㊖핒⣩ᑬ⠖䔌明蒂吂쬂㲮瀐풥쏢푷˭뗖츰⃍뎸ꐣ찑褂㕃㈨㰦ᚨ湅ᄮ氱೯ރ범₱⭈瞢雉╩ᵳ䢢癀骡鍐鲊᭔ⷼẚ뫲臷ᝃ趣ထ㱩衠㨔讟夦㑒\ud8c9菢槾ᵩꃖ逥脋䂂Ჴ梎䜋鰤⇔ᷟᆂ㤥\ud815㚩癥䶰㕌⺀産㵃㵈潐꬇릒躈烲禾᪌䁽팕䡐眠\udc37䣙羭덠䨣ꑴ횂ᡒࠐΐႠ킧ꡇꤕ䄙龐䪠韤䲈㫙ኮ؞܏ʖΜ鬒ݲ聻㧕ꃪִ⁓玜ᖮ콧広靘ጟ੨♎ϙ郞⁯朊ꠉ퀕攂怲偃ᙠﰀᗓ⁳鞯䂙⇱ϔ달榘늦湟羲澝◦瓆⎝囎蓺㉳Ꞅ襬ഄ㡎↩鈉㙊ࢠ㧛짯ে⚄徐䥠哐鯲ⴴ㻼躞।碆Ⱉ鉮搩䀧養䠈ꐆ螩첵ᶡṤ⌠ழ⟌譭ල砝屍尪ݶ灿샖\ud9e1㦷⟺⁽뼠Ố瞙Ʊ쪼茭禝咥곶᙭ම࠭朤嬶쬪뮐퓰摄缈ࢬच腴ᔻ䉬㴲쫶❾箸搰標⡴切稼࠶䇐ꬢ雒찺ᥔ৊莧䏝졙킯爏淎㨟ꖡ㿈슝뼠쳨枹च荱쎀ꀹ肂ꀟ偔䐣퐊㔎䰦咅놃唡\uddf1₲ኪᲂƌ۟ꋍƨპ堰簧뺏먐腄ẇ⁐䞡缆彆腊즌⹩৹诫㸑昖徂Ꮬ윁駶㪊ぜ螤瑕し黐٭瞗厏᧑ƾ僭뮄筕☀尡ﮡ蠔⇨䨅Ი䜬战楞糣╭鑛垇봊࿘ᅩℴⲿȓᬰ忔蠚䄦¸ꅺ蠾ꔀ䡭㟒먝ꃰ㦀縡㡌봝抓ч䲤촃੘䋀쎃䠈ゑこ듒琗坄냪蟍刊攈室ᵭ隡ௐ双죅乪İਖ➀읩檒秸륄䤌ꜝ尘䁩సC഍ₙ荥ꙷᴍﮓ㖝됕岒ꬃថ모旤ನ╹ӆ֊ѣܿ䎘쇦礪됂䘕砢醅垑摡鮐菀꟏펆⼞凡褧闸拭拉ᡉ礒䘑幇円䧥③Ҧ࡟蘛䙭䈮웸檤ꁁ暿ⅲ ᵠ䞛ﮘᏆ訬米⚒톛散ಹ퍔凱졽뀎萤戟ꔁ䄅㼁怾᳠鞧㮗펼௥立鵪ꐄ顱㤔☐⌔剹ꕝ䍁盀岽蝺ᡞ뱡횤䀨徕둁栤㠐鐀菡읒橸ᥐ䟤⋾怊寎᳈ﺕꡀ吣益밇뢻ퟙஶ鈏彷酤⸰䀭Ȅ슉젡ヒ爏膀풊趆鞀祀꧈獒ᚨ◊ೱ쉁㸳ꌔꪓ㺝⪠먶桪缨䙡䚤熘榩᳔辸덨ɒ祕컜煎馛穂撨ﬖ눲懴䗘됮㏆꽣켑괰唏ズ磯퐛ケ顉ꤒ昗쇄㖱趐驠无⦲ፌᣬԐ菤䈚憩］辔깆씥맄Ỻ쵃炡뻟䂛ч쾳葍邾愳摟顏蠬ဟ匷\n읽鄒䶐狄뱓嶠ح怭梭ӻಛݞ喑揟堎币喉翽낌湘㟾ⱷ\udb3b೹蕡膾憳摖஛널怆Ԃ㴠➁왠တ绲㳴吊ℌपޏ䍩䆤䥐讍怩详륰닃믈Ჰ뻲ᲊᤖᎂ퐋笻\ud809梂๳䂊䥚驡㺺޸宦웥揀も莵䵨ǽ류菄帧҄珝戎\ude41斅瞑\ud961뷤⹘緳쨛杊厏ǖ\n냄ࡌꀃኂဢᏡᮠ蟴嘍੿퓀ࣉ몄奢豩䩟\ud821袒ࠚ雲쨰뫂넨\udc4a⼆鯪ᥘࣴۃ˽∈삒謒〭ߌ㧂뫃넨Ằ뱊ᵅ鞔ᇜꈍ萹譎ꢍ᠁ᆎ\ud860੒꿉橰度徘೹蚈ٯ抵ਘ풧賓ᑌ犧\u000e抁ﶅꧡⱐ힦㟏泽ᘮ賂់આя䍈銟坾㲏헐〝뚁颣㛃涰㌯埑ꌧ适犙ꔪⅶ༘鄢㐪擁ﴐ䣘䀙휀ᷩᄠ⺍䄡욧阳瘟斬堤祌겭菏뎊㬊涄뛂ᘨ荘⧘䗏씔ႇ⋊股졔⑸䈾鐖㨌븇쫡刐桲Ꮼ⸜諻්薫ﷳี郞律蠻䃁﬌ᢂ㻃懈⾰ಬ⩈ຄㄘࠊ泥딲ᣀ蟶埨ꅝ羀釈狗᱇쟋磁숁쑈㱸㡕ﰖ퇺\ud883柼勯룂ᇑຆ䋤肀ꇦ偫耱倜谽㈜쇱⠆숼嫞巯侠봨ⱹє㵐좴烌㈃ᰧಃ⬏郻㼽㉀ᯏ桃ᛳ\udfaf䗼魾椾䁶䘐쀭᥌缪㴣༲⒙㼔Ꮕ㊘비᏿༳㶨 콅羝큃燐⾀鞃潌鉲皣ꀋ쁎ᨙΣ蕡鄘ᝠ᠓렆㥆␢灐쥐숐俓㞭䐀ཐ憆䏍솸킑뒙总烯樍趄ꎁ䖿ݳ鬀᧎ᛁ䍳蕺<ᐞ偃䏜멆ᤈ騫㨔む秥ꎁ萅湪Ӱ椇Ο鈢䀰㠭ᛃृᜍ玄灑\udc14砘㯘䗅섺ꋍ⃦違價ꐠ根ఁ健⠏햄筽ﴶ䔠蚞薔ⷹ锈䠁꥔ﰼ⁓쀶\uda81輻ꮅऐ䵰ꋒʍ腎ᖙ葲ﴗ鋺䃑\udaaa奤즃ꮇᩀ᫡፰싒⊻\udf57⍤༉磯\ud9ec膹㙾롍ፚჀ鐊顅爊銰䅒㱱᭾佻ᄒ﭅⦿㓡䤼\ude32ᐖʤ鹂鐂硠掠栂ᖂ聠ꋷ࿾膽썓좟炌㐣긜㧺뻵曁獰鮰粰孆ᷳ쏾繹\udc25㲁伣颹셾쫛Ч辘\ude0a쐸े訙棻㳳ᚥ퉀ᬥ릡塒税甮魅ặꢥݭƉℝღ恄Ⱋ\udc25딐쉑亀槡鴔穸佅ঞႊ࣢蚗䊣ⅶ탲ㆉ謂䬤䀁萀䗡剙᳿蹘⁖᠘鏩ɕ幗肁䔖鸕텀枆㓒骀匨䱞ẘ劢쥬뱨눽ꥠᦟ麭ἲ㣐됨ꠁ๵㼉ꨤ흘胟뙃謴酈ㄨ\udf3dᗼ鶪ῳ霐ԕↃ㓻珮聄晕䂩ꁘ㸘螆䡝불䦠ࣴٛช͒ąꁮ〖夽밢㲋뱆輠믂ę舠䡆懲雁餇쏑ȅ圳欈䴍竹୘퉼강̏ᇔృ஗钓즓悳밶㲄詶ʇ嚂驦秒⸔ौำŝ•䃀탡ヮ龗栠囍ꗫ살糌䀅⻸择ើᇇ߯蓊槇㸼띶废库쥥쯐썩䰤ퟠЀ壛鱏莪抑댝쎅鸞씘\ud934秐越꬧ኅ킴꟡㷰⳼⵴赻࿚묅臺慸ꦙ윕縞ῳ࿙잭鲦驤礈ᮔൈ語ޠ䀙鄇䃡巑舙矶ⷸ女㿡\uda64Ὸ庙Ì觅樂膌鑼Ⴌ萯Њ䙤櫼豌퍔筅ꇘ呹䦐遂䏇삤蛬꼦져쳁⥋脎᷻꫌萐肭뇲蟴춰蛏茂Ԗ┹嘕츅）팢ￃ窒䬫鯼艂莞Ӷ䎨聧⃏굶쐵斎谀⠄≃릾᳧㚃頖픒᷐瞨у聈聡ꈓț∈威⍁\udb50ꉈ㱖嶱褻齬戎フƃ赪㚁놁ᵖཇﱦ\ud885䆨ꉰ㪏᚟칱옭晴⬌䷍W넘ಇ섌䠅괋怺꺰縡祬䕿⮖褆Ⴖ૑掅䅂좼ࣩ਀舮䊌₎纀같⴬摏ⴄ毛蝁ᡶ㏐䒝贖硧捿\uda89舥Ӂݔﲇ꒱廈聀ῤⶸᗴГ৻↾슁⇌ݯꄔࠤ刕\udb52᪇릃驡跀櫓ᘘጡᇶ䇈䝽釈璘鱹顓룈槥䡠膡ᢀ雀䏬ห쫾ಀຨ䞽醲ᅟ摰耞䈲摡譵䥂訠孔뀃ⷹᡮ酫ꨚ掞脽锝䛷뉝ԗ礃丄켃ᣡ♐ᵨ㬰優ᨗ甐ڋ䧫氒顑즙駈눦ᤓ㣱慘륱ᗲૂ㰂躰誀ꅬ⋿懯㽊蒱ꐗ퀉ꔏ贁뎀璡ᤞ倴⠧饡ᘁ䍘䙀儶ᆔ䡐鞛ẅ犤눢줂Ⴠ绦兄ὡ诋⢴ᓘ쨏ॼ鑅罁䚞癃糅돶⅛⨁矰옠ঀᛆ࿷ଉॠ擥摝託ぉ琸ﰜ計ꡄ呜绮㥀㻒☢ぴ莈衸䖩Ჽ昘狟박䢈ᴣ戣蝈⨛⾇껚剅淹ꛩ臱煜ↀ搯后\uda15∆ـ늁럀㹓䅄瀙ёᢃ̔䙁郩ᇬ悞䦼氳꣈鬍؃죈䁤慄栙ᙑᄆ䛟ƿ菐ꪙ✃㬈怄凌⾧韉푹졚㫶癗믄ᇎψ眮뫎ͮ溯䵄젱訚傏˂ゾ惛ø蓄⎚᪩ꮪ紕⡁䎵䠅銋洄䝀牐Ḉ\ud948礈㛱೔芝匴ﯴ腉ꑅ頱攅밆ꉁ蔁튠⬨峰爥ꮛ驿귒ݾ䈡磙켔쑙攝ㄛ삄챆棃㘀耎뉢㒲蚘諢슖⎷ሤ郐粚쇀許\uda8b웹묌옑㻨ᒝ엫쀣≉々쉁䤦\ud818攂㊃뼃霃鰁䱐ꈈ￐啴⟾༛﬎⌣⡣袘쨐끥좎퉫㋰躠㯀퀬やѱᔙ䜜䛺䄴窷䧝력줠모긣Ꝝꤴ䯤ٍଦ贻ˏ苤퀮苈睊⊓鬒䳇徢ꁇσ퉮堋毞駼\udacb䥸轉ꃜ⁯ᄹ㐓䒃㐼ᘗ䗳슄凜ࢡꋥ焭⿢㫱ᾔ閼䐆℠Ⱅᬖ㮍廉榯힡⌲ᕭᬲ⯮㲰邵譞໓㎨䗙໫耟榏巛ﰊ⩁ቂ䃐湠늀倘⇐។ԋ蘢臌夎㺏㉗ꮪ帒꤉鞇⨭נ檋͂ꚢ팂ࡤ百㏁杻釐㐪⑜ഖ褔\ud810᣻좘↮챈麗㖂ࣘ굽鎿ס촆무죋틄颣ჩඃࢾ园뺬㷑ᚯ㜤䑷胶媂䣘ᨍሡڇꞐ麣癁폔砰Ṣ̴ہꉧ蓝懌醋ࡵব줝圍칋븣釮韯ヸ炣\uda1eដ뙯졂絋੐鼳⑔줝撊氋햝럾뭰賂荡娥鋉쥍봨肀☂⎏陊鎎誢ァઃ광澱峭뾾좏ⷿ虦ᔛબ鹤鐻惘쨀ﻂᇁ\ud8c8덣囈갮캯ꖠ汄첿꽱㞡柊݈࿑ɇﻃ⨒銗寂脅䷺薞Ī䝿凊酧젬恻컌郯봍⡼ထ뷁䀛䝴艨贃拾൞攰릛㘎︃ྨ㤄\ud9f6㵈迪ᱱᒩᏽ䂪䛳썝ᄤ袏ᾄꐽ햂卂嬐邐厠➐㞔າ࿼섛ﬂ畞犅傧螬ꚗ똎璎㒡崢촨繏鈧䑸슓ᷓ䫔騋螻㇖⨗괰꘹ꕂ캑䚔䮤榥۩Ῐ裼䕊먇鴟㨁䈁㪋똅⼢暀ㆠ槔㇨彬ⶉᜦ鄁T\uddf3ﳕ㜢＝䷕戆䙅稁冑짔౤䑞䭺ᜌ吐烐愴\uda99昂顶톝ᠠ杧ሄ펀嶖䝂ᰐᨕ鸖໗蘐緹੡奒摼甜餔鵇䙆ꝑ㹰\ude30鏪륅喓쟁噲ꂙნ꣰芗锋ᤓ㰋ஆإ뗚噉㵶궒媊蠵ȷ椮梜꠮告爻锉夑Ꚑཨ\udbb4쿆蟥䨔趑큤ꭂ韂\udbd6\ud971풀䩋䀠貊䫆妇ஒ할Ꞓꫬ嶒㬲鿝굮헬텀腵破挀ત鈲쐘ﴏḄ뇂拎渇叓ዚ鼊䬬谶䐫∼ꠧ聦骖꿐優啀㨃ꉁ籘镔ⵚ㸥幑曈醯㫑嗍ዔ爝꺮屇鴃袃乄啑彀啔㇞ፂ㐴挶때堷᷶Ჩ죲ꨆ爢뤕鲉᫨娥욺\udcde應냯豁䦈눢Ǝ裸籢﨣抈搘ͪ䬉瑄୵ຑ墀灪춦ʍ䏯₀兂Ƙ푐恬몙郃髳鸄㹵딆돈둪˲⡎శꞻ̃Ð㩪萎⨅핃鹇ꍐ閐壔㹤总톫⫸녤퍽\uddb0桹饙뀳䯀蚉槆↣竃㢡἟ᱰ궋팑椗吨獱ᄟ酸㐬宅쨕蘭异凄縂䋈ᨸ耠庎Ⰸᆬ䏿⍰棏죠ᑑഇ談腵䕋벥﷡\ud833ⱔ룐ഐ⊺끆榯섰耴Ꙍ瀭下ᅅ쌣䬊ꌙ櫘⮬ࢿ᫻埼헷葓렃뜄퐄㸝䃃ꥐ뎠በր❤ʋ\u000fݔ⃟㱼욖輰硽䀍쩥ꊻ觙狢氨鲬܊⭊跂跒ꅴ놫鄪앴䪿৔俤≰鏺袝⾌垴⤔暕அᎥ䗡䒃嶄兹欐⎃ᑖ\ud911쒗ン솝뷜ꢊ疣ࣂ앮款脊舤瀈ٷ⑅﯉쨯廰禡䯁띀⼴ⶨ㯍ߊ楔ݠꎞ棁搯ᑴ픁償\udb0cￊ뮂苾ϯ傿냻숯ױ䘼퀼冁⢷騴픑⿦\ud9a2螂꺴ꗠꖄ௱唥헕蘈줛耄詝➫\ud800ꀃ儗﫲㧁負⏿鑿禤ꎋ섙⢪這砹ᗩ帏뾀Ñ腈릸p㄰ᢢൢ䝉꣸⏨ℊ⣉⦎ௌ畣봗庋뒢聨崨퀚⽊⻻♽ᜡ礪ꔨ廗텁윰쟞آ닰㈂䶡긁좳꡵᛿ݻ꒻绐굯蜕揄疉㪑磰쁲랕囐䚰ಜ겲䙤淙ﳣ⣎鑈ഇꔞ́鉈퉁̰펔Ǩኚ໌૱Κ⌚ﱫዯ⢩쨹嘋㥅磊\udbe1瀠쿄䜝啊䓙ܬ䗳浮䪫騡涖舄孥릧ᛚʣ㹑뎔ᾔ䋥К뛛壬큰ꪵࡴ‾툚陠韑▙䋤\uda00ሓ묷䰞ᮊ趔樻倠胚琅」瘔\ud809ꁆһ秃痶蚍ܮ鏠ṗ쐎卼ㄔ䱗㡌Ｋ쿔뢨㊋쬇\uda34◬蕠讣佬ꚃ⑞—\u0019儮푦呻딇袡쪌葨Ϥ섶襖㌥፯읯䣴Ե䨣ଟ㶎幜\udb29㵤༲熙하穔玵ক᛭䕥䐹洢죢쁚숰萝谉╆銣㇂䂡늀븿끇행Ᏽഢ䣸뷵嚲ṡ⨓꨼䪊甃饃 ɰໞ⏃䎥╃฽⨦껛䘸㔏썔둡䯙ረﶠȏݔ䢕ొ苪轰䆺ꉎ\udef6\udc48푧삐졧枈Ẁ㤨▤㯈⚡䒘۴蘊聨㳭续漸뺗寏䬃ꀃ雠쮔侪ᕪ⟪譚諐㊝볿貚佄鼀릇ꅇ௵눋䔤鞬䔅欣ે䢁ᐪ覽蕖\udcaa\ude15ꢯꨵ樷媋阰䂁熼ᯐ䣫伂ⵖk䋩⇮ビ向㈬娌⯎澆蔃텼浈임睼䦤ᖂ酩׈䓰勋쨞늈窌没蕸팺䐤框\ud80c潖烞ʴ㲑芁츰窂梨랥硪쒼량᳉ꗻݳ૑鏕塭騪㹊⊏暏網ᅊ欨ި蛊㇪㦲艐嚉퉧墫⁯졒꘹瀒넂車澁\udb51樂兔敂岦먗索湞恺鮹딈贕浅⍆\udb50ﳖ✅ଘ旴墨ৰ݃Ԇ職恛횡隚侂䋢鲙軸꒬㟐좯ᢆᬿ⎳痍ᯈ縄梋樱ᨺ\uda86䚊덚钽땁ఈ堼㵍φ賎Һ㦝怭큉ሒ攖ꄊ饄\ud8a0℥쯠ﾘ粐┛೓䙹⌝ᄕ턫벍੢쒏甆䰖즛㿰ꩦ퀂⸭ꀳ䐦册턩鐎蠦씒Ȭ튚싁怢﫰髰鐀応쯳焋↱ᑰ呝᷏⺥혣찀抖蟎㼴冚Ⅺ蠖譌ꄿ챽省騣ꀏ暎沄᳑\udf91溈\udf58盦䭤棅˙ꍇㅶ棻㐲둶췑춤絢磼漜귖篇ݵ觱췝撾㉬탮懅棆둡촓㐨\ud88e핉㯸쟚\udec6䋎ꓯ蚸⒙͋낋샅乇偷뚗ꍅ冣꣐헰꬐㌼㦴ợꈛ膭ꍜ梭ᨶ\uda24┓貏婹\udd83顁뺀Ꮨ㵑ា貮䎭ꌴ桛梋‟࠭Ī焑\uda48彼둁ꆷⰧ¾ᑛ얀儡炅␇踞恌ᤳ晜擰蕅㓂䛒１簠㎛䬩᝭썑׈‴䄆휑ၫ➆憎Ⰳﾢ횁돀䃐㹘㐤়죒౾〥\ud9ff¢怶瀘㸋갂湲傉쎁凑౴叵ᬝၾ哲ś⍱腤㉷산쀧\udd03ㄲ㠘榐㣉哀ẖ靤蘲囑㍡瀁噌脡ܬ︑ꐶ闈ￊ㑣糳萰씝᝽䝇䘿傱턯퐆趟甈ꈏ腄챃ད䰀ꏔ䪤羟킯旔辩逎臻ꢪ蠃崜뫗﬙퀽ǲ畻☇뫩䎬ᬮ昷⧺)ꙟ텅꺩므㡧ć꼋懵骺䣵≟권胝ᠽ䝗䙫ꈪ内䮑툶쐕辗ᯛ꣜꛶㋈鼪⬹ᴤ\u0015䙾⅟℣ဝ냣塈㐊㴗轅ՐᏑ蠆濎餓탤ꑰℍ蕖茡冻ࢾ暕ᨻ븨㖁碨﵀錄˚ࡈ೧؟䇜킧ꉣ퇢䀸唚瘕욋ഇ刜娬崏璠ẳ䱃୚ꁰ䬾桄텾䂐㯖㯱첃䭑Ⲁ㇐፰㫠˕݌蛴ﬗꉹ★ｾ龂밹꯮㺍隡侢ᖨ돨钔秢鸢ᅈ甴蔹攀۾饅밫膉\udda7椋氰琩緔璸෸䢌蘩䛏ൟ䙏ꏥ꠳樰းꈐ⓷筽ꂔ⡉㊈䈒頲ᕐ咈䊴ᢳ꣬ၺ頮甞ⱬ吋ឺ꯼꽑ꑉ眛龒ゕ椉졧凒쁏偀౤頏뚂㼓쩇兤ઑ趙洘顒蒦쯼턀㏐쎜뒕䀉풞棙逤픀䕛쁢1㧔ᐌ綠⼩ᥫ⋌⨣菕满좚큫屑\ud9c3䫢䭀ᾶꚂ濘ጤ᜴࡚ͥϖꏧ턳偏큕퐐ఐ䍴램ᰘ\uddea㜆⃺蛊\rҝ▣뺈플顛湖ᠦ꽥鰂祰찢ر涣ⶐ䢠फӼ厴㵓䫓ጌ⌍䀞䌒钤僆谁굁ᆠ郤焢⪥ᝑেু燘ㄻ퐮౾茘嚅♰恘淊ꓔਰԵᯰՍ䈅僱Ⅼ醞ᢲ㔋怇ᅁ磼ꀱ䖅᠌䁒⸃ᙍ䛰웸扩꠼䠢묄陝̓ᒌᆹလ藌ဆớ⪝鞸۰ӌ膜鰙쥁끉캂㝁\udc11\ud846ᫍ氾㐘⩆㎸ᇸ䗗쀞⃱炤䱅多ᜌ낆ℬ⪁§僨ᵆ⽲裑谼ꏋ좍ؓ⴮𹅉눂쿰憳醃襨诨䲉픇뫔捷⠍ᢃ쨊Ḑ浠唇ㆣ婢骘為嬚Ⓘ᧜အ躲墾䄙⪷옖䪛╅䚁쥕壄쉁혱嘴ᬚᶍฆ槃䢟砯邛뜕둓噌\uddb2仙㸈⋰娴貚㽿莼曎䉼泂닸s豥贝訅熎\ud8c4ޢ\ud9b6俐옌糸ⴰꤣ耬ィ쐎萪퀇ꡭ畄\uded2䵌⏾ꢗ㨄枫컍ᒳ匛ޝ锃䢵턵瀱턗⺠￙聣現ꄨ셲霸㟊쎈痧؅奎ꢈ颋ꨊ☡嚇\ude1d耂ߐꥶ㩰⣱⤽퉍㮌鐧鐭퍀\ud95d뺪頄퉰픐ﮮٌ秕ᤓᕵ䅤앭ၐ呧鰇⠎ં䣁뛀ㆁꫢ꘠⁾쓎ᵼૂ䔝稰輧⾻緜㸐࿢祼鱁疐휐抦☊芩衂ꎪ捄텩㡧꤆焕蓰居ᡲ०⃈☛衞궓Ƿ䪆Ƈ䄥⑓膔넥쥹ᰢ鯴݊羌焯\udad3Ჩ謶芪挐ꠛ缺☲挜᪱쪁獐쏨咀㑠րZ脅鉷ৃ걺臟遴챏㔋㌟쵄⭁伃筡꫈뚌畴℃బ왮3ㆼ푬챨擂ᄑ뙚욃谎糰觤羔⢄ᤩ଼쌮偵䩫鐯ሟ徒⨝Ĳ쑐鍼侚겿ㄩ놦㓯抚돍竖戂ꃽ飕쨺猖⊵居⚕ꉴ찢Ⱄ㭴ⅳኹ䃣䌮挷⢇袺쾝㕓蕍⃻韠綨绔͠˂ࠛ੧토﬇懐⍵㑭騠焕ઍ买搅겴튀珌峐ዳဝ䈆쉝艂Ⴈ硸໚錚⇶㏘ՙ㉠龘㟦㶑չ谎ꃙﭜ䶜톎킡흥䰀킞ꫲ덺կ쀘ݔ팇뤯\ud88b₌얛츁\uda05숃繐듐〔ᰐ蓼ᢋᇹ䌢쓾偠⡓읋蜍\udac5蒡\uda0c뵆뤒뗈﫣鰕岁존֓挿⣤壟쨐淖궂얎뭾욓ۿꕊ췉쀘ƌ及䧷ꤏ〬㈣줕ご춻닊젴࿗⦆ᴆ趞荨Ɏ⏼섶콀끎談ᦦ贔틆ꃐ璱頴㊃⭦⪶쟀脔ﮕ铌뇚墌᨞阳澣ö主஢輑⾈扉褞좕䀝ğቩ吗砻찔序⣇匤ῡ赖傽芡씂깧ઔ卙Կ빬壅䑧﹇崜㥐ᖳ慀ﲱ⥔ᖰ⯤ᴪ軳Ț䔯㱱膃╙ꆌ嘰녦翅霊䫀\uda00햶౑ꃡ鯡ꔸ䋦䰩깬ﭴ걲唀⬝閊ેᐍ䥆캔ᗄചብǩ䚘芮ꑂ뇠ꡒ㿇찉햍璠䥸絘뀒㶎᧞蝹ᤗ퇲꾢ᦔ欝햏璠䵢봨몯欹뛼\udc00⪗఍\udadc턽㬬댝⦀慃觳1䣤ፌ䡆筄ඊ乿샆穂䓂줟찋㠉頃찇 僐ᙀⓖ䝐㓌Ⲻᢚ㐀㣗煠耀ӟ덄ﳰ䪙ܣ瓼ﾘ怖ⓓᐡꏅঠ盂쀻쀏鴀莵↠뵢⡨吴侬珛庪拞딒⤌䠇너䌌῎▨Ŕ㣛･ꂴ⌋濠䋌聎⫼閟灆ꇜᨁ쨻嶆ᱢ髲䲩ꍣ졨潘챬䴍ಓꑕ臗䄯삳낷졈怈ꀍ㺡⃕奐ֱ癔慬䧚㷍᰻叼窊甬♤൉亘똿鬛敂ᛄ陡꥞鉀扖ఫ쪹裊怒ⓩ烟弆北Ȗ+脱独¢謿㮧깜㻐ᤊ엒뱵놕␄覕蘠ᘓ﹄径輼ꬆ䀟㽥Ȇ\u0010䟋犑腇⡐屃쁤龔㤝戏翸⣃\uded8쇊ᾶ⑲艒节\ud818扰ꢉꬡ激ꙥᜋ퍐綱䎔罬汶⑾℩㗧ஞ⡾悷\u001d历췖ྫ땢笨瞥⏎\udb46區꺤䳶乥睈㨭ꦅၗ慊⮑ꡕ曤嶋Ἁ쉣뒀䫸〉⛚᱊ด胠쇨致녳傕抧ᯎ튥띀ᥐ뮱♔廬禕ḋᄈ撢蒉瓐肫졝嬳ᦀ퇧휪彸띎ﵠ뎤ꐥ麜ᇝ谲ꂫ疻놦吾ꛌ歎뎢䩋媕뿾鑐玊⢅漒莺ꍍơ⁰젷頓䐌昉ᘂ삄뵌裕䤐㢢쩝觐啠膡ࡶఖ䝭푢瘻뷪㼋腩ﭬ⟡⹦挬㷶㇪蓽襺ꉅ腅嫒遏뉩ۣﻅ렌ྒ耸ꤟ뺶㋾檈鍐ঔ귯㐌畠첧㵎\ude86䁲遣谂矘螪⏶㧪苽踾엉씔砙臓皅甁劁覠エ龠縀ᩨ偌ื優勠ᖀ煴瘛푖\ud80e芐傊㺣塱桔ผ嘕ᮇᱶ֧䞙⦉뇊坠廑뗉찶㓘型㼅듷娮䚑灕鍅역İ⥀੉䜘福쎺ǝ김⡔㘜稕ጊ藃观ꌥ耼ㄸ퐛鐍稁鐅ᲁ밐ꇡ\udf24摆㖿ⴑ谱몙燸푗᱑㔒칩䌓ٲ㇨ᖶꄷດ鸆鼚䄳넊妠ﰤ䀘呏象䶈랥至鬠৴ࠃἴꔌ低ᝬ퀕퍤\udc94擁Gᱞ㔅윘䵇燅彣킾䅅擤樄ݭ೰ƚꏯ䁥䁚큛洀ᘑ展⽄\ud801栀ᗨ렄᜺ᰲ蟰꡵㢹ꨣ丮퀂൷郺쌝屍䲒龋钅왍鐞Ꮦ셎걑㤆ꋚ侅ꘉ챆ꖽ况딸\ude80㵎㹪蓓计㣥⎙鳣㣢똬ꄖ䜋⑅滩ﯠ➔幰ᝪਦ̩ʼꄈ泼욶崳\udc91潓啀媧䗣稙᭶⥝ 뇥ᇧ虹䆹왞凵偤惚衼谪礐⎉꿪熃욲셝⦬ꪒߧᵳ袼ꇜ盋夵꒏埅犪갲嬬탁⮫԰ⶄ唸࿼牂瀌╆빈樣툆꾘护᠃랃㕴숆롗䄚㩌ᡆ蘛ʣ⎌\udc06틣ᣙ顈⸴뽅餏덢㡼㱎踿㥧꽍薎䧌ֲﶜ븰\ud89a삂ￄ訤뿶氉勢婜墍ѡ̓枦篈餙黑㽧ྒྷ违駬ᯥ쇵ꍼ䟲ⅇফ죣䠦រ莸뢋搩儵\udc20릁浊賳프쁐풸쥜梍ẗᾄꞥʁ恊•ࡉأ暴숁槆脣鋖〢ᣣ䁵쒸톝燮㑨鐄槊퓦肗㱐욜\udbd1骐̸绺㱷ꠧ퐼禑沷脋㉩ᯜ꬛᳃探젼⺢◷僳ា鋔ㅍፘ녭乇ɱ㡻㯀䧥왣뗅㣑ᵱ긴᝜瑊ᓇ᫇ࣸ妵ꇷゟ$Ȁယ༅܂㪁丐ᅘꖋయ戳눹읙ꌢ컏颸摧鈫ठ\udb8b嚣㛣㖨涸곣鯟䂟上刴씊㳖黔℔걭컅ᴪ㮊淄歑孱\udad4㲬瑕雏摕赔몈䌁셤꣚踢渭⯕鰃㌨ピ࢕䵟ꩈ⓽ޣ䒙Ú쇴쀠䀅㘋閌꓄ḅ㪑꥘귮⃆胻踱ꌾ渀丹ᮐ㹀䛤픲鲠깼畊뎀Ḝ븴駳䦡铼偓嵻⑽⸋衍㨇箌ㆢ㻢䱨㪍揜녹虗枏邏䔾峚D묧챏혽㿩鋦久勠繠愠㗴قϘ耶Ņᇸㆯ룓둸໎ᬕΰ魂⍢⣘㍍኏ᛓ䆣왴킢袔靜汰ᣟᬚ뾗ꝇᑱ☨츸렜ሉ侙ᆍヨ쓀舌畞馠窑ﲡ駱恻溼웮枉ံ㕿⿾嘱쑃抈桹∼輒퍂ꏇ듑棱崴ֵ└쏃စ䈂ꄤ䁔葰⠬愚◁檌錃䱀⁔䜼砕ẞඎ퉶㳝ኢꬥ膵꧇ꀃ絃苡僘悮␳ꗣ蠥壸湮磀⨰ᔁ켖Ն珄햂鮔然₼娂䐯ᦔ쒺篱\udd49䩛ἣ咣䖷㇁⾸睌웠늓顎䚷᱐஭왗儊ꀺ奚逝뼂⠀랋牳䯪ꗶ쓞扛赳앗儚퐖뱣甜ꜝ럴륨쵢ᨾ舟㼼걞㏆늄ﯵꢃ碆뱄᫥鞉廙噝崲\udae0᳿鶉ꟛ鍂答蔜ಽ⤢ᬰ鱜퐁棠씹⏘왨稄Ẁ੦軐臸䏈䅲⃭碗\ude94㻆ὢ燎愺⛥衬咷藞≦起躙ꇝ栵碦౨⸰恬⟰ᄹ觽葎鉿ㄓ럞⫯፷覙ꏝ摐紐\ude3a냇≲쨩䀄ؒᖠ赣첶츧牋㖛ꘈ衐젦牚痂煀멈ﳐഈৠ᮰⢨៲裵䒦掚몒聥眅ㅋ媇口﹨퓸媲⓮긄裰\uda41≂䨬籟촊鼝黇㍘፲癐쇉ꆼ෎戭掕䍓ꗽ訐͛ᔺ럞ᕅᯣ堹ל屖㡚ௗ๜庣枃ʚ킿삟ぺꨰऌﰀ鸃症딣ꃸ锔碟쑄烺凵鐣籐攁㰂൱楉뀩㣦힐㖂׹ⅼ莌厪떾듚Ť眼ꡑ漈\udc00➉᝙纔䍼恥ӟὂ虙뢴ꕧ肜猜ᖓ캈뙍䞓⣆ฤ㉠䨤ܡᏆ౓䂦ʧᆜ通ཎ࢜떘ἕ\uda74䣲刼䱝璏⬗匿ၓ䇏엇ó㐘估蠲嶇쐂쳼跢Ṁ㐾駄⚮즈惸ꁓ樚瀾뀆ᰜ\udf8d﬇쎃ﻁ쑰컌検ブᏙ輤䓗騾縺쐂좤⒃궐䶀뱔⍾णሢࡧቡ엘投噫⨦︿誃뾎孅牃瘱ށ罔揰⃕槅䝟쓱冐쁛⨆嶔洟塡糐ᕤ쳚অ\udbc2ಌ憷砲黇ԥꖛ㮭⨠갠䗊ॄヸᘒᶋ툓⃸퇀৾㐨ɛ榏缔毐뿄䩜靱ᒻ⑐ᰁⰀ韣䒀☄큭\udc0bᚇ摜멊ὀꀤ缀ᬀ㙧廧쯊ሜࣁꕠ웛\udb41趕ⳇ틥࿣ਡ䋭叄持媩៌๦犐ዷਧJɧꝐꤔ瘄庀寄꬈᜸噪㑊ᶜٯ袀윥拑霛纃㔜䂜쵂逧덐ñ૲㈂䞋ۼ⩠ⓕ⹂㈈┟䶢c扁訡죦࢈剪魴婏᭟뜩﬿쒴ॻ蔏茚\udbb3Ꟈ蝢ힺ쨄Ꙫ⒁㛚ഠ侯艰䔳ࣾ㐣蔘댂였羀텐⇀翰ⲁ㶋ᷟᆇ藾慿㼠㺆舘ₙ䕃ࠧ∉ႜ璌幃讻⯄聈ꨓ࢖ﲓ厮沁ꖈ䓝렪⇆⃈፹䊊訐亢ꎤየꡑӛ䶜ጂ蘭쐖￸덭⟱݈椢㙿ᑱ흉요Ņ\uda6d呫舼ﰅ핇鬁蓱ꈉ䥘굶ꖒ坝ꍤ逷櫫⋵૨ꡁ艇唄悛ᘵ宵벒ഖ䵓㶻䛁⽼䮔⚰Ĉ\udd12㈆栗귍倂윝篫ꠈ酠鍀Ș♵兆ঽ吟摇⤩ꪣ楋ⲭ\udec2݊便᩾㷡挐ᙎ䘱兦,呉눤㈏㗇哵榩詼鱪䱔ⵜ఺ࠐ黅䓍㇟뗳톃壂漛㿱ﳻ噣鴘铴!㨐雅䏍玦梾醱䍬ྺ㠦餏흒ﮂ鳑榠᜴濜㗍ᶐُമ㯋例셭\u0014誉촅䡌릣划짡丨誜毢䯇諢ᢴ喙१㑊䉕초묃䡎筫졼⾪쬃瀀韪㊑認꒗앃렎丷腠羟됑ఀ皀辬య更⒠۽᩟ꗊ䙙丂汇쑬ꄺ늡楀ፀ崡皔俖ꎥВ䌴❚六⣩萇䨇㽃ꨟ梉鸺乢嚦ꭏ◫鉶㥑Ἄ໪ㄦ쏕ᆶ蒫䨅ꄱ킛媱䙽쐂\udff5ྻᡠȄ즾烐죣⓴乩癋\ud8a7讒㳮왑댈縍㤉ꍸ阌몗嗖ޚ䖥\u0006凓息尌䠢娝쉂聊இ䵢麄ꇧ뗣葻旵猞\ud8b4鑇愡恚꨾愱ꪄ塊ᩀ荝㲖♁㞿꾀᜝⒬퐪웣ꐯ㠉昽屓ꨜᔣ\udd22ﮪ馹瘲洧苹\ude15䧁叝蒾ॵ郞쉗錆蒠ᰤ룽桴≷㤟ꍡ⼰齕䀬┵冋त왱膌㔉椇െẀ雀䐧ㆭ࿵鑉汄暆ꋃ倿偧蓄樤ồ匜￪╴Ǆ跟杬置㟓桧谠紝膨ࡔ帻줚榌Ά鵽篎⁰믂䧡⇰邍䂼Ⓤ싟ॴရ⁧ౠ噧ꖉ呐灩碦躳忖╍酡䭅⑤ꑯ⣕䖟䘝⸂Ꚅᫀ䘠癴剀姓଑䉟觐폳洑凂\udb4d촘뛇獀嵆∧ᝐ좉旔㬺㩞⟁옑钙﫬邳硪艪泥쏣멀ཊ㑦᫸磍큞׾揬䂈襅푒≩甂袜鋤旄縉똟㢳讫홐ꦐ懿ﰆ꺽㑛䀕촀┢賐☉澸蹼躜䮪匘ᥬᓗࣽ圍Н⨘㐄摈ᦢ餓虨⡰ၫ豆ጒ섈攒쫷㦊኏\ud961辳堻鞭㉡钀┣螎Ⴄꆛ餍䫯虶熡肉ይ̓≿䴄좔㍇㈥㐒쯴⟕漢忰ᖶ갂卹怅ኑ堳惃ↁꛒ詡顊分鉅偔≤޸ঘ譮虼䉾öဖ䒦㱄햃괗ꃰ籲睙鼜ꜘ薚ᕑ㥦譔䭙ꇬΩ䘡쌅壐ው袥\ud839陡逢঺冒ʬς՚㘨䞕픿ⅲ㼮ꉒ촆ꢚ덇ꨥ⁁ż꤭娄䡶㟰鵼託\ud833┵⢓눝䨗倌㜍앗虩椣뚉㩈财嬷슳᫑趢宴挧㘎케ꠁ턻劌䰆㨧\udf21比赀鵃ⳁ呣ᄗ㎫䬽኎襺鑨퐀㊘飉凌벡⬁숀ྔႁ㯪ײ腖諬얇掙燮܆餩⢓㻘䀸샲載⼟靗乭溘눛妃Ꮿ⣉扳\udd27艕愩뤩偼ꪻጇ閞倦艟癉\udb10簵ﶋ냣錇⁋涅ᴈ糨㠱㈘铹䅼ꃛ钗僒㑑ᐕ战쐎킄뀂⣑뺱㭄餤剆蠬䶑ꂋሔ棒ꀤﱇƝ闪顓荆‍ℚ誀ט圾㹮ჟ韋ъꊶ쫎赝늫ᝆ増樂ᘥ죑䖉訴ၫ鷃単鼧霞穠궾ᓃ버෹娣忆蒊㮤ꀵឡຆ愅ˇ쇁ꠐꠉ扥턳ἦ㞳뀦ꄥ찱硸﹔斊创Ή躜쐮훣ᮔﶞ蛫㽢憺࠼Ꭰ㻄遪㾱⥔Ċ胐◣ꐲ憑쒯Ƹ捔＠针֛ॸ䘖峀⾇ȳ郊漩⛯變㤠\u0019쓠樟넬᪃鱏櫇㥌㡨鹬เ゜ᝉఊ<Νּ０鮛䶌Ё웢嘅ꀓ췖୘꽜硉켇쇜䫡ꍷ፸桽쓝쟏꽂육ḥ橁㒮꺙ᢑٜ⥽쎴픲퉢簳ꤟ⁕氬眣䋕₆켒뮉㰴廢缍ᒨ鹝੍私䐨몁әఌ쌇땀㪢髀좀\udacf挀䂑鴨鵕蚠讀铹煓飹\udc57ꄺ⽶㾤鱗⿩祻ꂾ姸鮵䉂ꆿ኎ꢷ著╌貥뵫휅쪶豦⌷㇔孑য攔䀑Ţ\ude7a룇ࠈ\ude2cꢗ磕ꟈ삓珀瀤솀㯱㣪襈晚ꉾზꢱ\rꨂ苈૨잍鸅塃翮આ㨒櫕ᵪ膭拕瀒፨㙉洋༇쐁놠刵靑\udcb1䞘覇늁஄郂䫶싰鍄\ud82bќꠊ䨛颅╅簉赐勄帿⸰ố౭֫䐺ࡗⅳꂕ䜪鬑䒘㕁儤赑計䎀恴₝鿬ᙠ谓톺ǵ뚗\ude09㮠貒ौ퇣턲蛩ไﰾ堃Ŏ脜ቐ販䔇ꌧ鄣傩褹䒜㕃儦墓䲾ୄ阳肖覝戌懧ƈ⁝퀱㐒렁怇愧磊쟸唴䒒浍Ԥ郓䐇왺ꎩ銋嬄Ḹ㘺䇫芲㪃梉攷䨟鋹䚇垡铭㐄鉍䴙⒟區લᒓ궑ꓘ蘫餬촽퟉⯾⧆䳓쨕뤈ᶗ㉧颕ꡠ\udc70宨埈縼ႄ቎Ώ蛗䈒ₚ験Ⓐ줳몇㉏ꅀ熔年帿ῤᜰ.ڴ藎苪腚샬耼ᐞꅋ撚\udd42餤睑晉\uddd4ᾕ᪪儌ͅ臔\uda5a諗ꔰ둾᳀﫪ྗ訥愁矤銰瀸⦖錿橩攴ࣄ浇Ⲫ눕ᐐㄽ飊嬥递礀챘\ud87c䞒䫨駤鴷甬◿╎砡표鰸甁ፍ倂稀읐娱탘逢払嫂᤯⑅▇兜⠨꒨ဓ尲沁龜叕ԡ蝝陔欲怒㍩䀡踠ꕜᶜ턯뜑찌貇ܓ腊䌊㱒爩㈺蚊䡶п䱮㡹쁱蠉耉씎絆Ȃ皀䵍䅒槵є鍨̕╟况襀墉ꬷ僉\udf47퐵矒ഌ㷴倲揪Ⴉ⳺謪䲾ꋭA긅墊䎢ꇟ㘝뚵個‘఼\ud85c緓⯞髶䴤㛉↹촟肘扵ᦏ昗뎉㺫쨝꯴⠕ࢽ蝁⿄駾㘣욭˅品㑠頳ᐇ舊龇誀벁떀┷燢䓕荙ጰ俗槙◦ऻ驩㸐椬⚊ᩌ覠䚓혉䂹緘ꖲ㌣ꕂ邓엯ﶂㄼꮰ窍ꀇᗩѰ열潞ཌꊥ䫠遧轥▩琗渨ﰷd驍ঠ蚒≨ា賙៬谿⫩踢샏㘻䘔襦ୃⰠᬀ᠀੿᷉\udab4☼䵡❳Ȫ샷粨짋\udf21㉵欃腨⎤쮠ᣩ㈖豙班宔砛ꀛ쒜瞴鼝厠얓䀫轉Ӯ졪圃ޱ餡ꨗ⌿낧䤠둵ࠖᚁ㩊甦緙Ꞝሤ댜劄횾䍵쏮ŭ퀋遮쨰【뼛ᵠ먐ዑĚ뾤\u0019⮲蜨蘃♃᲼顾䭛偍턳ᒟᱎᣌꪞ㎆迩㦺ߺ䣬ꈁ鍠즓九ٝ耂됨뜸໎⶧㩧칄ᔃꞰ襖ꧭ룤챥ᠻᓧ굁́㜡細㵠๖׷ኈ䦾܏絺縑炔鷕貐浀᭑룉艃徆㝤ㄌàᗁ棦鎂㛌睯푾椲ﱢ凰喒Ǚ뉚橸㋒灲ဈ⾦ퟘˁ贼᙮Іꐍ貘浄魑ヱ毀縪艠噌雿솣ᤚᏨ올꒒㡿褻댔㖋ਇ虣슦䝛ኁ鲕฼跻Ϯ笩凝⠙艈\uddcb鿫╇ㆨ⥐ﳉ䑘²惶쨴鵸▬ᕆڛԉ膣鄴ⲟ╅⥑⋉ᖼ摩촁⣐㟒魿墷䲅ӥ쾤者晈໕⿢⺜손㵐罀ᜋ쵘鉽勋왟汵抭̅〥↖⚀焆昐鉨뒝㵧魌֬鼓䝫◜臧났ꔿ纇簄\udfb7릣᷆姄悍螬雖䱉ꏵ錮⬛ᆫ䪙ࣈ㮠琓鳉鑐珜㚢谭䅂䁹sᑒ堑倶뒕嚊闈ﷂ盉(㶲墵წ餭䍡蕷は窅硗則帤⛪완쭢둡뾽崘濏퀏ꡣࢻ⒋凶짢퐣뉰䷗옔阗㔁盽麞爗⿃쵯䞉顐΋驩嵔䑬搿ઌ먁燁ʁ쮾࿀ᣬ且銏熋♽҄ㄮꃌ⠛꠰ᠩꎓࢨ鈪ᘹ⹃ᴌᑔ놘揌铊ᢛ偗急닥돕䬰滍꩖乀Ƞ㺉葆䎤ǲܹ拾㻦彀큳럂﵉樏ヅᰈ吱좯樶ᑦ㤜麁Շ┑倱즤呵쁳ꏑ窌뵅ꐁ李힨塢坁㠽ᙳ辙狥ጩ쩽⼋夀쯇꼝녑圥퐠헉比缔㪾们鋿䕹⍐쥴癱鞶섞㪅㋱騠첼삆௔墸⪹㕺贙튷⑔쳼襐ԕ䞿ᄫ쯅담ࡲ猘噓㸠䘄쭓蕮졝鳪圔㹗卫⣔첡ꀠ洨现∆ࣿوÖ㣚ҕﱁ撬餬崗覍שׁ犣䄶\udca8〹䀄釨䰞祸뱃㩺쓇䚔ꨨ\ud89f뙓伧晑㏉禔ᳲ搅镕ឪ堌鑮쨸ⴲ묷Ւ逫崳濈㦆뉝羋㪸⒴镊昱认³⠙쨶礠늂䱦쪣ᄬᢠ㪽԰᫾ౕ䃅✁ም쥰ᜆ⾀柎⫥镅㟉Քᷲ搅雰쐾衊﷍恒뽪䎟ᨩ繋䯨≨혲뢨㯘꧌㑑祩ਂＢ䔵갾韦⪷뼦贚\udea4샴澩㉘魓릟鈷짹呭唈झ箋㑃蕐를兔⿋걕΍Ͱ葪➽鈫ᅋ警䚥\udb55煪ࢧѓꁓ⊨텔氊籕ᙵ햜ń㣕ॱ詻岾덀쭏鄉㞸\udc5cꀐ뤅㌂錕䞱룠叞遾挀ᶗ窋ᥤ跶ﰤ놭쨑㴄﹢䭤镎ت蜦䁨쇷䀫ၾ㸺☭︖\ud8a7ࣆ㞓║蛄銰悌了茡䱡ꏈ剘棁ꀐ殂玔⯢ᾰ썪할㎲៱邵蹧ⱺ㛷牐싐૴䁄鼜鷺䊐썃邧パᐩ琸꧖ῠ䓰ꓶ䥽厎깒ɍ騯풒踊剘䌑沔߫✥ሱᏉ䆌䘪緁뛞裚聙䠔됹崍⎪픠Ṡ⟜ᢊԿږ샛뀥ႜ큒ᐝ᭮⚠蟐쏨睘㻌⑽ῲ෗쏟␊䥓碰侴ؾ⼖塗⢧蟐ꨩ᪊抻촃ᾯࣀ엓괦烢突呄愧摠릪북楀༤ථ褄섯๨邐贷\ud86f䔢㺉텎辠銩泂揈ꠊ搦ⷀ鳃趽৕톎胖쁛ꀘꀊ\udd0aࡊ톒\udcd1䛉\udea8啦㭅朹賨쟁懰\u0007ᓆ먱씴煈柺ꌙ栆谛ᬕ⬶⣦⛓៘ꐵ킎⧍琼鉊映咜전펣⚠瓨ᬰ䭢ڰӧ‏\ud89f璘ㆁᒧ큤੔Ꝧ⅍盇咢붾ഺ⤑᭎诪҄꟩퇂깳꒝批鉙咛퐱矐഍\uddf4썃檰⠥㬒鄉䯓ꍂ務ㄏ썄ⱜﲟ傦讐㜀쉲괞⸆菤ₑ䜠ꐏ傭ᒷ䫀籫溂嫅騏襂輑핀粤댽ῢ৓胏譫ꈔ঺嬸ꔡ麅⥏ŀ쩒\ud9e8宸邏Ŗ⦒韘䥼э⌰\ude4d䣗몖푝̂䖰⓰卌ᮼ㚀⢇ᜰ䖠ୄߠ刷6酪䩓㴍劚콂ꖁꁴ㡎㔢䯦⤐鏌ৠ⑗貄颯☛ᮑꤜꢄĒ朼뾈毰㵯坶蛜ݒ莌Ɠ༸⡲꧀岝ꐵ杻妓ᥔ핦浞ᶙㄍ᳇┨䑒櫍⃙ࢨ踽ꐙ᥎\udda0왓ꏚ⒙㑈괾瀀䁦剪ꛇ崈䛆傐騪쮅L䎀뮧ꕊ앦䤇ጊ鐾⁇ᡉ\ud92d\udb1e괷裡滑ꌩⲐ壊䇭Ĳ驄赨ꋢ¸ꁬ䀀Ḏ各Ꭰ枹푘麫峏겯䨩ᜱ䷋語耗⤼瑥쩿ᴍ犓᱌Ħ嘓鎦䩀沅\udb69獁务삋铞㨊亇큁\uda86摄텈陊咑䰜鵐萚聯日협঎虜윊⽗ᦺ選脩챤褅꺈Ⴖ輦˺炒ㄙ⁄䐮璉蹃ꂷ㤲믜謶틭멌\udd12頟ဋ桥\"\uda1cᔴ뚈蕈唧䗣痜뻷Ꮰ뎎峸⛣隉讋槰ꤰ哢\uda3cᔬ뚊ᤶ边鹨䖛➆郃屹䫑梀ᢐ蛐碂※\udb45䝁㵧䴆䡨㕼𢡄ﳅḝڡӁ؝耆⃔棽ࠫ큕騵钝ŋ괧냕ﵡ㕼炋ᠶ᣹譊ㆌꓳ⥧胠鎢혺碔㏶銤ᇐ쑴䔪癬⭞኱ꂈ닶֐뇸孷䖽뙀퇠\ude17\u0019\ud9a5㙎糣ダᆹ如ĩ襢叒脐뀲哂㨼锤躃冁鹨酨喪㳔Ѳ豯脬芚棁턒ᓆє慜⪖睂誦巑抩㝴圤濚샊頣᚛쟹−瑈ꩅ\udd06⪝睇媳蔢쉱酈솠⟥⢾ᡩ皛僢뤄搏ᣫ\ud91a䱅ꮨ偔딧볅溉岤絡坲镜雠掤탡䂔谑퀜눈氃찃敇๒炩忈顴䙬雙詒ທ䞠出ꥼడꩠ茔檖䕈梦࣢଩램ꋊ孈ㇵἵ䷠戍刄ᠣ哰倿䠫铤␰ዹ꩜ᅔⶣዐ줚᭥品鉕ǔ邔潷✶轢鲬젓饓0黦怌䆢˴݀Ԁ쏀꟎鏐ऊ铏\udc64밝Á좁絓‘ⱈᙀ界투췮똘醙몰﬷Ƒ୭萀뱘⊒ ㌩騐ᐴ씓荍썕䨐哦屑伄᪑＃ڤ䀰纩涥Ⳋ뼚谟旊ꂇ\ud83a鑃騈풗츤ణ釫뽀㄁䈑ꉘ蟴ᡤ⢢᪎གྷ끄☥剽⧗䓲䱴밿ʘ뮌ڧ⻢㩶篴癪嗲ࣾ跍䯟ůꊨ⨉眚꒴樣褢휁ꈂ﷼㷚ざ筭⇮亮쐙Ĕ䄋₏襎ꒋꄴ뤢媖쵈㾠쭒俨ⴔ࿴尮짎痭웼넀큅萄᠏ଊ洇拓䇐灂໔㎵Ⰾ蛭䩸젥华焐䆉雍ᣆ圡鲙﶑ﶤ캒瑙を颪䤍냆鎬鉱꒝摃鉘\udda4݂皦臑嶩ၴ羱馲ⳳ俬謓쒓抔燈襟ƪ怆죀皷嘬뢪䝑艺጖ᒎ䲌ꝃ퀙ꀾဆ𚐄䈀䉇픸\udf3dꡜ꣆Ც乊ੂ⦵䵩оꊔ∪ၵ䠃甮Ẍ\udd4c䞡栘㜦ᗊ뒡㟡訖娏䠑㈄씇ᤨ≂耱ଠ璀栭▵㨨쑉輪鈃㱳哺㴉몐轅溦ፒ뛉ﱨ皀㍴᝾޼˳Ń悞㠦圿딦缟뇳ބᔩ㫱㍗庨忯遳⧰ே♎餺껱撞ꮽ鄲恨⌒뺦ꏑ澩ᣴߪ䶨կṀ伈쫦屦㩏ᦴঅ\udb48斠爳芡饌취̝轔ᅪꁑ퓴稽ẇჳ햠宀홐磠ը⅞ဦ٫䅞⫕맇ㅅ킐Ფ౅픮ΐ챰骅⎎弒囅ⰹᎱ䧇ॸﲇ暆ម㾌蚐歄ꆧ᫐桩爠ᦔ坣芅务硊떑ꨫ⢼윂쇌㼭ﺶ탪咄썴ㅀᾯ鍇鰈슯阢ꮚї닺됊ᩑ괚蚚歁\udf6b泽鳨⬀场⊄᫅ȴ藉삟뗂㆟撟龀ὀ옚鹐놥壓\udce8똴꼺࠵솄杛욃∨怴큚呐\udca0ᒦ털ﰹ븜젅嗍⠻嗽᳽仨┥匷\ud84a䀥账옍捈\ud8d2䇥Ἒ篁㍥ꢶ꘿ㅲⳞ⁶ທ\udd0d）낃ﮡﵒ褩㫩ฤ摤உᕾǢ䓪ⵙ끷먑䴣搂卍ﮠ팠䴖㿇㐡袐ຠ٦냼셇멽稨龡෨◱쀨浝䋵ȷ넠庛ᖡ鉦⑱㑱燇\udb4d!זॄ菁썼\udf60濼掏阯Ѧ髿૙몥㔚榅㓏먋䴧卌ﴦ훢኎렫⹝빏垶膂\u001dꇡ聞䀗ꀠ鈛چ\udb42씣\udcd3蝨伴傈⟬ᄜɀ毢椽⦛缘੯ῐ媖㙋笧ﵒǼ뿟㾏\u000f퀓찃졞業꠷驐\ud816獵샼᫶ⁿ醣홺즖ለꦚ派둭湟좈罄飂촁ᰃ鐱\ud820䟐Იᴸ嚡腴ᕦƠ쁙밿各컧덠鼜؀囌乀၅⁷ሑ二蛤跋ी䓺詁碌཈僵Ṻꠙ磡騆ઇ饃௹ŋ䪨捒펦鉴듬閂퍉隚暄⬡꺵Ⴠ馆癀⽹택׋仃篍Ԡ腒沕ᥑ멯ᡏ邅瞬翱扔鲀㥝諎᫊ຕꑔㄩ槕౟\ud9bd딽锏흀\udf82铁࿨썴冺࠙⺣⍌良卜ቝ榕砷婐\udd0c簅ؤꆉኳ膜\ud9ffꉓ⏫ꈆ팆뒐\uda50᫩걌쵳㢸䍴ር魂胯ᐥ⑊ħ詘鹌ꈯ骐ᵍ猧⫔櫉ᵸ퓚礟菽藄䄷텵쁞琶糖꣉贬ﴶ\uda27뗂蝱包㦖ꍽHÛ䵯ꁆ셖꤁䍙챇䘱孏㟑᭩ᆰ瓍㫰㳅橦冱勺ġ橃샔葷ⵙЦ魂民ꡩ\ud9b4⒄˒ຢ霜丁Ⓘ贄줖睁䦂弍皙魄㍃둀띩ᐕ窋⑙靫፜㑛쏯뱽틀♦િᑞ밤☔《쨨쒉떰龵踭蜜齦訠順쏼烣\uda46洃皞筍춠㥭ꪰ클婐ɱᘀ䎫㔈䎒쇃腗딈㩍䀊ທ݅莦⇐仮㇔瘞軑ꆶ僐꜕艥凚ᓈ㩬ᴆຐ蝇莥뉢暪㛬귍Ą룒䪐礐̫膈જ隠⠸沍ꖆ쐤\udbe2忖㘒鹶圯⑂䓘\udc7cꣳ貹ꞎ紃ቋ敁狑闀벴册٧\udbfa띞鮉퉹棥怩㩴䴳㛣ᬡ븦ﵣ쮴憂폅甧識鵴器텹㩤鴿隌겐ᣄ䊜ൊ㘖㰏靊骍臶芳肇ॱ﨏\ud92b李ᾠ㧒쟨ⱄ机篘嗨䐩नꣴ啜碎ἄ抍⇁菣בֿ꧆옽ラ歔\udf12꼾⮍哉舏탬㩧鴶岧癢鈾扯Ɗ鲡⁏䆏놞⢢ﰋ⍁꾦㠍㈥ᒡ愣娀଴뼅沲鷝ͻӳՈ䄔턖ქ㒻ꉺℾ\ud9e7ꊲ\uddd1櫩佴䖄㘠ཹጻ伫䡘봖ﺟ眀支교ᤒ탷퍙胕긞檺䏝ຮ鳷䓣ꞩ틝尨줼⸎㺌煌㠣鼨꩔訳垌鿡໖㢶\udd6e⤣뒕며ᨍ溔齅횫⌵覃≂皞䒃ꮇ눗鏆ả睪뒹\udd2a\udaa7㋒㮤⟑훩짴ᅩꕽ੭৞荜⋚ë넙榰谮洇뛔噠냜⏌਍ǻꓗ퇾ၨ斀괹ಟ빋\udda5苢筁ꄇ渰羋䊾謏亯ꇽ퍀悈ᡨ糈瞠衡鴇䦃僴룂㻐ຟꇛਈ죪⊩晼圝깑ᴲ齓痉팅洰癙䙖蹡䍂/ℕ桂ᬹ随㴮嚏콋▂绒爀ﬄ宠ˢ髆ଅꝜ叶듖며봯麐ꭃឥ聵᪁㞹᫙⟔馈ॳ␋叄ᚾ〄\u001f䄆턃｀ꪃ￑ਠᐁ忦霻톆鸦ꈷꕿ큭ꁥ怳穠専\ude9c쩈ᶥꏓ榤ⓣ\udf6a޹ো駎㶍穟ﴙ\ude99\ud804︄⚙즘ꉺ潧㿢餜欠튛ₒj灻㴲䊛ᔀ䑱蠰黰鈌⺘㐾ݬص仠ⓞ糪ﺱ뤼⌕呉諪얉\udba4䓂Áㆶ慜䁷\uddcd͏ꞈゅ؎紳劗之襩뛥⽜夶ၧᅖ삥ᑝ獟㋷ꈼ遤嬹吨麒䰫ⴉำ\uda52칩땸讚砜䢖踥Ꭿꑧ튤ᣙغ霏쨉䀀偡栠䝀㝜ᡌኩᗚ㔋ꝲዿ꧙䭯ꐑᡓ騆㋂⎀Ꮩ쉄抨㲃߽຿乐慯틡삵䬷첡첕鞃빩낀颷ḽ鵦읭汿ࣹ襻ꋔꀫ禍茓纚ꃁ뵰ᡴ俐埈祐ᗲᚁ訌芯舱聏\uda7b善崸嚚䮳ᚦ怒鏐퐌栆䕩ᘁ郀쒩䧐㶸䊖㉫ಜ\ud909៧揚덀멦恰㞂ꀊƻ쭭錌脇ꢐ誾咺Ґ䤓Ɛ뚆쁧퀱꺍ꅶ킸鎴ᆘ\ud931喏둖\uda3d䩏℁﹃‑㛩끨짡魋轓ᬉ譅籜绘똸聸픶쌗贉⨉㛐Ⴐ䈌⢃⮶衳㙀枻튚㺑ᅹ₉橡⤕䉂࠲\udb68∌컚㢃㐯괩㑱煱ם㇭뼭阨峄誧ᎉ濈뚌ㄯꐤ활츯꟔鬍臩桘밆︒\udd0a偎㬥㍨ↀ،䂆熃С陠쁏ᢆ頧牾茧䍁ⶤಚ㲵ﻦﵾ႘뾃チ萐줰抄㍣♓縅ꚨ᪝蹮柳奇⫈ﰚ惀㱱ᗺ⬳鉫爬谁䤂\ude74ఌ玅蹣埣掙辄裦觸蹇辝٦俧䌉腹ꀜ僀䁖򘸨㲢肤䉢硩枨豊䤥壄ϐ젋ꏴ㎂೮摅㰹⣩鋷歅棑׾᪛녿醍ቌ跳ꅆ胦᥁瑁虔塃ḙᎊ಩봈蜼\udf0d梚븷䄊첀蛈㥀馉屜ᅛ꒲ﴵ䦀弄檂퉀▀ꎠ熤⢼鲉旣͸색䀧㠜ꨗ阁罌帙Ӵ྆焽ᑞ䬺쟝唽퉟\ud921庈鑁⤞ઁ鼱ـ㈡崑㝀⮽㐄䱕Ÿ柣퇞᥄虜駐ᚖꕏ⨦ἑ퐈澠ǈ㊠ⲁ蚩ʄ菢璱찄걙紨縙ጊ篊킅퇶瞅ᏼ℃ઑ驀쌼苒㉗䁹쓳씇ڛ瀥⌄퓰ⵝ朠鉽쑁䧃鋱怅⠄搳\udd38횖삝螉\udc28㠓\udfa9ޅㅆ塥⌓ᛏ낤攐ㆩ᥼貊؏谞耳ꯆ珐봀㿀⩢ᢡస舠䚺╸壾㩯⨻ਙ녏ᡦ蝢⣁䓔譔禣㮞蕨쯧ꋚ㉚⡪ᓱ呓礳䊐䝈鬫ⴙ㳴歆缽ল็䭕䞉∵凔蜭呺㸵ᣂ벡襹螤萇⟍ⶊ靐쳸薺䃯얦᱋쨡ꊇ蘵㺎齇隃鰑돨婎닍앾ᓟ懲宊㲯擊챬甦⼔텎磜쬊▌ᥣ⬾襄蒬架ሃꑪ圅笝挱ಗ턵؁Ꚋ\udf75璳ɜ閳⠄ᒴ燘ꋱ챬僥ٰ⸫걤됪참ᅖ鶌賺㥣㞱鮟䃤硚큱⃔簛娟퀚ᤃĆ⿪肜竜麫殙㮢䈞ᕻ埜敚텀屲ꁣ왽괜猅뿆\ud854龁Ｈ瑤ǣ㫖裸쮵ꊞ㏍囁縍才깐넬辗⾅ຢ\ud956ᴻ㺳咐콈矬怱鍩಩憇렂ㆂ휹最쩘渰⽀ᆮ閇䪗礡鑥\ude0b褴㊲巬쑑䉧䰱킙猌Ⱖ䕌쨏囗筡붶㊽퉻ꩉᛜ鵌䠓昚Ǚ୴몲䇨ꩡ⦐≥둹ᣉ咑䁓ఴ♬쌓ঐ냆侥雓氾㩃澣뚣╂騔畫ꈬ腶梿䅚렞촊␏අ䲆㆓硩᳴률怮囙貲煤촢直턀⒮뀞䦑흂剧痑蓐贸敠僉쥴駯霙㣻䤞꠶먂錳꺌꓉ᬃ腲毰䏒惤\udbc9쐞鉑芒⤍쫧靕瘋\ud81e怖휂\uda89ᩜ银⡴ᵠŅᆘٵ­茩咃놌䜁䎤匭຃ᓌ쎡씳\udfc6㏠瞥㟶酛䥽銗Ҋ蜯剗굦᭎ჸ᧭넎戟ጽꗝ天鴔죃ꅡ킣倆ꓲ䎝黂ᴢ橉የ௡豌ꄚ暪郴螥䩩抈狿楙ነ륪و㵜ﺀ⹢뾠禐衐ﾰᾆ䇽㎩찲谑Ꚍꌛ᳤\"搅ﴄ䘍罀驦ኄﭖ퓾ߙ랷蛎ꭢ乧壭ᥫ哱멱暉ⴘ㰦낐꒥ದ皒㓬阕辒袚㔶臚䳍Ꙁ鞁㳒㹰贳⿨ꭌ\udbfaᦫ蕖誫ݕꇀ 郚됨氍၇ꭃ멃ﴲ땨ꂐ⁦篘䮗斴亰얲鉮饡瓉ْ촦ꨢ덋⢨簁황浞ᛍ⤇莳䭷ꕖኀ\uda55㓵䖄\uda16ꚝꢳ퐄䆙罌쵚″⶝ꡁ狩꛴嗑饽㒷\ud835鵈暝ࡡ\ud9a6\f細脓ᒍ뢹閌ꋚꈺ訊㘶嬐ꈩ귓뺉찇저䠉踔Ǩ㇞䴁쿽ॆ♜㣁ᰵၪࠚ枉ኘ঑䒤꥓痩魤蹺宨툱໨ꔖ擷퀥駽晅ꮩ얌蔼蛖⋌㢳⾾耽ͮ䙒\ud83b㰒䕥灛宕梤鏱ఀꨤ᲌欇吵ᓽ퍩찻îꉜᡧ栩쨻ည⸁㈃㄃얭ꚙ㨚ℜ瘊廵ᘣ迌ꐇ㋜ᣁ쳏ؘ献䜔繕킉䮣ึ呓䊛ㆤ쾑ጋ鐺記앰聽㝩삚퐁든蓍ે꟢탑ꃦ䞃ᐹ鷠섻硇匥텾ꚷ᭐먞᥍਻⊁㽨剺Ὶ㮎ዴߗ㙐ꗬ틔磟躳⌰Ě죈ﷇ譓ὔ᷌〸᮹鿻䞖ꘌ⅊퓊扺➗ᤦᤇ爲켨㑩厎䀣㬞욌ꑵԒ䥡됶醓쳟쬯릞ꞏퟣ엜យ았\udea8䏦膞⽿䃔섵₩퀯﨨Ƈঙᝎ쏓\udfd0ীᗤ㟈Ὸ᦯谨虭虇䥯馏ḉ戀᠁ں컃甩蹙䝦皹嫆䈧ᔌ䌚⋆⩟텝㚽膟重⨋꘨טּ,ﯦ珽᠅驺پ杌㦂닜ᅥ鮡⇫汍\ud9a7㺂햙乤픪䈳⛻ᡝ唽ꌑ頯栦⁫\uda33쀍䦙铋巻ꤓ琅㥫㒴䄕杂켽ꉩ妠恦ᙹ䅉Ꮴ虊ᚤ画셩渷㲪呆ℯᯂ챈ϰ늯梂ⳛﴝ⫄疥輏䈁剐Ϫ틳䒜ꛁ팮ᯤꊦ줻賂꫊空蘄䨑휇⩃庀됰뗉᭤轆礜㽙䱆퐸䑎捅㺩읰⺑謱ꆊ拍ࠃ騑鍤磟\ud9c5鉢침拍﵌廻죿켒纞ꨘᒃ腃웑⊨緰羔㠸฻෫䴖醴ꥢ䄐陼਎\udc01ዊ䶣䒳댾ཷ镴蝉澭␱ᇱ㶹椿蓒䙨歂㦟褽∾맒㣚ੋㄶ蔒쥍ꉁ㲸븽脹枻듁멅ድ㰴䵞ꊘ閥鶰쨑ꖨ推考씗閹ᯋ酠뤀稃끁☰ﳐ✘묭օ鵴줜꞉㋉∌됱陳ⴒ斖쭁ᯃ꿝ⷆ볆㭘䏖㑅騋䩬曡㉑䊄첚驖ꋗ褛ꢱ㞂㋑왙Ⲵ⦖䣞࿜枾課僤䑯槑᭢企➃ߪ늆Ẕ홾\udeee接㋀⅟⎳혹ᯖ쉀0ఫ琇ႊⰁꃁ繁⍀渪覣⁳求਷У㓙껴\udf2d䜒\ud9cc몐ꜹ幬င肬렆ࠫ㄁踊쥀挂鏠騔\udf1d၃鳮₈ꠇ≃ꐑꒊ弎\uda14搱ɷ̹聹胉䡅倏П愁뒇귲쭽볤㚐賀㇥镆慘㡊ğ왇ᨸ㔶ᘸ퉥ᎃكౕ\ud929擕副韩弱䦗䑶탥탲灣簏铏檊럧镦甁䪬᙮⥱铆䯳닼쉆咩쿄嗫⫎쮠鋀ᕙմ惜湮✵丛觏礖\ude05智袳㈵৤왡ᑀ됩ⷊ䰵㬥₧䎛諫쟦聸䙻噊댴〮㸷봁ጡ탠ᒼ妼ٜĪάظઁꠧ髢倰홈괒㖞⭁赧蹠褑윸ꑐ亹➠阛䫣͕센 뀍묅㤂昃並⚳蕨ᆬ녚㑫㉖蟐Ꭳ労榃錝餧女૆剌䣈蔥㋊奴䇺膉鱥쮗䬨盈倂总縃؍摡燂먍၀\udbf4៦䨃❃䎇䠫ЛᏰ쒡홪ﴔ疑뽀鵥쒝痶듌蕻ㄅ\ud860ඩ懚ᦅ⣈뚙崔㾳懞#\udf57缂⓹茠勇煆⢕嫔ꆺ쥆攪솀⸻겈憲ﴘ疖뽃ᵦ濐䜨肸틦戡Ⱛ዆隗ꁰ做죲稆㬊蕧䧗됩崨봩ᶴꮢ囡⿵鬯䐃摣ƀ\ud946쳖랝ᶐ瘝갤饤惙lﰢရ⨛࿘칿蜅驪ᧄ擅ꜵ䈈ਮ잲ΰ蠩틺딌ꈗԐޭ쩡ဿ礣㈀慄礚왮鋃婏壊䮺峨꟨ɀᐼὄ༸׋ꌮ₦饺೼晹莒ꐇᖃ鋁ᤠ犤ᚰ⥌ᖋꇆ즟ꍱ돧끥쐦簿˦誖ᆛ惍ᙀ䶈癰【օ᭢䠗㍹聖ӡ㑯㌭㈥֥鏓툀扌ﵺ篜왇඄ૐꌄ晾䂕砃䶕ﮆ퍦ែ耦뉬긶峽ឍ颦춝ȸ姹\u0012u稦︅琏ꨠኙᐬꧼ簳⹥鮎䰓望㊄\udca6恾栘뀞ः ؁恃ᕺ⁛㉂ఖ쫗ꆅ뉲\udc74༳ᄂ叕䏮ᴷᦻ薬␞ⴌ꓉胆 新褟궢Ⰱ沵税嬳床ᛉ힢ꏲ䊐酛♙᫰䘤⌤ㅒᢿ璌蘸⠄嬜㴵␰鈘ͬ♃ḉ鬲좚ꑳ튼绱풭摜섹㪟게䡣툘웈榶䙩㳙ᆕ旎Ꟊ錐샹퓉㱳慚漣᭴鋫戩玐鬒Ǵ璂钃씼霫꜕颮ᛠ噴ꉘ甸ᬙ躤飣꣞ꆴᝌ㈩༴蚣䖋섷삄㘏멋ɍ괢\udd09චﶲꍨｬ쐶朜⨮鏬邂䝱봂걟灜\u0017\udb22㚋趡쒝씉彩膚䊙㦽撦䯘ⓧⱣ䂰ꥪ宕േɥᑱ茡ꢀ㢸鞶轐餗퀴○豳⤎擌⩋ঢ়뚒ꖉꅧ꺁퀘⎔簀ᴳ䥩dĖϠ〢\ud962䜌ꉇ帠ນ닐拂ሙ襤튦縔⾟Ἆ쳉聳댰ᣜ؟㬡뇋祦멥ἐ椮蛎铋佌轅压須凿畦疸„鰟⻊怱秙砌⃗뗈᭮蹔ȒŅ脩䡫䰟ᄟ哠뛥ཐ霬棐Ҏᬦ鞺솷曭퇭\ud907琧癱\udd00禟⏆冢䡬짓Юઌ豱윿Ͻ懀쁮倰吗\udc1f煉ᨅ띥ᷙ蝴杶獥鏝鶺㉹堵쫺ὔꑹ簩ⵂ腧涄뒈䭺‑貒尡۴ĳ䏢Ů쁉꠿戈ꈜ嘫ፎ쵥雍䮚懀㭎㎧ᕞ觩웗ꌻ\ud916봑붗潀릳赜佢꾀踤뻖䜈遯䭫씵൹ૐ鷥ꘔ皺撽´㗬쭺㵻⛞蓞쾷ꋸ勏ꩯ鰼졐ྎ썲✊Ԍ੸パιɐ삱旹䌵餹곒ﴤ罃턡⤤畬丗珶繃᮴վ츨悤荖ᤝ龈鮆䋥듷⡜뿙韬ꊆ෻㛿丘䷫탮卑롄ಐ䡘⯊︷ᥩ걔ꜛ燔Ꙟ䣙꿕㕄鎁脞こ琙먮堀؈벁᰺扒⛨萜雘ㄇ㹮葎ә⟋䥤铥綆ꤤꙎ㝀⃦羐蠹獴刎䠵젆ᾌল愩棆醇킠偷㞀≤껡豐邴둶湎⯩㥹䚊ᩐ䪢骟㊅\ud92f봠ᡠ뀦즆̋佣픣แ歯晥һ㺟᣼仠௧톼냍ᡒ頲뺈덢⧠ꦡꚘ؜ꋺㆇ✎ྐྵ\\ᦹᣍᩇࢼ逸ㆎᝡ\ud917ḃ\udfa9舄ꬑ㔁⯰麬췘砿돦奡뒱̼쎐彄ョ័\ud87a旴᛺䟎퐫춁ꙸ犨৊䀞⼣嶙쪤瘦촢陆䡣㋌Ꭺൃᰤ韪芠㒊낺쁡怬䈂伋䭃讉\udfb3똩行캸奆휖∕䗵ﲤ㒼낱ᙕ씹놓忓雄㫽씺혓ਆ늠Ⴃ镋䄨֕尹磚蹞똨뢟獵ඈ悸訉䭫᪬剚除Тᚈ荁塧冽磂ᄹⴇꎜ凉ꖣꧠ₲✜ᘮڀ荼ʹ⅌瀶儮㌦윢皃뇎鶣㓔콎蚠⑞႘በ䅨䡾鸎鬹멠ۨ⭍\udda5঳샌䄐齓뗥Ⰳ颸꘸犧桻᳙\uda32ꮃ\udd69\udcbb④㵴㍆㮎祴靐᯴ੴ焸ꋧ\ude4fֈƆⵊꙈ⹧邴ꂴㆠ柄ㅙ蝒₣皨葆匟呭అ娛\ud9c2탅㐲睩䀤樃㧯⛓들柲臮D鳎蘩✷ꆅᇊ쵒釸\udb72ⰥἹఆ\ud9c7뒶衂鋑㹺匬컕휬䍣⥅퀰﯎ᾥㆪ챐፼铚泜鲏྆鈻굫楴ⓤ琰䤹碸㉎䰚⣡ᢀ켰⯱ꇂ᣷恪䠴䌄／㽕̀첲⺉퐬嬜⊰非䲏条폔⧳곩呱넠펙Ⴧ︒莐䴹焌⌊䶓ჶ⚺⇈㢤爝睑猘㟃ᾱ毙㆔㖾ꐞг鑡䗓鑩콴ネ㧻ꜣ퓊⠂爺ĸ᫣Ͽণꎪ\u0000聛₺鑂弁ꔖ莌⟣㒢癙霔륺䭇㬏䀗لꎞ䅞Ἓ쀂躃駎ꎢுꃰ呶좼ᤈ鄯Դꊲ出匜䔹８퍯༱ⅲ赽튢猘叓ኤ驐Ē䧔덙\ud956鳘噵쵃ⳅ绲쳦凑猹먺㲎ࢮ聏苺熕톱退ᡥ琈氆꺁䧌豂￶唀餄漹\uda62ᜪܲȅ䂜ꁫ⠳刨벂ᰀ㴂半鶕驂턐Ἱᜫ⼋懄鄢Ɖ앹⤼꽃ⴍ㠀嫇ᜡᆐ童푌쩴껵ῆ╡锪쮒藆?㦮耢噳ᖓ줊嬸윉켶ᓧ⠝Őᝓ馲勑惮牊鲊먑꺋菶퐡墁簀説\udadaᔡТ褯耧њꄽ∑ᆘ쌫ઔୈ䢓률閴ਮ䵭ಡ൅졭ꆆ퍓黋䀞\u0019瀒娎䝁칸轁姬鱜ܾދ齛䒗쁸㠟摷証ᚡ㼎儮뀖눲齤蝡罷⾋谲궨葙铍ẩ脿豻ગ䎘膀큡뷀되췀ᴆᱪၞ鴇ច뭊쇌륹䡋⹼琚쮔걏㓰喓꧙ₛ涚䵔䣎ᖋ옩␔댁憖鳠劗迅竬쬲葘⁠騌䜮䲶᧋黻Ƀ稕赙駞峉㡎﶐䃌茺휍㗬櫔觥ɼ䁣럡鍛㣌뚰롡봩溃︇઀橡嘐ᕈ䰼ᣕ㈮払쥛ꎕ珖岟⡜㌪薓ᛌ쥉\ud88cꒆ唧❃䶹૷ꛮ䎲轁醭圬ꮖ띄ꫧ檑♆⨨䅇ד⌿䲆늟屧钐祺\ud81eꮛﺜ蜒疡禁㩮溴濔ㄨŬꟜ췣姿⏍ë峗娇쐋殙⌘锩䭯ペ砊⪎⤂迸৑쒁ʌ焃깋괕痈㺡檖餱ག蟁嬦़臈尬밢얲ᖍ貪ຉ⑦ճ㽖휰퇺멋௞茧҉荻ဠ堋ᓙẔ퇊곧荔ἄ˸଀᝙̬센褃ųグ⢙젵\u001b\ude87෋頑Ϩඎ吔篛邂۝暀尸䃠ᜥ낤\u0006䀇鞊È欞⸳炥ꢢऻ栏嗆㏃萩␓➌駊ȡ蛤﯑ꑮ甊㯞៾瀠룕䕩뤏곺湲ꀑ鮐曦㱲䏙ꄔ麊Ϳ࠲患ꃩ깶쀐焼ᮚ憶䪤ؘ⮈絮棃ࣛ鑒婙ꉑ릻ⳛꉺ㜽뼥⋉梥췢ؘ翴䭮䣃მ霒瑘᭥鋖腸ꉎ첛㍋햲瘘䓮嫶كꥈ堏袈胉ꔽ屃燝碆㔬鴛옏㊆ᕐ扸午Ǯ᥅⳧핰䗫䋷刺킛ᤛꇂ똂鷈厣ꝳ铨姜딺ڷ⾖鐯๹怂씮츦타ⶓ㐩ሖㄌ볦劲黎풬뗙ἶ३࢕Иꃧ샙怟こ퀈堚猌렀֊䭃諙᱉撆눾䖴⺄Ʀ富豗ꥎ䙻輦쩎搜湼䨆阌欆㐁컁號䋵肎᰾ꅢ銭쉄퀉㙵᧋ㅳ駙戳⣡ူ冢 Ⴗ릶౻؞䪦\ud966鹋떢\udd57㬢剙㝠ꦽ츬썯犟릎న桕「瀃葊齲퍩ꂕ㗎⑒䏠ꅜ턀㊌룊丮猢㚠਑臘诶܃ꔁƨ쮴牐❚ᾘډ䇁ঠ棉簖༭皁뭁핤椲쬉晟檎濌䰯ᣘ쩶㌪貿វ皁菊⇦껐灹퍉䆎溅\ud886氞뒛搫㙥泷㪓鎍殁ஶᏐ鷢ᑬ㚀ކ㽞豣芤ͱᆁ⠕逢稲螒綵ꬦ奼䏊ካၲ蠆ېଣ쨷ꀨ卹칵玕㽈룊બ썩ᄘ뢼筣⨓찷ꏈ㲕뱈埘㐒뮴줸禀庞꺹㼆黱㗀춦퀙燋馗$괱⺌\udb0e䮢ꢰ은幪璜쇒싪㣳璸祟傑㦈伨䨮吇৥ꗐ㞬쪎䜽∯ᬜ䲤단褮᥈\uda7e鳉ﾮ噶䧥蓳勨鄼呙谣ⓖ畿塯\ud8d3ኡ磮ṱ㩉⇇Ḅﳒ훘㉄무踐ဣ艉߾蠘斾ㄨ왙ኊ\ud9c1餬⽁ㅃ\ud941酀ꁘ烠巒⬙ꢯ䭆誌㲉稼버偫흎䴪㪌娀蹧急뫴\ude67鸳켗ꊋ⥊ｖ䤨형둳灀\udd04鸞⡸䷀ᯜᖪϰ蚭얆㷜ှ둋鹿괆ᭆꥉ伩뗤鴺琻㸣췚瞢㰬崡펹켷횅珈ජ\udcf2ꯖ鱀縐䇛いỶ詇䟜ꓕ㙕嚊궚\udb41ꉷ馹퇁Ⱙ歠Ꙡ⣇闈䤱紡礩ꉸ瑚ⴣ岗め᧑ꌺⶠ嗔謀ᾶା蟮▐礔㳌鞊솛슑䱷歆\udbac浄麴冃쟞๋줳ꅒ벯乄耇페襉瘩溜\ud805現૞鵑⽾哸欤ﱳ♺嘺᎖쭀ꗦ駑ꥹᙴᮓ頼㿂銙촕铉堈㴖ሎ먇ゃ넁趹굜\udc4c䃰尟攳㒇\ud833厑긡๗骟蔠㗥ϑ赹惴㍞䔜Ṓ鍉죤搐咔삆볠稠逄힞ག贺响৶ピ釳깪鸚郫줲ଣ劃⩗譆㌡ꁍ疂랧煰흌ま廮ᰤ獝隭殡졣ꀧǡࢽ䝼鐧䐁樍䄁᰹磼ᕠ儢䑘╸Ḣ඄ؤ⋃兆㨁漥躌寏採垭襹㜇⪏ᗿ\udc54⋇悤ꆏ⦾뱺룐팷ఀ涌甠➌\uda06닦昮䕇騼օ尡虹벦㨡漵躂寈则골楠渴㶝ᓀࣧ䟫餈쀷禶瑭\ude63鴎壌旎駦䦬㐎洰Ϟ囯㥬λ촻⧴쐊踭乿툪엨ꪧ뷤௜\udb69韜젶䝣哧醘뙠惢ꃍ耦䀲ࠗ程討ﺰ㘬ｹ갌䀾䜃Џ飅諠烝강馰꒣鹞봳줕豍㙦蔽熉Ᏸ࠾䀟㶁谇쪋૦\uddee搈糿▘熋鐬ᜑ癳眱䮲ᅱ昽ꥤ謱⹅㓎넅⇘⁢瑃瀜ﰂ栂뾡亳鈙攷疆敍퍡鑌觘曷姨廉琝〓ἲ亊쟊氊勤౑奉阋䣭騏銿ᠧꆱ㲸䀮钑ဌꛉ洑ꌲ妹࡜칩竅詥㕇釗袓䷄冎袢\ud913㸤銠⟌揤䧐壹퉴➎桻㗚脥Ļ톁遯촻봖뗎䒥몝冹第羽糖㏗ᣕꒊ볬鈴퀇㹫봞尀됆串廓켔㖌꿊䀉豿⾒犜डᠣ䳉븨\udd97ಐᙠᑠꦼ넱氬꯮毢咷ဗ칷ꈹ糲偀氲⾐ퟥ凡췜켰繐ᑘŁ֨脛ꎱ䙃뒇ꉫ崲꾙佁ꯤ폑ᰡ演褴剩꓆嫦⊡櫐⃌홲퀨ꖟ䈳畩㣔嫹핼ᵟ㺓渗䖹╅큢砆㈅큖裪坠糚曹酴⸀˟⸮輢ᛛꓚ犾祳壠픟퐮꦳ࣨ䮰ꩬ냊절㊈᳟⭯镠葛洰身粟칔鸤﯀䀆쥪ꭂ薬스䓅ᱏ蜏ʨ똺蘞Ⲭ連\udcbf碜ᑉ䝊᠅ᝫ\uded1훈癠ዸブᬺڌݽꊞ獭㧟㳂뎴섡㪝게㝨Ⱂⶐྴ䡾班؟電䝚덧匶ন漐셜⤬輗\udab3䎝㑢䃇洀꽊嘴쓮페썎䌣擩żᖒἿ쎖癉걈揲⇹侴桾毭᷶蓶췶䒼ያﳤ뮸㌤羂Ȁ䭡钀섌傆ⱋ⸑覹펜䁁㣔ᅣ桿霬刟쵍멤윣簘ꋼ肆ҿⓀԯ쬍ꖧ䲩쀙퍠理ਚ밍볋௲ﰘ拼삆Ⓙ⧊ຈޗŴ≊ﳢ繤ᖕ䱤雂ꍌᷩ䅳ێ蜨䭂阮⍁똈Ȭ詜ⴗ⊘譀⢤ꋑ訩꽄态줢騈Ғ捔腶聻䁛倗ꨅ㤆ᄀ泀奸뽀Ƭ檿㲹那茏褲遽냜〤섛《娈⨃⺴⅀愐ᒀ㷀ᐌ൚숞Ꮪ‌車㸜ሆ錄ᖁ瞁䆀鵀ᦔᏐ჈趴ÜĲ䃖肌e怟퀑㘇قⓑ졠贈ᕮ輞舲跭蚸썢⃧浪эꀃ퀉؂▃랑＀⯄涠ጠᣪ༴荆˃U傌の䠛뀓ᒌ翉女訁杠庤ࢨϱ觨஠κz솫ࡻꀡ鄌ం▂뫀遺ꃀ榴ࣿ㲫Э䖮ꅜꂯ섲쁲\udc3a脊炭颓瘃槁겠嚆絸㼌דನ႟䊁ꃣ備푹鐖퀑밀찆娃ᵀ﶐䀄瞘㋐ঐࡷ덂腑悁耶砮堍上임蠠懀\ud8e4慘ǆ଴ي֦ơ䀟냕葮᠋搓琄忧ᵁ門ᛀ䁠ῒ੨ബ׋ű샎悡偉䐘넽頃⌆⥂䢡尀８ᥦ⼸଴䒴蒚ǶĈ#䀰ྸ頂攊὇鄁뷁喜㔁唰\u0002ྖ¯Ɛ쀠ꁺљꐻ鷙稆杁耋䲄움獰㠲᫪ۨϜƔ邺职쐺倏⛛㒴┠捸፠Ẕ⋨޴Ǆ䍱耗좋䁋搕퀕栄ⵅꚂ荁櫰筀徠Ȱᔛഴݙ荍遤䠈꠱䰁Ⰲ郆췃繡뼰߈ᵌ㫐᭎ࢪű䍉뀔뱹琉뼏佇ꝸ팁ᮠဂମ臔ಚᎦ䇀૩쁷ሴ騂貀Ȃ鴁⯼각琰ẞ蔆ۣB胎耠쀢堘␈嬍攄媂ﻁ拀ᙼᦩ᷂쉱䕰ᑞ쀶肗䁾总∋㐀됇촁ﱀꝀ՚Ịઐ蒪芦胃ƨ끁ų뀚騏瀗蠊襠鶐ᐸቂᛈଠ⼊耨୭ꂙ聥Ŏ肫䁑ꀭ⎓ꠋ鸅稂\udd92㊦ᮁΏ薇㢘સ\"怅肬툇줇宀鷀얄܁梀맀崹؆Ϋ쇜׋〵萊ꨐ眀誁콁㚀⢠笨↑২ϱĵ⪝셉ᠨ숐砞␑饴؃ꖁ귀烀您ㄷ㱀趺Vğ䠹\ud831氎鼅뜡愣鮀뤠Ո໮ᓜيT聇끴냞ꁡ䂦ះ㨂鮁矠潰䘠㪁׸踦ߐϘஅ큦帖順椀ꗣ᱁ᓴ⹈ഐƘຕ蕆½ǈ졛ꈢ㸁遑Ԁ瀔䋀㒀㪁࢝۷ʜ쀳e׳젋倉椉픉쀂ꠂ鮀ﺀ쨂Ꝕ⤴Ꮩŕ·\f䃆끇똫ꀗ遚ꬂ띁\udb01눅㑀婠ʠ븅È⵬쎆脖ꃘ多怑︑樎⍑\udf81熠圀Ḑ婠⚠Ƛ൥Ͽꊥ셈쁰퀓ꂽ᠃広潀긁듀ᡟ㴬ݷऑ菠쉣ǲ졯瀖ꈁ큟技턁䷀\uda82࿒வϨ⭮㦣ǹ怲ᅾ̱ဗ鸆롘뺜위疘㣠ꐤ׀ߣ삟䇭肴偞】穅雃훭쌅䣁堰᷂쫨Ѩᚮçc芿怋鰉訍袁ơ겠蛠홐ᇨ⩜ó䝆͔੠յ˪ᐝ㸑琁稂籀崐샀ᝄוĘŅ蔆苨Ø®⡐栎∅눁ంȕ㈀䠅挂擀ꪀ匰⭚ǟ⁑遇猹ꀶ᠉䘀퀁鼐ඬ㫐्⑴Ҩ䊃䆸怩ా찱삤䁖瀩鐂뀊慼툂鮁情໠墠ⱸᑹ醞ײ遭Ŧ肱衟입倖簊అ㼂䊪\u0010幠⩵䂂஬נ芻Ŕ₴衜퀩倢덑씠쬰媂लᐍʼ䔆肣ꃘ&㸦性缫ㄇ▻䴀ⓞ┡猾ཥڅ͚ź₾聪瀎밪雝싎ʃ㘃牀ﾀ沠ࠨ⪠꩐೹䔷Ϊ䅥Վꠢꈥ뀓搫박昑哀ᯁ㐀뚠嬁ɼᛙn邧퀹ꀚ琂\udc08〫䦀Ⅰ暀着⽌Ⴕഘิނ섃ġꂑ䋖逨사聑〬ꀗ䰋礠펐慘℠띀൘䔊⡛/怊됕〯\ud807黦搃؀섑纀휸墡泬࣠尠ⴸᖈૈ薿恴갥Ⴞ쁝䐯逖턊榀픁䬐Ꙃ۰⻐ᖱ୑聟˃ů삪✏〕Ȋ嘂끁涀눐划ڄវଚ藢䊏ő刃ꢏ-\uda02縀屰ὐ❿⻤࠮荚͝]ံ怫氈᠃琇ᕨ휘፠㕼섬Ϩ⻘䇪௩遷ଁ䂮鼇瀁樗롙屐쎂ꭁ垄ᢈෞجᔳ킊蠩芊셷吇큓堩Ẁ持ﲱ涂齤⿝ᑁט⭜ᙞਗ׬急밄᠃ⶀ딃䗑뵀䑺篨ᝠŚ伀⢽茈䆢僂န搩ﰗ栅빃娀ﴁ満鿢➠ⴴ˜൳螧ꃢ⁩薂ృШ舕씋ఁᰗ䇡ꂐ큠◪㓿ⶀŮ޽䎦퇯쁁퐨【䠅玐괁슅岈篔᛽凚য়챠wၸ䠦⠣㈜䰌隅ꦀ撡㢰⅀ֈឌၔ荬ɠ䃮ୋ䡫줫ŝ뀊\udd03䘢枠㴁쨐䕐Ὠ⻡᫹ฌ萟臚ႛ䀾离팇㐅证ℋ皀㛬䅡浵ᐚ๕腬膬ꂚ悆ࡺ怨麊؃᫁訁褈켐您㶶و嵮׀៓텾肱䊾﹵ခ岋㐄夃郀纀繠€ᡖ蛇₲䎤ꃺ摀鰍」ď鴁鱀뗁￠ᛠ俰Ǡ꘰州Вᕋ*֢芳⅘栒偓鱀⌁蹂ﾸঊᖾ萸⺍⁌ꁬ쀶쀁蠱悬げ‪찢⧩癈縼ᷬྰ去蝐⌾做度ʿ戗㨐㰪稕퀳ヨ΂ꏒᯜᦈ豱ڌ姫¸;ʟ瀪䂵펏倡氁꾠鏂앐ǆፓପŷ饍≭蠿\udc09\udf00桂襐\udb05䭸ݐꛐ咦ǜᕯ셑聀ʱ²硒搯ᰂ鮁Ƹ㫀柊⑆ᤘ୴蟈扪⁙⡆芵鐭為큑䰃謁ಠᬠ黈▤ム멭੸ԭ↣\ud82e䡬싨慵ᰝじ嬃㘖\ud90bᔅ⃠沘㊦ᔪন苛邮&備ၢ戕뀘ഇ侄韃ꠑ栅鍀向榆ຟ¯䃚ǖ਒ԫꡖ셳됃ꡚ갭\udc14찊쬅᪀♺㳲ឰ쮬⸻ꙡ퇄䖬슪耊稜葜谄ꄖ霋隀ꑠ粲୐걫ڌܑគேD쀫ż堌詁ᄖ笡\udf80㞂‑箦䐄宂⺲膠蔊ꠦ⠽뀎鼊ꦅ⟃ﷁ쓀蝀猐◌Ҥ蓏䀠臓섭蕥ယН㸔㢁昋 룘␡䮬ธཏ䊻Ē셑끧䀦縑퀐吆ￍ騁꧁皠ငს努ቴऎ┓ꅪ펶A⊐吏䂹䬌㿈뜀ᴁ纀턒墡嬝藁ࡴˠmĢ衇䁖ꠙ퀁䀴퓃膁糐ᘢ⇐ᚘཬܣ⃮籦䊭鐍做ꈂ\udf43㼊ො満倐ዐᒸ姘ⵊ脱䅼塞衾㰀𓘂嬀㕁\udc2c痐⤜˔гžᔽ୺䔇ဋ⅏찓䑑䫳㗸\udc51䙀쀑儜᱘৸ꅩ算੗薿瑶⠑ࢽ粎Ⰷ⽣김冀ꑰ୰៓颈Ԇă䇎␎肤灺怯䲎搩楸勰ꔨﬢ詞㼵ྒࣨ⧝ꌿબꀭ鈾ఖ紙ﶁ藱埠ᆀ㻠⁑囼ᩈܴ˿숿ઋջ⊏》鴋꠭㘔Ꞡꜰ揼␰ꎰ娠膖쉻↭聮쁂ᅑ瀏ﰬ霊㾅࿂햄ꪈፄ噬ⰴᐆ裝聹苓瀎ࢻ䠅渋㶐뫀㱠㶲ᓾ¨膥ᜐ詤䔖ꀽ慧ᘐ큕먂畂齀첅髕⥀㣠ᚘघ⽸䉜謬䔚‫怵퐍こ눪\ud80a伂➈니廁퇞ᔅ䇫ꃸ恼࠾ꕅ뚂郂䡂䞠냀漘ዲøঢ⼄ᖒ聈9渓䑚栯䘂茁ب㧐硑占겔幬⼏怞૸〬ꋐᅙ邹疮戄픕ᶠᆀɨρ泈롰傲⽜莸姳삺ĳ兝뀂頏䐪딕浅ꪂ藈㶨곉ਉҠ芿↼悙ʇ戰悤琌鼆⦀혀ⲅ骢곌玵⏀垽ٕ荐଻₿䁄∕퀎⑑㘃␕ກ䋘渰㢌ᩨ֊莺\u0001ꄖ胣ꊒ퐎옉䈄숮鐂梉称直⟁璨۩Ǣ䅿肢轃∐〈嬊അꘗ뢑躠읐♀❿㶑࿌䜆䀙耲䗁슫怶䢼㡙∅팀萈룐ﳀ⼼㘹᫣ºח셷膮ピ瀍쀭䰎\udd01⺁躠鵀⪑Ȱཾ࿸ָ䈅逅゛⠎뀏㨍ᩅⴣⲊᤅꔂﻡ嬨돱䖊䅬ᓦ訩硹ꋴㅯ킩訅뜥㜂סּ쀡ಂ賂㪨밽腤⻔ᗒ讫֥슰져ꂬT찇䚈挊࿀쯨折ຖݖ拷腭ឹ셍슦縹감億䰑氀珐鼐兡盺˜ώ쯘ᚄ੠넧䀰性搈媃䀃翥ﬡ躀桐綠㪁ȖΎʶΣ¬ᠺ뀚된䱚ആ挠竀ᶅ씨由痿㐛?줸ꅝƟნ怃ꀿꒃ凁퐈峨崱匿ѐྐ쏯⃬ƫ࢏倿셷䢠舌뱄稃\udf80뚀嗨䶁塀ꡘર⵰ꀅ詉볼쐎鱒倿䘌븁鈕銀鬐글אᾲନ嫴׎ᙄ쇖胛栥䈓栍ⶇᨃ팋ﱼ拰佤ō좝৅虱᚛d蕅㤀㐇㷌⑒ࠗ郀儰孈Ԡꖘ夆⷟膱\ud975᠗㡔ꪂ紕蜋⇄ꜜ໢㢘ꫨ඾Ǽ᜔ꀃ삝抏ሓ퀝昇됇牒䐊㌈䲐䯑柸Ị඾͠γ늒脞ʴ訃㐅ጇ刭깰؁腈䊁湘༝؊蘞℁룬샜恞ㅝ뤘ሁ䊀钸薀꺀ຠ㬸ॕཱྀ٥菟脫죓桃퀠昀ﰎ츁ᕁ꣑뎠퟈ᝄ₺ͬ嵳舺臆耞␱⨸␜蔄Ḅ稁銀淘Ꝁ⫴⋀꡴࢐⨫←એ聗㐰樍堓匃뀇娀㼘ﺠѠ٨๴冴ɗ숸〮藫䀰䠴퀇\ud903滑ꅀ瀅\udf98䏾䱠꓿门茿䃁ꢝဒ煎稘䈆焆쑀昐므귴䇂਀뼝࣎⽨ᑃ耖﹔ਉ弆읢\uda00眐䈄㇠䅴ᫀᕾ̬셬鈌兏ꊝ셫뀔ꈁ佂뼊隐톋䳁咄墦೙耽䁩ꀞ␆텹푒\uda2bဢ\udec1⌰僑稠ꈴ奯Ӄᒂ䂧ࣅ〕ࠌ턚鐊쌃츋㵅밀₨ᑊᰜǮ⠆ដ詵肞⋩六퐇큕밭贗㲊譅ᚢ틑煦ᅪ࣌ͽ荬誕薖⊡搖ꂦᡒ뙂ᆃ팁牰曂頑侸Ψ厂⥦᚛聜ꐻ\udc8c㱃뷁꺠⧨斄ნᖸ坨ⴲᔱ䇇Åᅂ悪ꀃﮀ巅⏒ヱ๰嬗艁៥醥ׅ실怄ĝ렩䥂劋໅芈侸᳴ᤌɿ䝐⇣ꆘ蠕렀ࠥ낶씍䀪柠竈ႅ拀淁䪘ỨϪۇ⎋订⒑ʶ㬱䨐嘂紀䈖ℐ刘冀Ѡᠤф幘蘶쀙腪ꀶ슉텠씘嘉ￊ⏑㱈䡂ꕔ〰ቜ哶֊ᑭங샟䀂ࠫ䘌ꢀ䃁눊껀菨㱠ĄՔբ⯺Ɋ૱耢抉ࠃ챞츂㸠솀縐␞ꮀᐛࡴތ䌩惉ꁧဦ腕퀇蜄ః奁́峢痈떥ৡϒ肫䅊遄穒煓—琄ᖂ、䅐樸Ⳑᚦק蕙ꍽ\u001eꁷ䁨褎\ud8aaﴀ嶁㡠题䫐ㄈ뮰庸⫕穮੩胛芣셤䰇㰗ஂ鯁笇䷈倪æᄽਅ䃚ᅾ夜堃ᠬ琔掰⏘̐掂៤༘Č͆ᘚ੒ᡱ芶끇촔ਖ਼즐쏂Ꙉ㇚්ᷦ⪃菊䇀⅏˦셳〞籜㴀됣䔋ˈ迂齰៸ꊔ匸膦ƕĿ蔒⋱쀺脈뱒뱅〖⏡衅恀㌠രᙕലⶫᐑ諧՗苲㈭좮⁙\ude2b쬰㘋ꛨ怂흠ЬᲢ州ۣň䓕蕫⡑숍〛悊\udc28演崀㛀䈱缨ᣠ葞Ա˄䬵ꪚ衿兽⠕䰄羃긕劀䐐듀犉䌞࿸Θⷘ쇰恞蕞苗戬谔吋伀寰➢ᒷ䪢嬑p陰R偵ዅ酴쉓愔橀책ꥠ㡴숖಴ը雀誹䗴ꀳヒꨮ昖씅⦂⥠듀匌Ѭᔪછ֝⊆밖戌풋๦頔ꮋቅ⽀⩂㺡ሠ孿皬⌴↫ࡦ䀢堥稞꘯츤핂蜔ݐ담͠瞞䃬胷ዐﰓ간ሃ偊䆀\ud842降刄ꬱഹӼ͜悻쀙葎﹅逋态嬄㑀嶁喀웢｠ō쳢喿Ƥ◧䆈䔿젦팘傽琅妆⦁遁ꃅ諀⦲麠ᾼ噬˳䀎탵聇灾㰖⤀퉗꤮㖃㗁จ鱂뾁栈ϡƠ押ᖢ䁿傻䁏씴뀅\ud88cꦂ핺亀䄥ⴒ猀㍰卸⒩腴ㅑ냝ﳴ㌈㠌鐇躀鈔㗡㺗毤⧜Ӻऌ[ᗍƨ職ﲤⶳᨉ庅쨔昑ゅ\udf40仈㱰ꤨ嶝Ȋ膕憿りၔ䅚䰄鯁Є툔䊀麀䘁笢ᯇ좴٣⅝Ǯ▋䁦萺舁଀☩䡡⌀䱅두ⷴ㪠ჴຨͭ䊟誅놨䊘怯㠚㒀䰪猕⯠⒨⟐寱戸뻼࠱䉗쌫謻 ౿⨇撤琀刮䫘䕀⢰氀嚱提ͨ࿀⩺==恦䁪숰逞㡞좀Ȃ榋ႈ냀⚰੃ᣮລɛ̎쇩█쁹鐴頄됅ڀ\udd01翹뭀՚༽쌐Ѵĺǝ\t胿耭쥾䌕齄ⶂ눕型幐鿁䈖ദଡ⻝ᝍꄅ蕌ʗ؎萗㡔ꄫ掰뫁䩂踉擨ᮜ巁⬿䪒ဳʫ\ud83cＨ⎤ᬗ嘐Ạ厢\ud909伎Ŝ觹⻟䏾\u0000ꗻ䀻ᐴ萕␀멃搅굂뼀πꎨ加⿋Ƚ诓䁶㰌〉籐撠跡ﱀ\udf40墈㿨ၔ蛫ľ菴ǲ邻⑩쀭嬓∁␭䛀뤱趈Ꞡ⌰ཬ儠⥶솃Ɛ蔙抌쮸㈋밂ꘃ䦀뼑ﮢꮰ᷐̠哴䕑៘䃳ࡅ搸⠚⒴璓у鈖퉀므ᮀ㬈ⵈꚐ颡⠪ᓾ䨟偛䀴煇갉䴡︨鐔䌁Ⴠ穠㄂ᥖܗȒ\u001c怦耈䊓Ἳ褝鄊漄팕ກ凰젲㓐ᱴ廎ډᑸ釖聨쁻\uda1c£؁獃\ud915ᡊ伅홐匉泠븘嵸⩜ᓘ䯣䔔방\u001a⢿骀调\udfe6鮁揅蛢ꙷ㯰ꊸ嚘⯷ᓙ䅡챜這䅿⢮鼉猇뀖뤠츢仐ᆺΫ㎶à䯶■遻㈹邺і턨눃ﱁ솢齰ᔘ껔嘄\u0006ϼ䀮聘ኈऐ郂\udf17ᬀ錠뿐ૄ㶼噢⠏ĉO엹ꊳ蠓„ꑓ䡋騁⦥⨒豀㓐ܒ圐⸐阫訯䕇鋝耰梻ﱒ갭６຀蹬ൢﯔ༎೨նΚϥ䬚蕷䁖ꠜ퀄\ude04齁뺀雈㦠⊘ꃌʁⱛ䈩䔖క慄吇끙적뀗㚋ྰߠ媈㖐᩿鑴Ȣ샳୩₎퀯ꀝ萅T갆갢ᨡ扅徢ිཾ೦ꏺƫ謸╞衜⥧萇嘃攃䒗锊댐ݠ햠㖔겐妃ƝᕍÁ䁷※ࠇ날ഈ贩쀗䆀깐綘㑻ᬨ괂嵬À鞮킹ԸነŇ쐇쉖\ude2a⨣炠쎰䶐㷤ꜽՈ䘩䂢憯씳⠢堠䄉袆嬗虌舅䅒묈ᗨ뵿鄦蝐ℒ訩磔쁭∆㡟ă懠㱉尐ꄨ宕⧨ᒾ䪚에聍ㅫ后䁘ⴆ朇닁⿁\ud8e4Ҿ㼰ᙨǜ䁣F冺䕠䁙耝ﰂ㠪㮃Ɂ败⪠伸㺤늺尉̴铪췓ᢀ吼㧔鸀⠡鄦冂컨ᶤꛚތÎ阤셒䔒ȸ䨽堈ꨄ☁҂Ⓛ䲀㉂솊ૠᥨׇۜ霉Ƹ샰塬꥜搇늅ᴗ폐嶰ޒ⑑ᗲఒ蒶钳聐ꊗ䅺嘍怨碕㕋\udc2c翴䕑祮౤尼⥥ᒻ謏냹摕팉ﴕ⨆䀩\udc17擁\udaa5鷂둠⑘ᩰ屰䏍ᘷ௅գ堟炵铌옂쩊뼠ꊢō퓈䊸˟⃫E瀿ᅷ䢠䴁袔鑋晅䓁棸뷑䪘ⲷ荍䩝衜\u0002ўᠯ㋥⚊徐絑䝎㓃ऺنǓₖy䌀戃됀쐃㽋춥萀䭩䩖ᷴ娍Ϥ聺샫╗ꊶ஗鸔ᬇ婃ⴁ㯹ࡘ孠᠘녺囇晨ᛜ⇦⣌䑀툓阍粃☗裁憀筀だ㌙࠘þⳁ懃䭷䁷ꀜ褚⑛趆嶢茁슠꧒蒂㩴ꄯ覝⨥肟胈 䥁璵漅ꤩ⺕肊ᗒ썉畴겺尊䊆쏗䫇삍튨鰔丅멒ሃ溔䘊థ㸑缬ეܽ݉腅䪍쁣酋ȇ뚃籐薰扠㳈ฦ媀Ⰶњꇙ쁕\ud84a刈ꨙࠇ똔㙊傴꽀嶠ൺᰨ厎⢂ː䩖얋佺稏钧䤇ꔀ띀킠늢聅⴨Ꜣ孡ⱔᑭ\u0010敭劮饊税䑘ȩ횗눋〥ے퍰ᆴ꼂叿 闎௨얞氊怵‍ࡖ茪礖첊쎅崒⌨Ꞣ僮䒙ᛍ䯭肦ᅑ億ഊꈆ裁骑䱠梒蟣㜘՚姟쮼腈䪮耭⋍ꅵ愞瑞꤀娀왊⩅䕂興੃઒带ҽĊ䯎쀻{퐎Ⴕ챔瘔ā褅쳠⊱匰ɬ̨⤽៟腬₮끟Ŋ爄⁁ꘃ尗첁럐㗤鰴ꂬְĻᖋY젋녳ᄌ︁䀀ρ묀≤㉙榠髬嚬臕驏䅴\u000f둘玨᠛颅脨ᒳᚋ㢰莄嵖⚨Ꚛ詠⡅菳ǐ찐䀁녌븟㠄㔇뺂鈁㡥贈渙怬됃ࢴ޸阠䯦傂䀍녥눚낉︅ځ抡ᾠ➔붡ݧ擱咭ꋩ࠴萍万鴪ᴃꁠ䟨✐யǿ̻䇶⃜蕘бꥠꂵ㼌氃갔䌋謐纂蛁勒᳄庌ˏꌱ၅䔆悸唁䯆尖혊ⲅ躲ꄱ崾଀葖ڍᘱî얐ꋛᨑ뀔ٟ㄀≋Eల理ᐘࡸ圊Ⲷy遼◺Xᅛ\ud900䄪䭑ⱅ蝻ጔ믈嬀⯲ᒩ脅퀗ꋴꥨ䢨阂ဨ꒗\udea0㍀끢\ud841摀끿醕⥺\u0019腈ףʊŔ삾⩚挪꽂왋︠佃癱䈄뤝Ĺ⺬⍽Á⁇䁘밝퀎稆嘪投ᄋ檅獂蚡䥌ૠ凅⮐ៜઔ֝䊣㘻삹衞븅䘂ꭉ漬랈奠ⴄᖓ䪄薳䊑Ⅻ½ೀ蠪㠡ꕭ᠂馔੤뽐嚌ӌ閭Ǚ쁷⁛怓】搏㘩ﲔ齁釅Ⅼ᷶ᚁ൤艺ᘓƉ胦⋭萧쒩㙓ਯᤖᮊ퇬ﺉ䖕蝘໽⺛ꅺஏꔕʀᅥ袨\uda51㰯\u0015岠ꨅ螀篨͚࡜圴ڧᗘ䆅蔆錪栲阗鈌간茗변뉁\udb40ေ䪁ᐚх菚dੴ씡싽ㅻ\ud80c᪎嘂᜕Ṋ⒨컂헩某২ଢ଼䇄ᝎ䃎怘ᠢś\u0003ၜ됄ﶖᴁᙀṢ赀ₜꟌ唶⧘Ē솶쁳䀨腴᱐㮛㦩ƀ뛀幰ᤤ궀ƈ޳᝜慸怤퐁㐋瑖䨅뒂됊ﶀ䅢\udf01稔ꅺ忌Ϻ̣ꇁ運䁈腩瑖꜀砣䈀櫅\udb12뱴ᦰᠤ彏䁐霔ꅎ틅ꀡ鄎栅刧ᨂ䋊圀쩘紡䅔ꍄ忪Ҥȇଲ䕣抜酎鲯챚\ud847⅃㇋㚀뽀Ḝȸꦐേμ肸ₐ뙍恍ꀆ련㨖\udc21᳥蝢\ud81cḬ곦ǲȅ₄攴닛녂Ჳ䁟씩밑廅à歀㷪ȶʡ߶聚胀衢ꁕ谵䠂⬩ܗ\udf40ዀᩈ喡緪ᥖ字⩺ͭ聮邫䀖젋ꌂ氊윬놦﹋ᕸ硂\ude48ᗬᰪގⷽ耓譡းᒿ联踪稛쌀佀俰㑀류౧⺚bø䊮䐼䢵ℍ蔪鿳砥橞䚄ⱼᷴ彥Ղ铌ꅲ蕐⠔鐠남됆㲖　镥ᗐᒨ堸䆋臅䨝졟灅꠲ギᡝꩇ溕渊럈毉䰹敹ஒన螰ᗧOꖵዳ踈渮픢輊䣥怂링榐밄咵⪁្獠䕫勞耳碾쭂靥㰀辋̅ᦂ葠Ḍ꽦塃⭆ᗠ諩䕺ꥄ梺吉\udc29킖ꧥ玀䨹朐מ౿蚛䅖쩛䕍蠈堁袮ኃ\uda2d貁ࡊ쏀譀仈᳐ბٴ_䋿銻ꀫ氝栍쌃먂唊闰鼐彩羜ᏼଗ⧞ᐥ逊툖簞\ud802⨆昮؃朊渽㶠଄늘༌Ѩ៾Ɛ薟ဿ搿蠋⤪륃뭁蘅ᐹ斀ꑤ宵⾳臓蔝슌吥㒻ᐃ鴃펖ⓐﯹ嗐㹡燔ବ哴ɧ诞胇䁨奍\u001a栋ងꮖ⃲敏伸Ꞃ噮ܥ臱懻䗗ᡯ氋㬨威됊\udca5휲솊᡼꣨ख़⡭锻쫬倸ᑝ搳ರ扜갩ᢗꠐᯅ筒㭰깐巨⢀≘諃⁏틢ᅐ沪ᡛ㈯솗瀥䜲븒ִ끇୒臡霝Ĳ쀝텞쨉ꊂ촭瀂퓀Å쎢ᡈ걘ࣙ⪁䆜샽ꗾ쀀䙓ᰬꮖ졋몈≰禔ְಘ剱䃲ᚣ言탭늍ꀧ쐑소అ먀ᦁⱥﾠҔඌ뾺媀걞茘삜攚銢꒴멑専坊败搊鼙嵴Ꝙ\u0013⻋섄쨟 ѐ饆멖ం\udb00턠鸢뻩噴ꊋࢽȞ鐔쬞逪ꠟ㐿颧꽀ꡊ೥謠ೂⵌඎ첎藤韥诹蠯쑑텋搕혁䠗⌥≤筑桸랟ܵ⤭䏄冶-灏邠﹛枕එ⨥挲뵩嘄뮐宁⤶隖쯍ꔚ頛掠뒮栄\ud92c夂庋飈佃⾠‘깈徨䇚̰䮊僀쁪說䂡琀¬冗+莥쾂︙板⅖蓈¶ʙ䭷䕙₩慆愘ꔇ촪笂쌀ࠠ퍀㽠㺣ɤ౓ʱ镠⩦앙틶쀄肟ş鴬⁖髁蠕攂ꪺ姣ⴴ闸쩨ᔔ:ճ璱腝䠆恗鏊\ud815턲츅瘂낡厝⯠咏䮌뒦䢯ᡔဪ츖쐋ʥ쿼ꣂ⁔ꫨ঴Ӂ肶䄭郟勇ꀄ퀞᠉㿋埃䑡ꡐ傠欨ծ̸᳖虦᪑堎₰쀲՝㸘ꄅ䴇钗곀༅퇰䮠᳈꼌ꛨڧ阞ਧԕ劳셵咢쉛唭밗髁緅伂땡数끌呱⿾ᐲ認芒襎㠜鑒缩⼖Ὃ舥㮂褴ᄜ렀帼⳧陔௵芗酴또ꄃꟃὐ쏠䵬㴽ଢ削⹦ᖡ设蔛䀂栚沼䑟롕䡅ퟡ慅鐄剤⬥ϗ譨앫㊒಼幞갭솖暥닲疔ᱠੜ⹥ឬ삡蕓뀓킯堉￉\udc15誈럒끡挂딎彲⹦ǎત≄犠鈣ԇܩ蒖ꂊ뺅\udd22퇂ㇿ㱰੘⸞ᓫè斖䋿Ἆ슲橝騮财꓊ᤲꉠⰩẔх蛺ᓪ䬇앝芳䕥욀\ud859梪즖鮀퍅Ӓ\udd41嬨ꡪ在⢔嗂讇蔯૶຀ꖒ\ude08⼩㈕샋魊敀看ዒİ價ھ䏤サ蕜ꋓハƌꀩ妖骊皐㭠猑梕ᢢ剞⿑ᑒ┖ꁈ륡㴃ꆗ䈪\udb85โ龸벱叨곮ᝀ쮟ꖦꋐ텹\ud88a渇븗䱊奅ᚠ㳑䧴띨ট⺅᜛Ǖ諒䕺沫졐瀃쟀턥뙀判଴ꤾ傾莇ឃₒ灁栶²艐☩톖졊ៈ\udf32⿌뙦ʪ萃ǩ쫯앂퐦鐴퀔걐찂峊㷥杀柄ૐፈ哖׊ᓞ評偳꩒戓ꊶ售슖ᘫ쳈ϸ⻌똯ƌ̿腵쩡╧抾륥\ud8a1球䬭\udf81窅봀٠ⴔ᧬匡ѯÑ褿쀏倪炭ꁞ겅웂垠⪊練იˊyş얱砛ꐉ혊픂辕\udb4aﰠ惀⏑珤Ꞙ傅萗䋫储葑瀛긛䱙\udc2f긔㲊࿅䢢쯩嵄꺟व⨤唩ꑚ葋ᅧ袨ꊘ\ud82b㈔畊ퟒꊢੌ맑妯Ⲧ靑쮦씹싵ꀂ螺ꑕ匪匊㚅锈䕱䷨땿鱛ըᘽ䁝抭㥞颣䡜✪㌕஋凥줊嚬ꠘࣗ⹮耭ĩ肝ﳓ앂《婚购뜄Ⅱ燥쌴⌥瞘뉬剗⣵艔醑ꗐ늏堼粥^\ud803暕‪㍀䥲\udba0xᚒೝӯₒ엿堔녟邷栄Ⰳ섺ᄫ᠀⥊燣€叏獛ᘉā聨偏﹚須氅嘯஖ᘪ텲\udf61惡ᨤ傾䂷Ĝ폐ְ抬ū뒽뾒萕Ẁ캀미ᕌϨ둬娜⨫铹⯄앀쀨〙傢願찃ﰕ䠪⢥遢蒱攔ỵΫ⪑韎쭑엞『륑合彠ɖ襥坢퉙僜뻬嬟⩻ឍ쬛쁝ᐝ鸙慀跠晐감䥒ヾ镮啋޾脽ᆎ瀽ꀳェᰀꨅ咰癀⚠˓O覓年ꈴ﹋ꢓ㾒滇㴓栁寀媢䣑⽸ᨴ䲢ݑ膨脑ꧡသ蠀쐎먁顧⩡챀⬐⮐ഠໞ͈ɨ\u0011ⅇ鈈鐥㼂⦋ʀ퐀Ʇ潸Ⴌ嶆ᡈ䀑轘쎠%퀹选栌項줅鋆ⲃꦀႰ微㊀ྼ俯짺銀襴䃺⁃ယ㊬쐁戂왗㷱ꅘ㪜勮ᵐᰕ䐈ъ술Ɗ⪾ၷ椳낆\ud98a㠁㈰銎幕낐䍳辳Ⴆ愊僻ʃ굣㠧뀎\udfe7앒倁⼁粒솠㮁龩顂䒒쑜Ƈ턫㦕飴ꌜ拓䄒촉儁밨֕⣊ꌐঈᴙ娬ꪯ孒‪樰⢑闟赋渁༊梵⤼⸮᯵≴㢆ꗠڭ恜ㄐ됢⁗삝袐考∅ﳃ㲀嬀ᏘኁῠߜǢǥ샍怆鉿ᄃ咕讒ࣇ奅쁸主Ֆᓍሲಥ௢0䥴쉌ሀ\u000eꢀᦹ度薑̦㥔⪆∏︋\udb32舣጑銈\udf38㿀䙕᤾\udf4c乔튚蒧硇ɚᤝ违ﾉ専⠋뼽䫲 ֩띗肪ඤ얱歷⪾壍쁋ᘌ逇⥃倃새甀∲㘠ⷐ䋤ۜꭎ唬夌䑳쁝쀬堁툂윦Ꜫ䐰ᰊⴸ㢨ਂݘƨS镭쀴肐耎뀄 ١吲䬐毥侬ᶒ銯ေ⮛閼䁚꘥⤄坋泀礱쀀⁕௎།᷐儹廾윸՚岹踏\u0019㥍렁䂏ǋ뜪蚼䃥ᄐⰃ䝧ฐ靘Ώꐦ㉧︺逎툧墈踄\uda17䊀魒᪂⭰˗塟寮㠄炧劷Ꮭ䠃䑔䅔斐䴀揊뢠溯ᥪ⋣쉜ጭ䑨냵䱔ᕧ삎\r芮遥킪笴\udd5eⱞϲ뤱쐂ꤊǘӬ삔鍘퀧䅐\ud80eࠂ᫰Ꚉﮕ褀爕澚ࢡ♁琱ᇺ饰唀ᰝᐐ‎슭楛＀폘\uda2a뀸쀃肰б遦ᕆ뱳㍍唪\udc0b䅕䂪㈴　䐕攊띠⍲躐敢唯鱌帒༟퍣उ䉨卄獋ᚓⱫᨥ媝፿惈ꬩ曥屍唶龇ᖏኮលꠁ끕䮂犮ᙃ\ud9a1ꮼ怤ꬍꍩ⎒༅䐏಩糠拣鮕⤀䱀㢸Ǚ嫑輼줢嗺戱ꌗ凌傧ꠃꈀꐀ፠㰨㹴ᑚࣧ苯Α큦သ堉᪳䪸ᔭﰄ꤁뤈㜊쀠㪖㘓㧯虼걾坙࣬푆쉃ᕊ숏ࣄ㲬暦輫㡕윂㗥巈霕趀Ҿ釲¶챉\b帴祕㲮扄澸穕略緾쩇⼂ꉿ\ud946࢖뤔챨䴥정ੌ埃套☹뙕⤀ご㇊ꀦ䄺옫␬燏颏⫞࠵缶Ђﬧ釁糰裪⚎瘨⮏Ӷ۷쎡咯⮱낶ⴿ匡쀖\u0001犪鷣岫璘謁疀ፊ뛉蠊골ǥ쇖㐑⠍窑犪퉏⎂慕ぉ艶䨄岞姧㦻骇뀤牴ꪪ䃝⪂ᕷ㦛گ煃极蓠㼢붹㧶ૐ읧₩\u0006砩隵谀Ċ泇㛩췰䒇栈ࡕ䴪\udbe8ꕉ᳌䗜셹틔ꬿ逈쪦刘蘒퀌⢃쑙ꆨ─鎖ᖫꥢ쭙⇰䇚㍪钗耻겓\udc48뇆⏣겈줨븠₀⊈ㅅ荌聸ዬた聭恏啾위禂钄㮀컐ᥕ䧰౱䋻⌕脙㇤炒䌕ầ葈劂쨗郧襱쪔큒က✚\udcbcख़띵吜胣嗾耚\u0001㕞豢䵔嵥\udfc0庀ℍ걪Ꝁ䖚ꭀͯ䧱呉⨄ꁆ䪔쁋졃䕢腭ࠀ꿊죌ᕀῸ௭垖룇䂄/丸梓밃ꨦ虔ᗤᤀ渠⚠ਐ೤В̉ôú耻敦ꀞ乀臡Ꙩ慒ᶆ小鸬藹岓❾呥\ud800~㢱嶐㨠᳠ɹꐭ৊ꬳⳌ탺쀇សى\udfb0흔⽕益ꡀת뢆庸Ӝͮŷû耖萉窮萀\udd44꼀蹌㯀Ϡጤ˸߳冏耀‐ငࠆЀ舁䄁髤ࠞḨڠă씖酂Ǽ傇눸㕱⮓ࠁ쎓㍱玓阁齞ਠᔐጫ齄͌刚\u0002䀰lҗဘ○娔১ꊓ傤ᶌ動羃췇跿ꍀǊꂵ炕ꪆᘵИᕐ伅悃뫘\udbb0礜☸ᄲԓ킖ꭈ껝ꓬ핱謑㕙ꇇṔ⚈缸ὼᓑ⠉䑍联߆悥壖೩ꪵ檶赛瀇ꍕ㸨燐ꏀ㈀ⵟ୒䤚꼃舒╃Ê櫈啐骴뽄怡籘権古׀統鞀Ա䉥ꖹ关쓂葫褓ꀉ們⒩蓴毰媻ḩ䭮઺겨꡿⨷唗퉠쐵镓췰볤ꉃ\udbb9偛㺕瑾蕱ވФ̒É頚䀽‑适젆ꘛ爁礀ﲀ䅀⟪꿚侀醔Ǌ゘뢋䀕ꀅྣ덆\uda33\u0019뼢\udf0d࢛ꁠᠰૣ㎺蜰䃰䧾飣㕠肃㡃䎁獗桜泤겄ᣦ龩꿦ꠘꨖA屣蠄\u0010耋푲樀뉲ḀẐꬌ鄤ऀ˔ŕĵ䰞\\ꊃ\udc83쀌퐀畱ࠀ뎪陰㨠ŵ堻ꇳ喡ࣽ檤꬚耝စ몪樑睕泭榤ꦚ鳳驺꼜殞꫈꫞䀻﬊렇뵕渁쾪ꏀ⯪ꄃ䭺겼ǻ䦯¦찟핗庉磌簂ƫ缀ﾀ䀠【ጝĆ겫鍁꫆摰檩夢᪪時蚮ݩ愀炀앛祼舚馡你杣㇅◰픱퐯\u0002쀘鵏⎇붒ሥ梶铊莐㞪맸Ě귭婗R䁎쁕휓渄擀ൗ！기력僕櫰ᰵ宔Ǯ¤䁗霌≵⛘䜂沨ꍪ⬪ᝡঀ赙弍온ꮕņ铽灲ꔴꟅ왏䤔함ﲫ殘霪꒕⎰襙咠Ȱካ⯢擮숊ሿ\ud848㰃梈◕쫊욖Ⲻ꣝墮ꤷ咄膽蓝\u000b逓ꐑ렎⮣쮂ǰȦ뛘䳈⨔魝寖귛ŋꨍ햶耖⬛\u0010Ꞇ霠ⷕﻪ썏㖺ꅟ┏垰σ픊᠗畚\udabd倆退ژ\fஐ⾺몪贞갏哋ꪑ鐉啳䀂㵛峂轔㑨𥉉뇪썵䡺ꥀ\u0016ꆹ焻꨼)畺窫쀋먢햱ȸ緕嫪복敺ꀽ嵞긏嚇쐂퓕ꄲ╅庯흖ឫ痪묁냺뤽嫮ꭏ哀ò昺\ud90b뵟橳ὕ⟕⫊臵煺뢆쵀ğ呗ꮹ듣當直뵝㺬͊淩ᯕ췪藵幜ଓ얨䉫ꯗ픜앾ᦊ鬦鮔Ŷἀ蕑䠮ဗ繀Ⅲᵛ鹞겆特꬗唇檕핍檰ⵜᚪ ᥢ鷆飜菶踷㗾譲蟆䄣ꑢ\udcd2湇砒定娆卦ꊤ\udfd5瓜꿵匷㟽嫍쵴쫪ꨔ蠄䚒Ἣ췉㨓\uda42ֹ誺ᷴ♠Ң郇踞旐芀ᅭ聨൶㜮㢇Ʃ옂墓ဵ倲損澽ᔃ借䉆殩맲\udcf7מ氢귎Ωꭳ懹癮瓣ⷎꩁꧦ鐨㔥檨瑠뜺懌⷏䂩砵ዜ︍偽ᛍ鏯࿿㬈殰㕢᫄啍В䍜꿈﹆῱ǹ銼杵嵣࣐ꠎꪝിᢞ遉䈾⌗苈琷냕䍭ᰵ烛煂⸣ᯒ૒۔﯁぀顈䰥逊ጊং辇뚪樁佧彄破鈾☝哔ﭾƵ㹘퉨젒㒏ᩇ瓳䚐팪褔䩅⸣冩捪緣瀸蠒綒渃ὣ襀䑪꼹㻶㳾汆됺꾑갌䛃䤛喕졬爙㸯岃侉㜡㈵䪟།䧐ퟞ쪑亏认劃ᇑ픑뀬畛茀鵑캫\udc4b鎪뤠ⲍ瑿✣埑ꯈ퐆⎭ຍ᫯궽탇蜇봍뚘䪧쯃峢ǰ흾ㅜ㗚鼵䎁옃僬⁂웛蠐甎팚仆ꇃ弱ꮨ혬欆㖍᫷䎇逓탤ꡆꨑ벆\udb1a\ud98d滆뻣年㞈퐔樲⤺齫侤ꤖ폣⩂㓸눁ᕈ휚蒊俆껣卑ꢴ㦬〆㕚鼠䵄䔬ㄑ豇牑ꌑᦷ澍筪깣弉꿨홝එ㕃᪠﹎䔡ᚏ酎䖡ᑓ菀垀Ễ郰咟榯꫽햹ğ媺훪䱔Ⰳᔕ夁餲இ黢俀ৃ⢪芭쳧뒩⡳畀ڢ壟즨ཕ뉪\udd84饅低뜦둮髡㎕䠹삛孌솻逌ᐭ纩ꓗ䤰⍐횁䭀⏺ꦓ勽喎梼핋꫟㕑\udab4͒ࠂୗ꓉‵轹繾ꌢ➹怢됩冋賓ﵞ갨徣℈埪ㅆ⫽玤誾⛛䫩ุᦩh㖅홴젅꼲썓巍⌻瞩븩䝍坖᧓剹槶㲼縶骖૗홬뚐瓗적觺놚쥾뫕藿ဧꍍ޷෥憎ꘅ餗ꚽ恤뵧埫Ὑ찼呃㋤ᗈኣ发괴㧬殱ᣎ᫄涴ꄚፕ῍쓖ﱫ业葭龆럱萉갈혡ダ頡᫈☚ጋꍓন쉪莪딚ﾍ絆ꥣ刟晈퓣䦑ꓸ퉤젡㒌獞\ud9aa裖癪ꜵ࢚计艆낣妷⁏늍셊㗑렚⍝窔\udcd4썬व뮚ꁍ噼媹ҟᎮ䊧씛郣砺쵭욳썗됹≫ስ䂚質霆Ḻꢝ咘헧啬㔷᫘䵛ፐ놫䢥ቫ阵龭髆꾇೴㐑셬橦㔓髐ⵖ덛ﱡ䠁踵溸㑭駆댛樠䒸퓣 㔠嫞赘ᚡ֪ﳕ౪帵ງ瞍䪡אꪨ휤叟㖈髂䵅ᚱꍕ槰锣섵犤䡍䃙✓冹겜홞毀떟髭侪⚽銎親䘣礨鬒畆ꭳ啹간휒歡梤骼詒ⴐꊚ譆ꇀ랫៕淪녯⽶ńΞ껯啉わ햛목᥋⨧㧃㨁త絜ִ⃑妩襥ꩬ<\u000f햢髞窫絚断〓饫佈ᶠᥱꟻѭ譥궼͹毢鹗䵫窹㕝ꛑ밋枫珕虚쮅ㇺ꠽噾ꪏÏꨔ쁎媜\udb06蝹쭒斫轖ᘁ矕悭橺ꍓ宰県梲㔽䵡者榮Õ寧촵萀୍杬諓崺㝇뢦欱裂锒햋꫋圁굙♆⮟嶫⃗샪슇룎겸섔熢볒핑ꩣꃗ쏲໹鍸먻㉦ꦝ꓈辴퓮ꅚ떏嘎굺䰋ꭓ땡灻ﺘﵚ⃖꽦⟵눛艶滟䵦퉽榉歒땦窱㕲蛹ꑰ쁾灞\udefc썙ꨂ힎毸딨媘涚ᚰ鋖빪䢵ꡚ埣׃咍러푌耐颠䰅逰঍Ӄ法鹪硶콚벖ꆣ弹곋Ⴄ歱ꐨ툕쵪搂᭐얩裗湪ĵ烚꣪酆넾츷̨풞櫑딲嫆⵩ᚦ獘苕쟅騵瞚\udcf8뭆꧳凵긢퐶檘딻骅ⵣ䚧鵗ᣕµ弚ꐭ取꯫堥ꬢ휉檁㔫᫮ᰣ탃捐薯ꛗⅪ例垭忖뿃吉ꤸ힣淎㗸媜涑㚳춭⛔繪墵\uda9f⨭密ꗘ臱ꮢ횫標떲嫾浙㚼譝꧷拔\uda7dꕈ蚟渭䊩ឋ反꼼퐉橡땂媭浊⚵銆覮袦扪꒵蛚쥭窶깋峭꺼혩殲⧰됕ⵘ缲鍑ꖩ뽕攁紀˸獐⥸齋哾꡴֚젹벮䈰ゅ邊␈ᰄ轖詪꣕ܠ橥琦ꆱ豍ꦙ扩ㄌ蓕 턯隴鑊ࠄ㈓㤈䲄ପ\ude30ᇃးඅ쨌풍⒚A℀ﰘ\ud90f帅ሑ血鉂㩡➨蹈䏪⑒፮䦏\udcb7ᄕ蚾⩉᫅鍗᭹鎵ᓑ᩶땼䚂ℊ낟뢍瀛ⵠ脪筞껔⩼氵䑚齭熶멛叵깬훶櫜㗶\udaa8浔뚼㸣ⶩ法蘵Κ爓ѳ帍꡺힮樝뗐\udab5便뚥魟ඨ䚐와霵헍瞶랛寭ꤶ홫樃떍᫜浡᭜禭侰㽫↵塻翭厶ꁛ勭겢핓橳᫇쵁籗ﭔﶭ㻕﨣徵\ud8daᬶ걣忹ꠐ숁殷땿\udaddݔΩླ୫纶灚聭ꈖ렋厽ꤦ흽毶㖿媋ᚾ孝薯吹ࠐ\uda87䈭弖봇匃괡횛欅떔嫲尽ꇗ孔䭫衵఺耝猖벇唝傶횂檭뗶鼞ⵤ躯蝒䎬쇕郪\udfb5凕儭呅⌓夥ꦌ䖠뗼㪍ᵠ躾ݘ톩ⓗݫ䏹ᒚ䡖ꭋ哗ʅ馔痦顱\udabd䵟揀퍐톧⫔יּ໕圑⪭䵖ꐭ堽軬奈教쁡왆嬃ⶇ䂸渲Ȩຌꏆ䵱喉뮬擔뉷촞棟ἑ栀ᱤ욵됚鼠ࡦ뉫凇఻尔裃ᥠ鵮ᙑ㊆Ꭸ귋炠娲簨㮌鳆嘧她༨椥葖㈉㫃笒亦⸡㾑\ud8cb踳\udac5ⴾ悅⾱똪\udb89䑮㋕㫨鵃왋ꌤꍵỔ䯱欵밺ꌝ窎ꏱ辽ꧬ푡歔申㫩ᵞ蝐綨싔ѫƵ䄚ꇍ䐓ఛ帑꺙흀疘\udad9쵓욽ﭝ贤ﻕꑪত꣚젝稶뜣妣껁횇\ud9f7㗅᫈ﬁ㚢ݔ䎫凔곪ѵ耺괝畈ᛳ咃꡼ퟧ씺㖆㫃鵧캤읝秖Ｕጚ舝眶꺇唣꣆훃櫧㔷䍨⵪운孟֬ۘ\udceb覵ᣚ懶ꬋ忀䔸홰ค媥鵈⺡᝕莪䗖ﳪ䑵ẇ䕂Ặ뚋寨瘅홌䍁痓髰嵅⺸ፑ얫ӗ孪ᴾⒺ왝央뻧嫋꧑힆∤떱ᓬ䵱靗玭㇕죫㈩䩚쬝礦굋屑䶱ퟖূ肅\ude76࠹㊷瀊꺮ခ繠ᄶ؀ἨЀ\u0000";
+            window.__GITBOOK_INITIAL_RENDER__ = true;
+            window.__GITBOOK_LAZY_MODULES__ = [];
+        </script>
+        
+                
+    </body>
+</html>
