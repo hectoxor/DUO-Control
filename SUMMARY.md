@@ -7,7 +7,7 @@
   * [Подключение Driver Station к Control Hub](nachalo-raboty-s-control-hub/podklyuchenie-driver-station-k-control-hub.md)
   * [Схема проводки](nachalo-raboty-s-control-hub/skhema-provodki.md)
   * [Следующие шаги](nachalo-raboty-s-control-hub/sleduyushie-shagi.md)
-* [Getting Started with Driver Hub](getting-started-with-driver-hub.md)
+* [Начало работы с Driver Hub](nachalo-raboty-s-driver-hub.md)
 * [Adding More Motors](adding-more-motors/README.md)
   * [SPARKmini Motor Controller](adding-more-motors/sparkmini-motor-controller.md)
   * [Adding an Expansion Hub](adding-more-motors/adding-an-expansion-hub.md)

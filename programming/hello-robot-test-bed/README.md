@@ -84,7 +84,7 @@ For the purpose of this guide a test bed similar to the example one can be built
 The Test Bed sections highlights the necessary robot components needed to learn the basic programming concepts used in the Test Bed - Blocks and Test Bed - OnBot Java sections. However, there are two more components needed to succeed in testing your code: A Driver Hub (or equivalent Driver Station Android Device) and a gamepad.
 
 {% hint style="info" %}
-For information on setting up a Driver Hub and gamepad please visits the [Getting Start with Driver Hub](../../getting-started-with-driver-hub.md) guide.
+For information on setting up a Driver Hub and gamepad please visits the [Getting Start with Driver Hub](../../nachalo-raboty-s-driver-hub.md) guide.
 {% endhint %}
 
 ![](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4\_pJHI8HTuZFQTNfcy%2F-Mef03GnAoBcRAuOvVBl%2F-MefIm2DvUiOnc92AXOR%2Fgamepad%20and%20driver%20hub.svg?alt=media\&token=c389678c-0ab8-40d9-a046-baed376f2584)

@@ -6,7 +6,7 @@
 Этот раздел предполагает, что вы уже прошли процесс настройки устройства Driver Station. Если вы этого не сделали, ознакомьтесь со следующими руководствами для получения дополнительной информации о начале работы с Driver Station:
 
 * [Поддерживаемые устройства Android и возможности диапазона Wi-Fi](obnovlenie-nastroek-wi-fi.md#podderzhivaemye-ustroistva-android-i-vozmozhnosti-diapazona-wi-fi) - чтобы узнать, какие поддерживаемые устройства Android можно использовать в качестве Driver Station
-* [Начало работы с Driver Hub](../getting-started-with-driver-hub.md) - для настройки Driver Hub
+* [Начало работы с Driver Hub](../nachalo-raboty-s-driver-hub.md) - для настройки Driver Hub
 * [Настройка Андроид устройств](../legacy-documentation/configuring-your-android-devices.md)- чтобы настроить Android-устройства без поддержки Drive Hub в качестве станции водителя
 {% endhint %}
 
@@ -28,7 +28,7 @@
 {% tabs %}
 {% tab title="Driver Hub" %}
 {% hint style="danger" %}
-Этот раздел предполагает, что вы уже прошли процесс настройки концентратора драйверов. Если это не так, перейдите к [Начало работы с Driver Hub](../getting-started-with-driver-hub.md) и пройдите процесс настройки Driver Hub.
+Этот раздел предполагает, что вы уже прошли процесс настройки концентратора драйверов. Если это не так, перейдите к [Начало работы с Driver Hub](../nachalo-raboty-s-driver-hub.md) и пройдите процесс настройки Driver Hub.
 {% endhint %}
 
 | ​                                                                                                                                                                                                                                                                                  | ​                                                                                                                                                                                                                                                                                                                                                  |
