@@ -31,7 +31,7 @@ _If a path in this guide does not resolve the issue please contact REV Robotics 
 
 {% embed url="https://youtu.be/f1ev2Ap9Ywo" %}
 
-The steps below utilize information provided in the [Adding an Expansion Hub ](../adding-more-motors/adding-an-expansion-hub.md)article. Use this article to help you navigate as you run through the troubleshooting flowchart. &#x20;
+The steps below utilize information provided in the [Adding an Expansion Hub ](../dobavlenie-dopolnitelnykh-motorov/adding-an-expansion-hub.md)article. Use this article to help you navigate as you run through the troubleshooting flowchart. &#x20;
 
 ![](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4\_pJHI8HTuZFQTNfcy%2F-MX985Hm4J6FTl0\_gLCi%2F-MX9Hh9d7HgKrItUJ7tP%2FAdding%20an%20Expansion%20Hub%20.svg?alt=media\&token=2cbd961e-9aac-447d-b8a4-c754009ddcc9)
 

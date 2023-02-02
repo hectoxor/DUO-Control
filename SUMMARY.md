@@ -8,9 +8,9 @@
   * [Схема проводки](nachalo-raboty-s-control-hub/skhema-provodki.md)
   * [Следующие шаги](nachalo-raboty-s-control-hub/sleduyushie-shagi.md)
 * [Начало работы с Driver Hub](nachalo-raboty-s-driver-hub.md)
-* [Adding More Motors](adding-more-motors/README.md)
-  * [SPARKmini Motor Controller](adding-more-motors/sparkmini-motor-controller.md)
-  * [Adding an Expansion Hub](adding-more-motors/adding-an-expansion-hub.md)
+* [Добавление дополнительных моторов](dobavlenie-dopolnitelnykh-motorov/README.md)
+  * [SPARKmini Motor Controller](dobavlenie-dopolnitelnykh-motorov/sparkmini-motor-controller.md)
+  * [Adding an Expansion Hub](dobavlenie-dopolnitelnykh-motorov/adding-an-expansion-hub.md)
 
 ## TROUBLESHOOTING THE CONTROL SYSTEM
 

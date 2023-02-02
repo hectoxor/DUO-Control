@@ -19,7 +19,7 @@
 * Кабель типа USB A Female к Micro USB ([REV-31-1807](https://www.revrobotics.com/rev-31-1807/))
 * Компьютер на Windows, с загруженным и работающим [REV Hardware Client](https://docs.revrobotics.com/rev-control-system/managing-the-control-system/rev-hardware-client)
 
-Дополнительные материалы, необходимые для [подключения Expansion Hub](../adding-more-motors/adding-an-expansion-hub.md):
+Дополнительные материалы, необходимые для [подключения Expansion Hub](../dobavlenie-dopolnitelnykh-motorov/adding-an-expansion-hub.md):
 
 * Expansion Hub ([REV-31-1153](https://www.revrobotics.com/rev-31-1153/))
 * XT30 Кабель удлинитель ([REV-31-1392](https://www.revrobotics.com/xt30-extension-cable-2-pack/), included with Expansion Hub)

@@ -11,7 +11,7 @@ After receiving the Expansion Hub it is advised to unbox the device, power the E
 * Etpark Wired Controller for PS4 ([REV-39-1865](https://www.revrobotics.com/rev-39-1865/))
 * USB A Female to Micro USB ([REV-31-1807](https://www.revrobotics.com/rev-31-1807/))
 
-Optional Additional Materials needed to [Connect an Expansion Hub](../../adding-more-motors/adding-an-expansion-hub.md):
+Optional Additional Materials needed to [Connect an Expansion Hub](../../dobavlenie-dopolnitelnykh-motorov/adding-an-expansion-hub.md):
 
 * Expansion Hub ([REV-31-1153](https://www.revrobotics.com/rev-31-1153/))
 * XT30 Extension Cable ([REV-31-1392](https://www.revrobotics.com/xt30-extension-cable-2-pack/))
