@@ -1,67 +1,66 @@
 # SPARKmini Motor Controller
 
-The SPARKmini Motor Controller ([REV-31-1230](https://www.revrobotics.com/rev-31-1230/)) is an inexpensive in-line brushed DC motor controller designed to give _FIRST®_ Tech Challenge teams more bang for their buck. It offers the same performance characteristics as the REV Control Hub ([REV-31-1595](https://www.revrobotics.com/rev-31-1595/)) or Expansion Hub **** ([REV-31-1153](https://www.revrobotics.com/rev-31-1153/)) motor ports in a small 60mm x 22mm footprint. Now FTC teams can add a SPARKmini Motor Controller to utilize more than four DC motors from a single Hub in a space-efficient package.&#x20;
+SPARKmini Motor Controller ([REV-31-1230](https://www.revrobotics.com/rev-31-1230/)) - это недорогой встроенный контроллер щеточного двигателя постоянного тока, разработанный для того, чтобы дать командам FIRST® Tech Challenge больше пользы. Он обладает теми же эксплуатационными характеристиками, что и моторные порты REV Control Hub ([REV-31-1595](https://www.revrobotics.com/rev-31-1595/)) или Expansion Hub ([REV-31-1153](https://www.revrobotics.com/rev-31-1153/)), занимая при этом небольшую площадь 60 мм x 22 мм. Теперь команды FTC могут добавить контроллер двигателя SPARKmini, чтобы использовать более четырех двигателей постоянного тока от одного концентратора в компактном корпусе.
 
-### Power and Motor Connections
+### Подключения питания и двигателя
 
-The SPARKmini has three integrated wires with connectors dedicated to power, control, and the motor; one [XT30 connector ](../system-overview/cables-and-connectors/xt-30-power-cable.md)for power, one 3-wire servo-PWM connector for control, and one [JST-VH ](../system-overview/cables-and-connectors/jst-vh-motor-power.md)connector for the motor. The figure below shows each of these connections.
+SPARKmini имеет три встроенных провода с разъемами, предназначенными для питания, управления и двигателя; один [разъем XT30](../system-overview/cables-and-connectors/xt-30-power-cable.md) для питания, один трехпроводной разъем серво-PWM для управления и один разъем [JST-VH](../system-overview/cables-and-connectors/jst-vh-motor-power.md) для двигателя. На рисунке ниже показано каждое из этих соединений.
 
 ![](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M8S63YNATJr5J\_ZuT4z%2F-M8S6x4RlQpD17v6ojlt%2F2.png?generation=1590700268318203\&alt=media)
 
-Connect the power wire to a free XT30 port on the REV Control Hub , REV Expansion Hub ([REV-31-1153](https://www.revrobotics.com/rev-31-1153/)), or through an XT30 Power Distribution Block ([REV-31-1293](https://www.revrobotics.com/rev-31-1293/)) that is connected to a free Control/Expansion Hub XT30 port. Connect the control wire to an open servo port on the hub and the motor wire to a JST-VH port on a motor, like the REV HD Hex Motor ([REV-41-1301](https://www.revrobotics.com/rev-41-1301/)) or the REV Core Hex Motor ([REV-41-1300](https://www.revrobotics.com/rev-41-1300/)).
+Подключите провод питания к свободному порту XT30 на REV Control Hub, REV Expansion Hub([REV-31-1153](https://www.revrobotics.com/rev-31-1153/)) или через блок распределения питания XT30 ([REV-31-1293](https://www.revrobotics.com/rev-31-1293/)), подключенный к свободному порту XT30 Control/Expansion Hub-a. Подключите провод управления к открытому порту сервопривода на концентраторе, а провод двигателя - к порту JST-VH на двигателе, например, REV HD Hex Motor ([REV-41-1301](https://www.revrobotics.com/rev-41-1301/)) или REV Core Hex Motor ([REV-41-1300](https://www.revrobotics.com/rev-41-1300/)).
 
 {% hint style="danger" %}
-DO NOT reverse polarity on the power input connections. The SPARKmini does not contain reverse polarity protection. This can permanently damage the SPARKmini and will void the warranty.
+НЕ меняйте полярность на входных разъемах питания. SPARKmini не имеет защиты от обратной полярности. Это может привести к необратимому повреждению SPARKmini и аннулирует гарантию.
 {% endhint %}
 
 {% hint style="danger" %}
-DO NOT swap the motor and power connections. This can result in uncontrolled motor operation and can permanently damage the SPARKmini, voiding the warranty.
+НЕ меняйте местами разъемы двигателя и питания. Это может привести к неконтролируемой работе двигателя и необратимому повреждению SPARKmini, что аннулирует гарантию.
 {% endhint %}
 
-### &#x20;Servo-PWM Input
+### &#x20;Вход серво-ШИМ
 
-A motor’s speed is controlled by varying the voltage that is applied to it. The SPARKmini’s output voltage can be controlled by sending it an extended-range servo-PWM pulse. The extended 500µs to 2500µs servo-pulse corresponds to full-reverse and full-forward rotation with 1500µs as the neutral position (no rotation). The pulses are proportionally related to the motor output duty cycle, therefore variable speed can be achieved with pulses in between the extremes. The following table describes the pulse ranges in more detail.
+Скорость двигателя регулируется путем изменения напряжения, подаваемого на него. Выходным напряжением SPARKmini можно управлять, посылая ему серво-PWM-импульс с расширенным диапазоном. Расширенный сервоимпульс длительностью от 500 мкс до 2500 мкс соответствует полному вращению назад и полному вращению вперед, а 1500 мкс - нейтральному положению (отсутствие вращения). Импульсы пропорционально связаны с рабочим циклом выхода двигателя, поэтому переменная скорость может быть достигнута с импульсами между крайними значениями. В следующей таблице более подробно описаны диапазоны импульсов.
 
-Table - Control Signal Pulse Ranges
+Таблица - Диапазоны импульсов сигналов управления
 
-| **Pulse Width (**_**p**_** in µs)** |                   |                   |                   |                  |
-| ----------------------------------- | ----------------- | ----------------- | ----------------- | ---------------- |
-| **Full Reverse**                    | **Prop. Reverse** | **Neutral**       | **Prop. Forward** | **Full Forward** |
-| _p_ ≤ 500                           | 500 < _p_ < 1490  | 1490 ≤ _p_ ≤ 1510 | 1510 < _p_ < 2500 | 2500 ≤ _p_       |
+| **Ширина импульса (p в мкс)** |                                   |                   |                                 |                       |
+| ----------------------------- | --------------------------------- | ----------------- | ------------------------------- | --------------------- |
+| **Полный обратный ход**       | **Пропорциональный обратный ход** | **Нейтральная**   | **Пропорциональный ход вперед** | **Полный ход вперед** |
+| _p_ ≤ 500                     | 500 < _p_ < 1490                  | 1490 ≤ _p_ ≤ 1510 | 1510 < _p_ < 2500               | 2500 ≤ _p_            |
 
-### Zero-Power Behavior
+### Поведение Zero-Power
 
-When the SPARKmini is receiving a neutral command it will not provide any power to the attached motor. There are two options for how the SPARKmini handles this zero-power state:
+Когда SPARKmini получает команду нейтрали, он не будет подавать питание на подключенный двигатель. Есть два варианта того, как SPARKmini обрабатывает это состояние нулевого питания:&#x20;
 
-**Brake** - Motor terminals are shorted to each other to dissipate electrical energy, effectively braking the motor.\
-**Coast** - Motor terminals are disconnected, allowing the motor to spin down at its own rate.
+**Тормоз** - клеммы двигателя замыкаются друг с другом для рассеивания электрической энергии, эффективно тормозя двигатель.&#x20;
 
-The zero-power behavior can be selected via a switch located towards the center of the SPARKmini housing, shown in Figure 2. Each mode can be selected by sliding the switch to either the Brake (B) or Coast (C) positions.
+**Холостой ход** - клеммы двигателя отсоединяются, позволяя двигателю раскручиваться со своей собственной скоростью. Режим нулевой мощности можно выбрать с помощью переключателя, расположенного в центре корпуса SPARKmini, как показано на рис. 2. Каждый режим может быть выбран путем перемещения переключателя в положение Тормоз(Brake) (B) или Холостой ход(Coast) (C).
 
 ![Coast/Brake Switch](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M8S63YNATJr5J\_ZuT4z%2F-M8S6x4SV5pOuTuqJEl4%2F3.png?generation=1590700268319111\&alt=media)
 
-The SPARKmini will indicate whether it is in Brake or Coast mode via the Status LED, located in the center of the housing, whenever it is outputting zero-power. Solid or flashing blue indicates Brake Mode while solid or flashing yellow indicates Coast Mode. See the LED Status Codes section for more details.
+SPARKmini будет показывать, находится ли он в режиме торможения или холостого хода, с помощью светодиодного индикатора состояния, расположенного в центре корпуса, всякий раз, когда он выдает нулевую мощность. Постоянный или мигающий синий цвет указывает на режим торможения, а постоянный или мигающий желтый - на режим холостого хода. Более подробную информацию см. в разделе "Коды состояния светодиодов".
 
-### LED Status Codes
+### Коды состояния светодиодов
 
 ![](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2F-M4\_pJHI8HTuZFQTNfcy%2F-MBpTihAyYN0ZC30Q7rL%2F-MBpVtluQt88S1r89S-z%2FSPARKmini%20Codes%20-%20Export.svg?alt=media\&token=f71c289c-5028-4645-be17-eb92356e4dbc)
 
-### Specifications
+### Характеристики
 
-| **Parameter**                   | **Min** |    **Typ**   | **Max** | **Unit** |
-| ------------------------------- | :-----: | :----------: | :-----: | :------: |
-| Supply voltage range (VIN)      |   6.0   |      12      |    20   |     V    |
-| Supply voltage absolute maximum |    -    |       -      |    25   |     V    |
-| Continuous output current       |    -    |       -      |    15   |     A    |
-| Peak output current             |    -    |       -      |    20   |     A    |
-| Output voltage range            |  - VIN  |       -      |  + VIN  |     V    |
-| Output frequency                |    -    |      10      |    -    |    kHz   |
-| Input pulse width range         |   500   |       -      |   2500  |    µs    |
-| Input frequency                 |    16   |      50      |   200   |    Hz    |
-| Input timeout                   |    -    |     65.5     |    -    |    ms    |
-| Input deadband                  |    -    |      ±10     |    -    |    µs    |
-| Input low-level voltage         |   -0.3  |       -      |   0.8   |     V    |
-| Input high-level voltage        |   2.0   |      5.0     |   5.3   |     V    |
-| Weight                          |    -    |     0.87     |    -    |    oz    |
-| Dimensions (excluding wires)    |    -    | 60 x 22 x 12 |    -    |    mm    |
+| **Параметр**                           | **Минимум** | **Стандарт** | **Максимум** | **Единицы измерения** |
+| -------------------------------------- | :---------: | :----------: | :----------: | :-------------------: |
+| Диапазон напряжения питания (VIN)      |     6.0     |      12      |      20      |         Вольт         |
+| Абсолютный максимум напряжения питания |      -      |       -      |      25      |         Вольт         |
+| Непрерывный выходной ток               |      -      |       -      |      15      |         Амперы        |
+| Максимальный выходной ток              |      -      |       -      |      20      |         Амперы        |
+| Диапазон выходного напряжения          |    - VIN    |       -      |     + VIN    |         Амперы        |
+| Выходная частота                       |      -      |      10      |       -      |          кГц          |
+| Диапазон ширины входного импульса      |     500     |       -      |     2500     |      Микросекунды     |
+| Входная частота                        |      16     |      50      |      200     |           Гц          |
+| Тайм-аут входа                         |      -      |     65.5     |       -      |      Миллисекунды     |
+| Входная мертвая зона                   |      -      |      ±10     |       -      |      Микросекунды     |
+| Входное напряжение низкого уровня      |     -0.3    |       -      |      0.8     |         Вольт         |
+| Входное напряжение высокого уровня     |     2.0     |      5.0     |      5.3     |         Вольт         |
+| Вес                                    |      -      |     0.87     |       -      |         Унции         |
+| Размеры (без учета проводов)           |      -      | 60 x 22 x 12 |       -      |      Миллимметры      |
 
