@@ -1,75 +1,78 @@
-# Encoders
+# Кодировщики
 
-### What is an Encoder?
+### Что такое кодировщик?
 
-An encoder is anything (device, software, person) that _converts_ information from one format into another. Some examples of encoding include:&#x20;
+Кодер - это что-либо (устройство, программное обеспечение, человек), которое _преобразует_ информацию из одного формата в другой. Некоторые примеры кодирования включают:&#x20;
 
-* A transducer, like a speaker, which _converts_ an electrical signal into sound waves
-* Software which _encodes_ an audio file into an mp3 to decrease file size
-* A stenographer (court reporter) takes courtroom dialog and _converts_ it into a written record
+* Преобразователь, например динамик, который _преобразует_ электрический сигнал в звуковые волны.
+* Программное обеспечение, которое _кодирует_ аудиофайл в mp3 для уменьшения размера файла.
+* Стенографист (судебный репортер) записывает диалог в зале суда и _преобразует_ его в письменную запись.
 
-This section is about rotary encoders which are electro-mechanical devices which convert the angular position of a shaft, like on a motor, to an electronic signal. These signals can be fed into a microcontroller, which controls all robot functions, and then used to provide real world data to make better programming decisions.
+Этот раздел посвящен поворотным энкодерам, которые представляют собой электромеханические устройства, преобразующие угловое положение вала, например, двигателя, в электронный сигнал. Эти сигналы могут быть поданы в микроконтроллер, который управляет всеми функциями робота, а затем использованы для получения данных из реального мира для принятия лучших программных решений.
 
-There are two main types of encoders: absolute and relative.
+Существует два основных типа энкодеров: абсолютные и относительные.
 
-**Absolute encoders** return the actual angle of the rotation (e.g. 30°). Absolute encoders maintain position information if the power is removed, and position data is immediately available when power is reapplied with no rotation needed to read the current angle. The relationship between the encoder value and the motor shaft is set when assembled and will always stay the same. Commonly these encoders use a specially printed pattern disk which are read and converted to a known angle. Generally, absolute encoders are easier to use when programming, but they are more complicated to manufacture so are larger, or more expensive.
+**Абсолютные энкодеры** возвращают фактический угол поворота (например, 30°). Абсолютные энкодеры сохраняют информацию о положении при отключении питания, и данные о положении сразу же становятся доступными при повторном подаче питания, причем для считывания текущего угла поворота не требуется вращения. Связь между значением энкодера и валом двигателя устанавливается при сборке и всегда остается неизменной. Обычно в таких энкодерах используется диск со специальным печатным рисунком, который считывается и преобразуется в известный угол. Как правило, абсолютные энкодеры проще использовать при программировании, но они сложнее в производстве, поэтому имеют большие размеры и более дороги.
 
-**Relative encoders,** which are also referred to as **incremental encoders**, provide information about the motion of the shaft (e.g. forward at 5 RPM), and only provide data while the shaft is rotating. One way to remember this is that relative encoders return information on the incremental change of the motor output shaft. Relative encoders only provide pulses as the motor turns, and interpreting these pulses into useful information must be done externally. A relative encoder does not know what position it is in at start-up, but it is possible to create a calibration program that must be run at every start-up to obtain reference point to calculate an angle from.
+**Относительные энкодеры**, которые также называют **инкрементными энкодерами**, предоставляют информацию о движении вала (например, вперед со скоростью 5 об/мин) и предоставляют данные только во время вращения вала. Запомнить это можно следующим образом: относительные энкодеры предоставляют информацию о приращении выходного вала двигателя. Относительные энкодеры выдают импульсы только при вращении двигателя, и интерпретация этих импульсов в полезную информацию должна осуществляться извне. Относительный энкодер не знает, в каком положении он находится при запуске, но можно создать программу калибровки, которая должна запускаться при каждом запуске, чтобы получить опорную точку для расчета угла.
 
-Encoders measure a real world change (shaft rotation) and convert it to an electrical signal. Two common ways to do this are using optical or magnetic feedback:
+Энкодеры измеряют изменения в реальном мире (вращение вала) и преобразуют их в электрический сигнал. Два распространенных способа сделать это - использовать оптическую или магнитную обратную связь:
 
-**Optical encoders** have a disk with a series of either slots or a reflective pattern around the outside which is attached to the motor shaft. A light shines on or through the disk where the light can pass through or reflect onto a photodiode (device which produces an electric signal when light shines on it). These sensors can be very light and compact, but can be very sensitive to anything that might interfere with the light reaching the photodiode. Finger prints on a reflective disk, or dust from a dirty environment can interfere.
+**Оптические энкодеры** имеют диск с рядом прорезей или отражающим рисунком вокруг внешней стороны, который крепится к валу двигателя. Свет светит на диск или сквозь него, где свет может проходить или отражаться на фотодиоде (устройство, которое производит электрический сигнал, когда на него светит свет). Эти датчики могут быть очень легкими и компактными, но могут быть очень чувствительны ко всему, что может помешать свету, попадающему на фотодиод. Помехой могут стать отпечатки пальцев на отражающем диске или пыль из грязной среды.
 
-**Magnetic encoders** have a magnet attached to the shaft of a motor and use Hall effect sensors to detect the changing magnetic field as the shaft rotates. Magnetic encoders are able to operate in harsh or dirty environments.
+**Магнитные энкодеры** имеют магнит, прикрепленный к валу двигателя, и используют датчики на эффекте Холла для обнаружения изменения магнитного поля при вращении вала. Магнитные энкодеры могут работать в жестких или грязных условиях.
 
-### Magnetic Quadrature Encoders
+### Магнитные квадратурные энкодеры
 
-A 12 pole magnetic quadrature encoder is installed on the rear of both the HD Hex Motor and Core Hex Motor. The output shaft of the motor extends from the rear of the motor case and a multi-pole permanent magnet is attached to the shaft. There are two Hall effect sensors, marked ‘A’ and ‘B’, mounted next to the magnet at 90° to each other. As each of the 12 poles passes across one of the Hall effect sensors, it creates a change in the magnetic field causing the sensor to generate a measurable voltage signal.
+12-полюсный магнитный квадратурный энкодер установлен на задней части как HD Hex Motor, так и Core Hex Motor. Выходной вал двигателя выходит из задней части корпуса двигателя, и к валу прикреплен многополюсный постоянный магнит. Рядом с магнитом под углом 90° друг к другу установлены два датчика на эффекте Холла, обозначенные "A" и "B". Когда каждый из 12 полюсов проходит через один из датчиков эффекта Холла, это приводит к изменению магнитного поля, в результате чего датчик генерирует измеримый сигнал напряжения.
 
-![Typical Encoder Configuration Installed on the Rear of a Motor](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89rN\_nO1-4JRef4%2F1.png?generation=1590172883133437\&alt=media)
+![Типичная конфигурация энкодера, установленного на задней части двигателя](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89rN\_nO1-4JRef4%2F1.png?generation=1590172883133437\&alt=media)
 
-Quadrature encoders are a specific type of relative encoder that have four different output states. If the root _quad-_, means four, but there are only two sensors in this encoder, where does the name come from? The output from the two Hall effect sensors are called “Channel A” and Channel B” respectively; an example of the output is shown below. In a single period (T), defined as the duration of time of one complete cycle in a repeating pattern, the timing diagram has four distinct states (see a, b, c, and d below), hence a quadrature encoder.
+Квадратурные энкодеры - это особый тип относительных энкодеров, которые имеют четыре различных состояния выхода. Если корень _quad-_ означает четыре, но в этом энкодере только два датчика, откуда взялось название? Выходы двух датчиков на эффекте Холла называются "канал А" и "канал В" соответственно; пример выхода показан ниже. За один период (T), определяемый как продолжительность одного полного цикла в повторяющейся схеме, временная диаграмма имеет четыре различных состояния (см. a, b, c и d ниже), следовательно, это квадратурный энкодер.
 
-![Clockwise Quadrature Encoder Output Timing Diagram](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89sYz2Fo51GcCss%2F2.png?generation=1590172883093442\&alt=media)
+![Выходная временная диаграмма квадратурного кодера по часовой стрелке](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89sYz2Fo51GcCss%2F2.png?generation=1590172883093442\&alt=media)
 
-The offset from Channel A to Channel B is because the sensors are offset from each other by 90°. As the motor rotates one sensor will see the change before the other. When the motor shaft rotates clockwise (CW), Channel A will lead (the edge will rise before) Channel B. When the motor spins counter clockwise (CCW) Channel A will lag (rise after) Channel B. If there was only one sensor it would still be possible to measure the number of rotations, but not to detect the direction of the motor.
-
-{% hint style="info" %}
-On HD Hex and Core Hex motors Channel A leads Channel B when positive voltage is applied to the M+ terminal. However, there are times when this will not hold true in real life. Different reduction gearboxes, or physically swapping the Channel A and Channel B encoder wires into the controller, can reverse the relationship between the channels. Keep this in mind when programming and troubleshooting your robot.
-{% endhint %}
-
-When the encoder is being read by a microcontroller, the two signals are compared to produce a count up pulse or count down pulse. These pulses are counted as steps forward (CW) or backwards (CCW). Using the specifications for the encoder being used, a count can be converted to degrees. This information can be used to drive a robot arm to a specific angle, or tell a robot to drive a certain distance. Both the Control Hub and Expansion Hub communicate to a microcontroller through the encoder ports.
-
-### Encoder Technical Specification Definitions
+Смещение от канала А к каналу В происходит потому, что датчики смещены друг относительно друга на 90°. При вращении двигателя один датчик увидит изменения раньше другого. Когда вал двигателя вращается по часовой стрелке (CW), канал A будет опережать (фронт сигнала будет нарастать раньше) канал B. Когда двигатель вращается против часовой стрелки (CCW), канал A будет отставать (нарастать позже) канала B. Если бы был только один датчик, можно было бы измерить количество оборотов, но не определить направление вращения двигателя.
 
 {% hint style="info" %}
-There is some conflicting terminology difference between encoder suppliers. This document defines one of the most commonly agreed upon set of terms, however be aware that when comparing between encoder specifications from different vendor’s terms may vary in meaning.
+На моторах HD Hex и Core Hex канал А опережает канал В при подаче положительного напряжения на клемму M+. Однако в реальной жизни бывает, что это не так. Различные редукторы или физическая замена проводов энкодеров каналов A и B в контроллере может изменить соотношение между каналами. Помните об этом при программировании и устранении неисправностей вашего робота.
 {% endhint %}
 
-Every time the output goes through all four distinct combinations of output signals, it’s called a **cycle** (see a, b, c, and d below). Encoders have a different **cycles-pre-revolution(CPR)** based on the number of poles on the magnet used. The CPR is how many cycles are generated for one complete revolution of the encoder shaft.
+Когда энкодер считывается микроконтроллером, два сигнала сравниваются для получения импульса увеличения или уменьшения отсчета. Эти импульсы считаются как шаги вперед (CW) или назад (CCW). Используя технические характеристики используемого энкодера, можно преобразовать счет в градусы. Эта информация может быть использована для того, чтобы привести манипулятор робота в движение на определенный угол или указать роботу определенное расстояние. Как концентратор управления, так и концентратор расширения подключаются к микроконтроллеру через порты энкодера.
 
-![Encoder Cycle](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89tWBiquGW5GS2y%2F3.png?generation=1590172883093279\&alt=media)
+### Технические характеристики энкодера Определения
 
-An example output from one complete rotation of a 14 CPR encoder is shown in in the figure below. A 14 CPR rotation encoder may also be referred to as having 14 rises on channel A. Encoders are mounted to the motor shaft, not the gearbox output shaft, so for a motor with a reduction gearbox attached this is less than one full output shaft rotation.
+{% hint style="info" %}
+Между поставщиками энкодеров существуют некоторые противоречивые терминологические различия. В данном документе определен один из наиболее часто встречающихся наборов терминов, однако имейте в виду, что при сравнении спецификаций кодеров разных поставщиков термины могут отличаться по значению.
+{% endhint %}
 
-![Figure 4: Encoder Output for one Revolution of a 14 CPR Encoder](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89uDlCp-X9LmH23%2F4.png?generation=1590172883130729\&alt=media)
+Каждый раз, когда выход проходит через все четыре различные комбинации выходных сигналов, это называется **циклом** (см. a, b, c и d ниже). Энкодеры имеют различное количество **циклов-превращений (CPR)** в зависимости от количества полюсов используемого магнита. CPR - это количество циклов, которое генерируется за один полный оборот вала энкодера.
 
-One reason to use CPR to define an encoder, rather than the commonly used PPR (Pulses per Revolution) is when the encoder signal is decoded by the microcontroller it is possible to do 1x, 2x, or 4x decoding. For 1x decoding the micro controller would only “count” the rising signal on a single channel, while for 4x decoding each rising or falling edge for both channels is measured as a “count.” Although 4x decoding is one of the most common methods, because it’s based on how the electronics decode the signal from the encoder, and not on the encoder hardware itself, it’s not an ideal method of defining the encoder hardware specifications.
+![Цикл энкодера](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89tWBiquGW5GS2y%2F3.png?generation=1590172883093279\&alt=media)
 
-If we assume 4x decoding when each cycle is interpreted, the microcontroller can read the four distinct outputs (a, b, c, and d) as individual steps. So for each CPR, the controller can read four counts/ticks. To calculate the number of counts per rotation of the encoder shaft:
+Пример выходного сигнала от одного полного оборота энкодера 14 CPR показан на рисунке ниже. Энкодер с числом оборотов 14 CPR можно также назвать имеющим 14 подъемов на канале A. Энкодеры устанавливаются на вал двигателя, а не на выходной вал редуктора, поэтому для двигателя с установленным понижающим редуктором это меньше, чем один полный оборот выходного вала.
+
+![Рисунок 4: Выходной сигнал энкодера для одного оборота энкодера 14 CPR](https://2589213514-files.gitbook.io/\~/files/v0/b/gitbook-legacy-files/o/assets%2Fftc-control-system%2F-M7xeR0wyMXoIwV8ldL1%2F-M7xg89uDlCp-X9LmH23%2F4.png?generation=1590172883130729\&alt=media)
+
+Одна из причин использования CPR для определения кодера, а не общепринятого PPR (Pulses per Revolution) заключается в том, что при декодировании сигнала кодера микроконтроллером можно выполнить декодирование 1x, 2x или 4x. При 1x декодировании микроконтроллер "считает" только нарастающий сигнал на одном канале, а при 4x декодировании каждый нарастающий или спадающий фронт для обоих каналов измеряется как "счет". Хотя 4-кратное декодирование является одним из наиболее распространенных методов, поскольку оно основано на том, как электроника декодирует сигнал от кодера, а не на самом оборудовании кодера, это не идеальный метод определения технических характеристик оборудования кодера.
+
+Если мы предполагаем 4-кратное декодирование при интерпретации каждого цикла, микроконтроллер может считывать четыре отдельных выхода (a, b, c и d) как отдельные шаги. Таким образом, для каждого CPR контроллер может считать четыре отсчета/шага. Чтобы рассчитать количество отсчетов на один оборот вала энкодера:
 
 $$
 COUNTS PER ROTATION_(of the encoder shaft)=CPR(Cycles per rotation)×4
 $$
 
-The actual cycles per rotation of the output shaft of the motor is depending on the gearbox that’s attached.&#x20;
+Фактическое количество циклов на вращение выходного вала двигателя зависит от установленного редуктора;
 
 $$
-COUNTS PER ROTATION_(of the output shaft)=CPR(Cycles per rotation)×4 ×Reduction
+КОЛИЧЕСТВО ЦИКЛОВ НА ВРАЩЕНИЕ_(выходного вала)=CPR(Циклы на вращение)×4 ×Редукция
 $$
 
-This can be calculated into the degrees per count. Assuming no additional reduction is added to the final stage of the motor output (i.e. direct drive) the number of degrees per count is calculated as:
+Это может быть рассчитано в градусах на отсчет. Если предположить, что на выходе двигателя не добавляется дополнительная редукция (т.е. прямой привод), то количество градусов на отсчет рассчитывается как:
 
 $$
-DEGREESPERCOUNT=360°/COUNTSPERROTATION(​oftheoutputshaft)
+DEGREESPERCOUNT=360°/COUNTSPERROTATION(oftheoutputshaft)
 $$
+
+
+
